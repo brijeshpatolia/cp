@@ -1,0 +1,11 @@
+{
+  "name": "pollev-ai-contestant",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "postCreateCommand": "npm install && npx playwright install --with-deps chromium",
+  "forwardPorts": [],
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  }
+}

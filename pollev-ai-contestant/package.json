@@ -1,0 +1,16 @@
+{
+  "name": "pollev-ai-contestant",
+  "version": "1.0.0",
+  "description": "Headless human-vs-AI quiz bot for Poll Everywhere — Playwright + Claude",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:click": "AUTO_CLICK=true node src/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "dotenv": "^16.4.5",
+    "playwright": "^1.49.0"
+  }
+}
