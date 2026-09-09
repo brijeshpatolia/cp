@@ -6,6 +6,8 @@ Every page carries the running header band "BLACKROCK FUNDAMENTAL RISK FOR EQUIT
 
 **Scan artefact affecting every page in this range:** each page shows faint grey "ghost" text that is the *next* page's content bleeding through the paper (verified: the ghost on p.46 is exactly p.47's headings; the ghost on p.48 is p.49's; the ghost on p.49 is p.50's; etc.). Ghost content is NOT transcribed as belonging to the page it appears on.
 
+**Equation inventory (audit check):** numbered equations (1.26)-(1.55) run continuously across this range with no gaps and no duplicates - p.46: 1.26-1.27; p.47: 1.28-1.32; p.48: 1.33-1.35; p.49: 1.36-1.41; p.50: 1.42-1.46; p.51: 1.47-1.48; p.52: 1.49; p.53: 1.50-1.53; p.54: 1.54-1.55; p.55: none. That is 30 numbered equations, all transcribed below. Three descriptors carry no formula and therefore no equation number: Return on Capital Employed and Return on Assets (p.50) and Debt-to-Assets (p.53).
+
 ---
 
 ## PDF page 46 (printed p.46)
@@ -93,6 +95,7 @@ None.
 - Every yield descriptor uses **month-end price** in the denominator while the numerator uses the most recent available accounting figure at date `s <= t` — an explicit lag convention to avoid look-ahead, though no justification is spelled out.
 - "Normalised" earnings are the **fitted value at the most recent date** from a 5-year linear time regression of EPS — i.e. a trend-smoothed EPS rather than a trailing average. No reason is given for choosing a linear trend fit over an average, nor for the 5-year window.
 - EBITDA is scaled by Enterprise Value (not by price), unlike the other two Earnings Yield descriptors.
+- Lag-convention inconsistency inside the page: the explicit `where s <= t` line is printed under (1.28) and (1.32) **only**. (1.29), (1.30) and (1.31) carry no such line, even though (1.29) and (1.30) also mix an accounting numerator dated `s` (or fitted at `s`) with a price denominator dated `t`.
 
 ### Figures
 None.
@@ -186,13 +189,14 @@ None.
 - Growth is measured as a **trend slope scaled by the level** (slope of a 5-year time regression divided by the 5-year mean) rather than as a point-to-point growth rate — this makes the descriptor a normalised trend growth rate.
 - Predicted Sales Growth uses a **symmetric denominator built from absolute values** ((|FY2| + |FY1|)/2), which keeps the ratio defined and sign-stable when forecasts are near zero or negative. The choice is made without explicit justification.
 - Both the Asset and Sales trend descriptors reuse identical machinery (same window, same normalisation).
-- Note: (1.36) is described in words as using "the estimated slope coefficient" and the accompanying text of (1.37) refers to `beta_i` (unhatted) while (1.36) and (1.41) use `betahat_i` — inconsistent hatting in the source.
+- Note: inconsistent hatting in the source, **verified at 6x magnification, not a scan artefact** - the numerators of (1.36) and (1.40) are `betahat_i`; the "where ... is estimated" line above (1.41) is `betahat_i`; but the same line above (1.37) is plain unhatted `beta_i`. Same quantity, two notations.
+- Wording/formula mismatch in (1.38): the text reads "The difference in the natural logarithm of Total Assets A_i over the previous two years", but the formula `ln(A_{i,t}) - ln(A_{i,t-1})` is a **single-period (1-lag) log difference** - two annual observations one year apart, i.e. a one-year change. The source does not reconcile the two.
 
 ### Figures
 None.
 
 ### Unreadable
-- p.49: in the "where ... is estimated in the following regression" line under (1.36) the coefficient is printed as `beta_i` without a visible hat, whereas the numerator of (1.36) clearly has a hat — [UNREADABLE/AMBIGUOUS: whether the hat is present on beta in the line above (1.37)].
+- p.49: nothing unreadable. (Re-checked at 6x: the line "where beta_i is estimated in the following regression:" above (1.37) is sharply printed and carries **no hat**, while the matching line above (1.41) unambiguously reads `betahat_i`. The absence of the hat is real, so this is recorded under Claims as a source inconsistency rather than as an unreadable region.)
 
 ---
 
@@ -285,7 +289,7 @@ None (the parameter definitions are laid out as an aligned "where" list, not a r
 - p.51: Small-Cap parameters — **alpha_1 = 0.95**, **alpha_2 = 0.75**, **alpha_3 = 0.2** (verified at 4x enlargement).
 - p.51: Mid-Cap parameters — **alpha_1 = 0.60**, **alpha_2 = 0.54**, **alpha_3 = 0.7** (verified at 4x enlargement).
 - p.51: Small-Cap is a continuous function on the interval **[0,1]**.
-- p.51: Small-Cap "is designed to give exposure to smaller companies which reside in capitalisation **deciles 8, 9 and 10**."
+- p.51: verbatim - "The functional form is designed to give exposure to smaller companies which reside in capitalisation **deciles 8, 9 and 10**." (the sentence's subject is "The functional form", not "Small-Cap"; the earlier digest paraphrase misattributed it.)
 - p.51: "The Mid-Cap substyle assigns an exposure to companies in **deciles 6 and 7**."
 - p.51: exponent **2** (the Gaussian squared term) in both (1.47) and (1.48).
 - p.51: equation numbers 1.47, 1.48.
@@ -298,7 +302,7 @@ None (the parameter definitions are laid out as an aligned "where" list, not a r
 
 ### Claims / methodological choices
 - Both size sub-styles are built as **Gaussian (bell-shaped) functions of the log of the market-cap rank**, not of log market cap itself — i.e. exposure is a smooth function of cross-sectional rank, making the descriptor distribution-free with respect to the level of capitalisation.
-- Small-Cap is deliberately **capped at 1** (flat top) for all companies ranked beyond `alpha_1 * M_t`, so the smallest ~5% (given alpha_1 = 0.95) all get full exposure; Mid-Cap has no such flat region and is a pure bell centred on the mid-cap rank.
+- Small-Cap is deliberately **capped at 1** (flat top) for every asset with `k_{i,t} >= alpha_1 * M_t`, i.e. over the top 5% of the rank scale given alpha_1 = 0.95; Mid-Cap (1.48) is unconditional and so has no flat region - it is a pure bell. *Caveat:* p.51 never states whether rank 1 is the largest or the smallest company, so reading the flat top as "the smallest ~5% of companies" is an inference from the descriptor's stated purpose, not something printed on the page.
 - `sigma_t` is calibrated by construction: it is set so that the Gaussian takes value `alpha_3` at rank `alpha_2 * M_t` (this follows algebraically from the formula), i.e. the authors pin the curve through a chosen (rank, exposure) point. The paper states the parameter values but gives **no empirical justification for the specific choices 0.95/0.75/0.2 and 0.60/0.54/0.7** beyond the stated decile-targeting intent.
 - Small-Cap and Mid-Cap use **different universes** (Estimation Universe vs. standardisation universe) — the reason for the difference is not explained on this page.
 
@@ -327,6 +331,7 @@ None.
 ### Numbers
 - p.52: reference to **regression (1.12)** twice (residual source, and weighting/window source).
 - p.52: equation number 1.49.
+- p.52: hatting - the prose names the descriptor `gammahat_i` (hatted, verified at 3x); the equation (1.49) writes the population coefficient `gamma_i` (unhatted). Likewise the prose has no symbol for the residual while (1.49) introduces `u_{i,s}`.
 - p.52: returns are **weekly**.
 
 ### Terms
@@ -342,7 +347,7 @@ None.
 None.
 
 ### Unreadable
-- p.52: [UNREADABLE/AMBIGUOUS: the dependent-variable symbol in (1.49). At 12x magnification it clearly renders as an italic lowercase "l" followed by "ê" (e with hat). Whether the leading "l" is a separate modifier (e.g. "local"), part of a two-letter symbol, or a typesetting artefact cannot be determined from this page.]
+- p.52: nothing on this page is illegible. The dependent-variable symbol in (1.49) is **legible** at 14x as an italic lowercase "l" immediately followed by "e-with-hat", subscripted `i,s` - i.e. `lê_{i,s}`. What is uncertain is its *meaning*, not its shape: [AMBIGUOUS: whether the leading "l" is a modifier (e.g. "local"), the first letter of a two-letter symbol, or a typesetting artefact. p.52 never defines the symbol; it is described in prose only as "the residuals in regression (1.12)".]
 
 ---
 
@@ -389,6 +394,7 @@ None.
 - **Balance Sheet Cash** — a cash-holding ratio — is filed under *Leverage* rather than Quality or Profitability; no rationale given.
 - Equity Dilution isolates the part of the market-cap change **not** explained by total return: the ratio compares last year's cap grown at the total return to this year's actual cap, and the **negative** log makes issuance (dilution) a positive exposure.
 - **Debt-to-Assets is taken as a vendor field with no formula**, unlike the other three Leverage descriptors.
+- The `where s <= t` line is printed under (1.50) **only**. (1.52) uses the same `s`-dated debt items (`LTD_{i,s}`, `PS_{i,s}`) against a `t`-dated denominator `CE_{i,t}` but carries no such line; (1.51) and (1.53) are dated entirely at `t`. The lag convention is therefore stated once and left implicit thereafter.
 
 ### Figures
 None.
@@ -451,7 +457,8 @@ None on this page.
 
 ### Tables
 - p.55: A large two-column-pair table (apparently: Style category | Substyle name, repeated twice across the page, roughly 40+ rows) is **visible only as faint grey show-through** on this scan. Consistent with the pattern on pages 46–54, this ghost image is the content of the FOLLOWING page (p.56), not of p.55. On p.55 itself only the heading and the introductory paragraph above are actually printed in black ink.
-  I attempted contrast stretching, autocontrast, unsharp masking and up to 6x upscaling on the region; the glyphs remain below the resolution of the 952×1288 source image. **No cell values are transcribed, because none could be read with confidence.**
+  I attempted contrast stretching, autocontrast, unsharp masking and up to 6x upscaling on the region; the glyphs remain below the resolution of the 952x1288 source image. **No cell values are transcribed, because none could be read with confidence.**
+  **Verified against the next page's image (audit step):** `p056.jpg` carries in solid black ink the caption "Table 1.4. Inventory of all substyles investigated" over a four-column table (Style | Substyle, repeated twice across the page). The faint grid on p.55 is that table showing through. So the show-through hypothesis is confirmed, not merely assumed: p.55's own printed content is the heading plus the single paragraph, and nothing else.
 
 ### Numbers
 - p.55: **200+** — the size of the full list of substyles investigated (of which the printed inventory is a subset).
@@ -471,4 +478,4 @@ None on this page.
 None.
 
 ### Unreadable
-- p.55: [UNREADABLE: the entire substyle inventory table occupying roughly the middle half of the page. It appears only as faint show-through of the next page at this scan resolution; category labels and substyle names cannot be read with confidence. Cropping/enhancement at 3x–6x was attempted and failed. Treat the table content as belonging to PDF p.56 and transcribe it from that page's image.]
+- p.55: nothing that actually belongs to p.55 is unreadable. The faint table occupying roughly the middle half of the page is **not p.55 content**: it is confirmed show-through of Table 1.4, which is printed legibly on PDF p.56 (`p056.jpg`) and must be transcribed from there.

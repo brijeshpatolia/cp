@@ -2,7 +2,9 @@
 
 Source images: `/tmp/claude-0/-home-user-cp/79206b60-659d-5f16-a034-7d8ab14cc34a/scratchpad/img/p037.jpg` … `p045.jpg`
 Every page carries the running head banner **"BLACKROCK FUNDAMENTAL RISK FOR EQUITIES (BFRE)"** and the **aladdin by BlackRock** logo in the footer.
-PDF page index = printed page number throughout this chunk (p037 → "Page 37", p038 → "Page 38", …, p045 → "Page 45"). On p040 and p041 the printed footer is cropped out of the photograph, but the sequence is unbroken.
+PDF page index = printed page number throughout this chunk (p037 → "Page 37", p038 → "Page 38", …, p045 → "Page 45"). On p040 and p041 the printed footer is cropped out of the photograph, but the sequence is unbroken. (Footers directly verified on p037 — "Page 37", last digit at the photo's right edge — and on pp. 38, 39, 42, 43, 44, 45.)
+
+**Audit status:** every equation (1.12–1.25), every table cell on pp. 40–41, and every stated number on these nine pages was re-read against the source images at 4×–10× magnification. All equations and all ~250 table cells verified correct as transcribed. Corrections applied on audit are marked inline in the p.40, p.41 and p.42 "Unreadable" sections.
 
 ---
 
@@ -47,7 +49,7 @@ Column contents:
 
 **Figure 1.20. BFRE Coverage Criteria and Proxy** — a top-to-bottom decision flowchart of five diamond decision nodes, with three terminal grey boxes at the bottom.
 
-Decision nodes (top → bottom), each with a "NO" branch drawn to the right/left:
+Decision nodes (top → bottom), each with a "NO" branch drawn to the right/left. Only the first two branches carry a printed **"NO"** label; the branches leaving `Eligible status?`, `Eligible security type?` and `Market & Industry data?` are drawn as unlabelled lines into the same common vertical that drops to Unit Proxy. The only printed **"YES"** label is the one between `Data exists?` and `Eligible exchange?`.
 1. `Data exists?` — NO branch runs left and down to the terminal box **Sedol Proxy**; YES continues down.
 2. `Eligible exchange?` — NO branch runs right, joining a common line that drops to the terminal box **Unit Proxy**. Annotation to the right: *"Eligible exchanges in BFRE coverage were defined by BFRE research"*.
 3. `Eligible status?` — NO branch to the same Unit-Proxy line. Annotation: *"Bloomberg: Active, halted, Suspended, Order Imbalance. Data Stream: Active, Suspended"*.
@@ -262,10 +264,10 @@ Column sum checks (all = 1.00): Volatility AUST 0.34+0.33+0.33; EMEA 5×0.2; UKI
 | Oil | Crude Oil-Brent M+3 | | | | | | |
 | Oil | UK Close US$/BBL (Regional) | | | | | | |
 | Quality | Equity Dilution | | | | | | |
-| Foreign Sensitivity | Foreign Sales | | | | | 0.5 (see note) | |
-| Foreign Sensitivity | Foreign Assets | | | | | 0.5 (see note) | |
+| Foreign Sensitivity | Foreign Sales | | | | | [UNREADABLE — see note] | |
+| Foreign Sensitivity | Foreign Assets | | | | | [UNREADABLE — see note] | |
 
-Note on the last block: a single value **0.5** is printed in the CAND column vertically centred across the two Foreign Sensitivity rows. It is most consistent with 0.5 on Foreign Sales and 0.5 on Foreign Assets (summing to 1.00), but only one glyph is printed, so the row attribution is not certain — flagged below.
+Note on the last block: **exactly one** value, `0.5`, is printed in the CAND column of the Foreign Sensitivity block, sitting vertically between the "Foreign Sales" and "Foreign Assets" labels. Verified at 8× magnification: there is no second glyph, faint or otherwise. The table draws horizontal rules only between *style* groups, never between substyle rows, so row attribution rests on vertical alignment alone and the page's downward skew across the right-hand columns makes that alignment ambiguous here. **Do not assume 0.5/0.5.** Counter-evidence against a merged pair: in the same CAND column the Growth style's two 0.5 weights (Asset Growth Rate, Change in Assets) *are* printed as two separate glyphs on this same page — so a 0.5/0.5 pair would have been printed twice here too. Taken literally the scan shows CAND Foreign Sensitivity summing to 0.5, not 1.00.
 
 Column sum checks: Value AUST/EMEA/NAMR 0.34+0.33+0.33, UKIN 0.5+0.5. Profit AUST 0.33+0.34+0.33; EMEA 4×0.25; UKIN 0.5+0.5; NAMR 0.33+0.33+0.34. EarnYield NAMR/CAND 0.34+0.33+0.33; LATC 0.5+0.5; **EMEA EarnYield 0.25+0.25+0.25 = 0.75** unless the EMEA Dividend Yield 0.25 is counted inside EarnYield (see Claims). Growth EMEA 4×0.25; NAMR 0.34+0.33+0.33; CAND 0.5+0.5. Leverage UKIN 0.34+0.33+0.33.
 
@@ -288,8 +290,8 @@ Every weight is listed in the tables above. Distinct weight values used: 1.00, 0
 None.
 
 ### Unreadable
-- p.40: the CAND value **0.5** in the Foreign Sensitivity block is printed once, centred between the "Foreign Sales" and "Foreign Assets" rows; which row (or both) it belongs to cannot be determined from the scan.
-- p.40: the printed page-number footer is cut off by the photograph's lower edge.
+- p.40: **[UNREADABLE: row attribution of the CAND `0.5` in the Foreign Sensitivity block.]** One glyph only, centred between the "Foreign Sales" and "Foreign Assets" rows; which of the two rows it belongs to cannot be determined from the scan, and there is no evidence of a second value.
+- p.40: the printed page-number footer is cut off by the photograph's lower edge. The bottom note "Note that the substyles with [*] are negated." **is** fully legible below the second table (partly overlapped by the "Galaxy Z Flip7" camera watermark, but readable).
 
 ---
 
@@ -369,8 +371,10 @@ Column sum checks: Volatility JAPN 5×0.2; APXJ 0.34+0.33+0.33; WRLD 4×0.25; US
 | Oil | Crude Oil-Brent M+3 | 1.00 | | | | 1.00 |
 | Oil | UK Close US$/BBL (Regional) | | | 1.00 | | |
 | Quality | Equity Dilution | | 1.00 | | | 1.00 |
-| Foreign Sensitivity | Foreign Sales | (blank) | (blank) | (blank) | [cut off] | [cut off] |
-| Foreign Sensitivity | Foreign Assets | (blank) | (blank) | (blank) | [cut off] | [cut off] |
+| Foreign Sensitivity | Foreign Sales | | | | | |
+| Foreign Sensitivity | Foreign Assets | | | | | |
+
+All ten Foreign Sensitivity cells on p.41 are **empty**. Verified at 6× magnification: the row band for "Foreign Sales" / "Foreign Assets" and all five column cells (JAPN, APXJ, WRLD, USAM, EMKT) are inside the photograph and blank. Only the table's closing bottom border is clipped by the photo edge. Consequence: **no region on p.41 uses the Foreign Sensitivity style at all** — it appears only in CAND (p.40).
 
 Column sum checks: Value JAPN 0.67+0.33; others 0.34+0.33+0.33. Profit USAM 0.33+0.33+0.34; WRLD 4×0.25. EarnYield all five 0.34+0.33+0.33. Growth JAPN/USAM 0.34+0.33+0.33; WRLD 4×0.25. Leverage JAPN 0.34+0.33+0.33; USAM 0.5+0.5; WRLD 0.5 + (-0.5).
 
@@ -388,15 +392,17 @@ All weights listed above. Notable non-standard values on this page: **0.67** (JA
 - WRLD Liquidity spreads over six substyles at 0.17/0.17/0.17/0.16/0.16/0.17.
 - EMKT Liquidity uses Price Pressure 1M*/3M* plus Growth of Trading Volume 12M — the only model using the Price Pressure substyles.
 - Oil is modelled with Crude Oil-Brent M+3 (JAPN, EMKT) or UK Close US$/BBL (Regional) (WRLD); Quality = Equity Dilution alone (APXJ, EMKT).
-- No JAPN SmallCap/MidCap factor; the other four models here use SmallCap Factor at 1.00.
+- No JAPN SmallCap/MidCap factor; the other four models here use SmallCap Factor at 1.00. MidCap Factor is unused on p.41 (it appears only for NAMR on p.40).
+- Foreign Sensitivity (Foreign Sales / Foreign Assets) is unused by all five models on p.41; across pp. 40–41 it is loaded **only** in CAND.
+- DivYield is a standalone 1.00 style in WRLD and USAM only; JAPN, APXJ and EMKT carry no dividend-yield style at all.
 - No justification is offered anywhere on pp. 40–41 for why particular substyles enter particular regional models.
 
 ### Figures
 None.
 
 ### Unreadable
-- p.41: the last two table rows (Foreign Sensitivity — Foreign Sales, Foreign Assets) run off the bottom edge of the photograph; the USAM and EMKT cells for those rows are not visible at all, and the JAPN/APXJ/WRLD cells appear empty but the row bottoms are clipped.
-- p.41: the printed page-number footer is cut off by the photograph's lower edge.
+- p.41: **nothing in the tables is unreadable.** (Corrected on audit: an earlier draft claimed the USAM and EMKT cells of the Foreign Sales / Foreign Assets rows were off-frame. They are in frame and blank; all 10 Foreign Sensitivity cells are legible and empty.)
+- p.41: only the table's closing bottom border is clipped by the photograph's lower edge, and with it everything printed below the table — i.e. the counterpart of p.40's "Note that the substyles with [*] are negated." line (if it is repeated here) and the "Page 41" footer are **not visible**. The `*` markers themselves are printed on the substyle names in this table (Broker Coverage*, Price Pressure 1M*/3M*, Return to Turnover*, Amihud Ratio – 1Y*) and the p.40 note is assumed to govern them.
 
 ---
 
@@ -430,6 +436,19 @@ Non-displayed definitions on the page:
 - **Beta × Sigma** = "The product of Historical Beta and Historical Sigma" = betâ_i × sigmâ_i.
 - **Standard Deviation – 1 year** = "An exponentially-weighted estimate of the standard deviation of daily total returns."
 
+### Body text (verbatim qualifying lines — these carry all the estimation settings)
+
+Three separate lines under (1.12):
+- "All returns are weekly and in excess of the local risk-free rate."
+- "The market index is defined as the market capitalisation-weighted Estimation Universe."
+- "The exponential weighting function has a half-life of 52 weeks, and uses 5 years of weekly observations."
+
+One line under (1.13):
+- "All returns are total returns."
+
+One line under Standard Deviation – 1 year:
+- "The exponential weighting function has a half-life of 180 days and uses 360 observations."
+
 ### Tables
 None.
 
@@ -453,7 +472,7 @@ None.
 None.
 
 ### Unreadable
-- In (1.12) the market-return term is printed as r with superscript M and subscript "i,s"; the subscript characters are small but legible as `i,s`. Recorded as `r^M_{i,s}`.
+- Nothing unreadable. (Audit note: the market-return term in (1.12) was re-checked at 10× magnification and is **confirmed** to be `r` with superscript `M` and subscript `i,s` — i.e. `r^M_{i,s}`, indexed by asset as well as time, consistent with "the market index applicable to asset i". Both sum/limit blocks of (1.13) were likewise confirmed at 7×: `max_{s=0,...,11}` / `min_{s=0,...,11}` over `sum_{u=t-s}^{t}`.)
 
 ---
 
@@ -649,6 +668,8 @@ None.
 - **Inconsistency:** the prose for Growth of Trading Volume says the slope is divided by "the average **Total Assets** over the last T months", but the printed denominator in (1.22) is `(1/T) sum V_{i,s}` — the average **traded volume**, not Total Assets. One of the two is wrong; the formula is the more specific statement.
 - The volume-trend regression (1.23) is a plain OLS of volume on a linear time index over s = t-T,…,t (i.e. T+1 observations, while the normalising average in (1.22) runs over T observations — an off-by-one between the two expressions as printed).
 - Share Turnover is log-transformed; the same 3/6/12-calendar-month window convention as Proportion of Active Trade Days.
+- **Naming discrepancy across the document:** this appendix heading reads **"Share Turnover – 3 months, 6 months & 12 months"** (and (1.24) is the only definition given for it), whereas the style tables on pp. 40–41 name the same substyle **"Stock Turnover – 3M / 6M / 12M"**. The whitepaper never reconciles the two labels.
+- Note also that (1.20) Return-to-Turnover on p.44 divides by `V/N` (share turnover, un-logged), while (1.24) Share Turnover logs the same `V/N` average — the same quantity enters two substyles under two different transformations.
 - Price Pressure is a *counterfactual* construct: it needs an estimate `r_{i,s,tau}` of the return that *would* have occurred had the asset traded, plus an indicator `delta_{i,s}` for whether the asset would have felt price pressure. The estimation method for `r_{i,s,tau}` is not given on this page.
 - A "no trade day" requires **both** an unchanged close price **and** zero volume (logical AND) — the exact complement of the "active trade day" OR-condition in (1.19).
 - Price Pressure enters styles negated (marked `*`).

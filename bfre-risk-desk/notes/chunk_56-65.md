@@ -13,15 +13,29 @@ caption is visible**. Page 60 is photographed at a strong angle (~4° rotation p
 ~1.75°. Where the raw photo made column alignment ambiguous I deskewed the image and re-read each column
 separately before recording values.
 
+Two further scan features, both present on every full-page photo in this range:
+- **Printed content:** the page footer carries the **"aladdin by BLACKROCK" logo** at bottom-left, with
+  "Page NN" at bottom-right (visible on pp.56, 57, 59, 61, 64, 65; cropped out of pp.58, 60, 62, 63).
+- **Not printed content:** a **"Galaxy Z Flip7" camera watermark** is burned into the lower-left of the
+  photographs of pp.56, 57, 59, 61, 64, 65, overlapping the aladdin logo. It is an artefact of the phone
+  that took the picture and must not be read as text on the page.
+
+**Audit status (this file was re-checked page-by-page against the images at up to 6× zoom).** All industry
+codes, industry names, asset counts and market caps below have been re-read cell by cell and are confirmed
+against the scans; the corrections applied in that pass were to derived column totals (pp.57 and 63), to two
+"largest/smallest" claims (pp.59 and 62), to the extent of the row misalignment on p.62, to the granularity
+claim on p.57, and to several hedges that turned out to be resolvable at zoom (pp.59, 60, 61).
+
 ---
 
 ## PDF page 56 (printed "Page 56")
 
 ### Headings
 - Caption (centred, italic): **"Table 1.4. Inventory of all substyles investigated"**
-- (Faint bleed-through of the next page's heading "INDUSTRY SCHEMAS" is visible at top-left; it is show-through,
-  not printed on this page.)
-- No body text at all on this page — the whole page is the table.
+- A faint grey mark sits at the top-left, well outside the table. It is show-through / bleed-through, not printed
+  on this page; see Unreadable — it is **not** legible, so no wording is claimed for it.
+- No body text and no running header at all on this page — the whole page is the table, with the aladdin logo
+  and "Page 56" in the footer.
 
 ### Equations
 - None on this page.
@@ -179,8 +193,11 @@ Foreign Sensitivity.
 
 ### Unreadable
 - A small ink speck sits in the right margin next to the "Dividend Yield" row; it is not a character.
-- "S&P GSCI Agriculturl Total Return": the word is printed with an apparent typo; letters are legible as
-  "Agriculturl".
+- "S&P GSCI Agriculturl Total Return": the word is printed with a typo; verified at 5× zoom — the letters read
+  "Agriculturl" (no "a" before the final "l"). Recorded as printed.
+- [UNREADABLE: the faint mark at the top-left of the sheet. Local-contrast enhancement (blur-subtract ×6) brings
+  up blobs the size of capital letters that are *consistent with* the following page's section heading
+  "INDUSTRY SCHEMAS" showing through, but no letter can actually be resolved, so the wording is not assertable.]
 
 ---
 
@@ -240,7 +257,7 @@ Right panel:
 |---|---|---|---|
 | CSTFOODSTA | Food & Staples Retailing | 27 | 603 |
 | CSTALCTOB | Alcohol & Tobacco | 15 | 314 |
-| CSTFOODSD | Food Hsehld Pers Prod S Drinks *(the "S" is probably "&"; see Unreadable)* | 58 | 1104 |
+| CSTFOODSD | Food Hsehld Pers Prod S Drinks *(the "S" is a printed S, not "&" — see Unreadable)* | 58 | 1104 |
 | HLCMGDHLC | Managed Health Care | 9 | 179 |
 | HLCPROVSVC | Health Care Providers & Svcs | 38 | 297 |
 | HLCEQSUPLS | HC Eq Sup Life Sci Tools Svcs | 51 | 537 |
@@ -267,9 +284,11 @@ Right panel:
 
 ### Numbers
 - Market-cap and asset counts are stated "**as of December 2013**".
-- NAMR totals (my sums, not printed): 28 + 26 = **54 industry factors**; # Assets sum ≈ 1585; Mkt Capt sum ≈ $17,704bn.
-- Largest single cells: EGYEXP 172 assets / $1699bn; FINREAL 167 assets; HLCPHARMA $1015bn; CSTFOODSD $1104bn;
-  FINCOMBANK $973bn; INDCONMACT $951bn. Smallest: MATCONSTM 5 assets / $18bn; HLCMGDHLC 9 assets.
+- NAMR totals (my sums, not printed): 28 + 26 = **54 industry factors**; # Assets sum = **2,193**
+  (left panel 1,145 + right panel 1,048); Mkt Capt sum = **$23,251bn** (left 9,339 + right 13,912).
+- Largest single cells: EGYEXP 172 assets / **$1699bn (largest cap on the page)**; FINREAL 167 assets;
+  CSTFOODSD $1104bn; HLCPHARMA $1015bn; FINCOMBANK $973bn; INDCONMACT $951bn.
+  Smallest: MATCONSTM 5 assets / $18bn; HLCMGDHLC 9 assets; FINCONSFIN 10 assets.
 
 ### Terms
 Region code **NAMR** (North America). BFRE industry codes are prefixed by sector: EGY (Energy), MAT (Materials),
@@ -279,8 +298,9 @@ ITC (Information Technology), TEL (Telecom), UTL (Utilities). "x" inside a name 
 
 ### Claims / methodological choices
 - Industry factors are region-specific: each region gets its own bespoke schema (this is the first of a series of
-  per-region schema tables). Granularity is clearly driven by cap/asset coverage — NAMR is the most granular
-  schema in the appendix (54 industries) while later small-market schemas collapse to as few as 14.
+  per-region schema tables). Granularity is clearly driven by cap/asset coverage — NAMR is one of the two most
+  granular schemas in the appendix (54 industries; the unlabelled Table 1.6 on p.58 is marginally finer at 55)
+  while later small-market schemas collapse to as few as 14.
 - The document gives the number of assets and market cap per industry but offers **no stated rule** on this page
   for the minimum asset count / cap needed to justify splitting or merging an industry (cells as small as 5 assets
   and as large as 172 coexist).
@@ -289,8 +309,11 @@ ITC (Information Technology), TEL (Telecom), UTL (Utilities). "x" inside a name 
 - None.
 
 ### Unreadable
-- p.57: "CSTFOODSD — Food Hsehld Pers Prod S Drinks": the character before "Drinks" scans as an "S"; it is most
-  likely "&" (as in "Food, Household, Personal Products & Drinks") but I cannot confirm from the scan.
+- p.57: "CSTFOODSD — Food Hsehld Pers Prod S Drinks": re-checked at 5× zoom. The character before "Drinks" is a
+  capital **S**, not "&": it matches the S glyphs in "Hsehld"/"Pers"/"Staples" on the same panel and is clearly
+  a different shape from the ampersands in the adjacent "Food & Staples Retailing" and "Alcohol & Tobacco".
+  Read together with the code **CSTFOODSD**, the abbreviation is almost certainly "**S[oft] Drinks**"
+  ("Food, Household & Personal Products, Soft Drinks"). Nothing else on p.57 is illegible.
 
 ---
 
@@ -445,8 +468,10 @@ Electricals & Engineering, Personal & Household Goods, Nonlife Insurance, Oil & 
 ### Unreadable
 - p.58: caption/region name of the first table (presumably "Table 1.6. …") is cropped out of the photo.
 - p.58: printed page footer not in frame (cropped photo).
-- p.58: the very bottom edge of the image sits just below the last UKIN rows (OILGASALT / TELTELECOM); if the
-  printed UKIN table has any further rows they would be outside the photo — I cannot rule this out.
+- p.58: the very bottom edge of the image sits just below the last UKIN rows (OILGASALT / TELTELECOM). Re-checked
+  at 6× zoom: the **closing rule of both panels is visible** at the bottom of the frame, so 14 + 14 = 28 is
+  almost certainly the complete UKIN table, not a truncation. Anything printed *below* the table (a caption for
+  the next table, the page footer) is out of frame.
 
 ---
 
@@ -547,8 +572,9 @@ Right panel:
 | ITCIT | Information Technology | 4 | 27 |
 
 ### Numbers
-- JAPN: 25 + 16 = **41 industries**. Extremes: CDIAUTOCMP 63 assets / $577bn (largest cap), FINBANK 77 assets
-  (largest count), ITCCOMMEQ 5 assets / $3bn (smallest), MATCONSTM 4 assets / $7bn, CDIDIST 7 / $5bn,
+- JAPN: 25 + 16 = **41 industries**. Extremes: CDIAUTOCMP 63 assets / $577bn (largest cap);
+  **CSTXALCTOB 108 assets is the largest asset count**, then INDMACHINE 93, FINBANK 77;
+  ITCCOMMEQ 5 assets / $3bn (smallest cap), MATCONSTM 4 assets / $7bn (smallest count), CDIDIST 7 / $5bn,
   TELTELECOM 8 assets but $295bn.
 - LATC: 10 + 9 = **19 industries**. Extremes: UTLUTIL 48 assets, FINBANK 45 assets / $400bn (largest cap),
   MATPAK 3 assets / $4bn, ITCIT 4 assets / $27bn, HLCHLC 10 assets / $16bn.
@@ -569,10 +595,9 @@ ITCIT (whole Information Technology), CSTXALCTOB ("Consumer Staples excluding Al
 - None.
 
 ### Unreadable
-- p.59: JAPN CSTALCTOB "# Assets" digit reads 6 but is blurred (5/6 ambiguity is possible).
-- p.59: JAPN HLCEQSVC market cap reads 61 (51/61 ambiguity from scan blur).
-- p.59: LATC FINMULTSEC assets read 6 and FINREAL assets read 16; the 6/8 glyph distinction in this column is
-  soft, though comparison with neighbouring "18" supports 6 and 16.
+- Nothing on this page is illegible. (Four cells that an earlier pass flagged as doubtful were re-read at 5×
+  zoom and are unambiguous: JAPN CSTALCTOB **6** assets / $97bn; JAPN HLCEQSVC cap **61**;
+  LATC FINMULTSEC **6** assets / $17bn; LATC FINREAL **16** assets / $27bn.)
 
 ---
 
@@ -660,7 +685,8 @@ Region code **APXJ** (Asia-Pacific ex-Japan). Distinctive APXJ-only splits: FINR
 INDDEFENG ("Aerospace & Def Const & Eng"), INDCONMACH ("Construction Farm Mach Trucks").
 
 ### Claims / methodological choices
-- APXJ industry buckets hold hundreds of assets each while UKIN buckets hold 2–3; the schema granularity clearly
+- APXJ industry buckets hold hundreds of assets each while the smallest UKIN buckets hold 2–3
+  (UKIN's full range is 2–33 assets); the schema granularity clearly
   tracks universe size, but the whitepaper offers no stated threshold rule on these pages.
 - Health Care is a single factor in APXJ (440 assets) despite the region's size, whereas NAMR splits Health Care
   into 5 factors — again unexplained on the page.
@@ -671,9 +697,10 @@ INDDEFENG ("Aerospace & Def Const & Eng"), INDCONMACH ("Construction Farm Mach T
 ### Unreadable
 - p.60: printed page footer not in frame (cropped photo); a page number appears as a smudge at the bottom-right
   corner of the image but is not legible.
-- p.60: the right-hand panel is soft-focus; digits I read but cannot fully guarantee: CSTALCTOB assets **61**
-  (51/61), FINBANK assets **238** (236/238), FINDIV assets **249** (240/249), FININS assets **96** (96/98),
-  FINREALMGT cap **605** (605/805), FINREIT cap **168** (158/168), ITCELECEQO cap **255** (255/256).
+- p.60: no table cell is illegible. Both numeric columns of both panels were re-cropped and re-read at 5–6×
+  (26 + 26 values left, 18 + 18 right) and every digit resolves, including the seven an earlier pass hedged:
+  CSTALCTOB assets **61**, FINBANK assets **238**, FINDIV assets **249**, FININS assets **96**,
+  FINREALMGT cap **605**, FINREIT cap **168**, ITCELECEQO cap **255**.
 
 ---
 
@@ -694,7 +721,7 @@ Left panel:
 
 | Code | Name | # Assets | Mkt Capt ($bn) |
 |---|---|---|---|
-| EGYEQEXP *(scan renders the code as "EQYEQEXP"; G/Q ambiguous)* | Energy Equip Oil & Gas Exp | 287 | 818 |
+| EQYEQEXP *(printed exactly so — see Unreadable; presumably a typo for EGYEQEXP)* | Energy Equip Oil & Gas Exp | 287 | 818 |
 | EGYINTSTR | Fuels Refining Storage & Trans | 206 | 1783 |
 | MATCHEM | Chemicals | 368 | 712 |
 | MATCONSTM | Construction Materials | 152 | 143 |
@@ -769,11 +796,14 @@ Publishing").
 - None. (There is faint show-through of the *next* page's table caption in the lower half of the sheet; see Unreadable.)
 
 ### Unreadable
-- p.61: the first code cell scans as "EQYEQEXP"; every other code in the block uses the EGY prefix, so this is
-  almost certainly **EGYEQEXP**, but the second character cannot be resolved with certainty.
-- p.61: EGYINTSTR assets read **206** (206/208 blur); EGYEQEXP cap read **818** (816/818 blur).
-- p.61: bleed-through text near the middle of the page (approx. "Table 1.1x. …AUST… schema") is show-through from
-  the following sheet and is **not legible** even after enhancement.
+- p.61: the first code cell is **printed "EQYEQEXP"** — resolved at 5× zoom, where the second glyph plainly
+  carries a Q tail and differs from the G in "EGYINTSTR" and "MATGOLD" two and six rows below. Every other code
+  in the block uses the EGY prefix, so this is a **typo in the source document** for EGYEQEXP; recorded as printed.
+- p.61: no numeric cell is illegible — EGYINTSTR assets **206** and EQYEQEXP cap **818** were re-read at 5× and
+  are unambiguous (an earlier pass wrongly hedged them as 206/208 and 816/818).
+- p.61: bleed-through text in the lower half of the sheet (roughly where the next page's table caption would fall)
+  is show-through and is **not legible**: contrast-stretching the region (percentile clip + unsharp mask) yields
+  only noise, so no region name can be recovered from it and none is asserted here.
 
 ---
 
@@ -813,11 +843,15 @@ rows 2, 5, 6, 8, 9, 13.
 | TELUTL | Telecom & Utilities | 21 | 90 |
 
 **Anomaly (important):** in the printed table the Industry *Name* column is displaced by one row relative to the
-Industry *Code* column from row 6 onwards — "Materials ex Metals & Mining" appears twice (rows 3 and 6), there is
-no "Insurance" name despite a FININS code, and the pairing "FINBANKS = Health Care, 10 assets, $363bn" is
-economically impossible. I verified the misalignment by cropping the code column and the name column separately:
-both columns carry the same group-rule structure (2,3,1,2,1,4,1), so the displacement is in the printed content,
-not an artefact of my reading. The **intended** mapping is almost certainly:
+Industry *Code* column **for rows 6–12 only** — "Materials ex Metals & Mining" is printed a second time on row 6
+(it also belongs to row 3), which pushes every name down one row, and the name "Insurance" is then **missing
+altogether**, which lets rows 13 (FINREAL = Real Estate) and 14 (TELUTL = Telecom & Utilities) fall back into
+correct alignment. So the Name column contains one duplicate and one omission rather than a clean one-row shift
+through to the end of the table. The pairing "FINBANKS = Health Care, 10 assets, $363bn" is economically
+impossible, which is the tell. I verified this by cropping the code column and the name column separately at 3×:
+both columns carry the same group-rule structure (blocks of 2,3,1,2,1,4,1 rows, with rules after rows 2, 5, 6, 8,
+9 and 13), so the displacement is in the printed content, not an artefact of my reading. The **intended** mapping
+is almost certainly:
 
 | Code | Intended name | # Assets | Mkt Capt ($bn) |
 |---|---|---|---|
@@ -837,14 +871,16 @@ not an artefact of my reading. The **intended** mapping is almost certainly:
 | TELUTL | Telecom & Utilities | 21 | 90 |
 
 (The numbers pair with the *codes* in either reading — the number columns are unambiguous. A 10-asset banking
-factor worth $363bn alongside a $103bn consumer-staples factor is the signature of the Australian market, which
-is consistent with the bleed-through caption glimpsed on p.61, but the region label itself is not legible.)
+factor worth $363bn alongside a $103bn consumer-staples factor and a gold factor looks like the Australian
+market, but this is my inference from the cell values only: the caption is out of frame and the show-through on
+p.61 is not legible, so **no region is asserted for this table**.)
 
 ### Numbers
 - **14 industry factors**; asset counts 44, 15, 9, 61, 26, 88, 55, 16, 31, 10, 15, 7, 38, 21 (sum 436);
   market caps 83, 10, 34, 179, 11, 96, 68, 103, 59, 363, 39, 54, 91, 90 (sum $1280bn).
-- Extremes: banking factor 10 assets / $363bn (largest cap, smallest-but-one count);
-  FININS 7 assets / $54bn (smallest count); EGYCOFUEL $10bn (smallest cap).
+- Extremes: banking factor 10 assets / $363bn (**largest cap**, third-smallest count);
+  FININS 7 assets / $54bn (smallest count), then MATXDIVMET 9 assets / $34bn;
+  INDITC 88 assets (largest count); EGYCOFUEL $10bn (smallest cap), then MATGOLD $11bn.
 
 ### Terms
 Codes combining two sectors into one factor: **INDITC** (Industrials & IT), **TELUTL** (Telecom & Utilities);
@@ -862,7 +898,9 @@ exclusion code **MATXDIVMET** (Materials excluding Diversified Metals); **CDICON
 ### Unreadable
 - p.62: table caption / region name and the printed page footer are not in frame.
 - p.62: the printed Industry Name column is displaced by one row relative to the Industry Code column for rows
-  6–13 (documented above); I record both the as-printed and the intended mapping rather than silently repairing it.
+  **6–12** (documented above: duplicate name on row 6, "Insurance" omitted, rows 13–14 back in register);
+  I record both the as-printed and the intended mapping rather than silently repairing it.
+  Every character of the affected rows is legible — the problem is with the document, not the scan.
 
 ---
 
@@ -881,7 +919,8 @@ Discretionary rows) is not in frame. No caption and no page footer are visible.
 ### Tables
 
 Columns `BFRE Industry Code | BFRE Industry Name | # Assets | Mkt Capt ($bn)`; 25 visible rows; codes and names
-are correctly aligned on this page.
+are correctly aligned on this page (unlike p.62). Sector-group rules fall after rows 3, 9, 16, 23 and 24,
+i.e. blocks of 3 (CST) / 6 (HLC) / 7 (FIN) / 7 (ITC) / 1 (TEL) / 1 (UTL).
 
 | Code | Name | # Assets | Mkt Capt ($bn) |
 |---|---|---|---|
@@ -913,7 +952,7 @@ are correctly aligned on this page.
 
 ### Numbers
 - 25 visible industry factors (the left panel, not photographed, would add more).
-- Visible asset counts sum to 865; visible market caps sum to $13,098bn.
+- Visible asset counts sum to **869**; visible market caps sum to **$13,401bn**.
 - Extremes among visible rows: FINDIV $1351bn (largest cap) with 54 assets; HLCPHARMA $1010bn with 23 assets;
   ITCCOMPER 14 assets / $706bn; FNNREAL 102 assets (largest count); FINMRGREIT 15 assets / $49bn (smallest cap);
   HLCMNG 10 assets / $180bn.
@@ -936,8 +975,12 @@ points to a US-centric schema, but with the caption cropped I cannot state the r
 ### Unreadable
 - p.63: table caption / region name and printed page footer are not in frame; the left-hand panel of the table is
   outside the photo.
-- p.63: the code "FNNREAL" is printed as such (verified at 6× zoom); it is presumably a typo for FINREAL, but I
+- p.63: the code "FNNREAL" is printed as such (verified at 5× zoom — the two N's are unmistakable next to the
+  "FIN" of FINLIFEINS directly above and FINMRGREIT directly below); it is presumably a typo for FINREAL, but I
   record what is printed.
+- p.63: faint show-through from the reverse of the sheet runs behind the table (visible as grey smudges to the
+  right of the Name column, e.g. beside the HLC and FIN blocks). It is **not legible** and does not obscure any
+  printed cell.
 
 ---
 
@@ -945,6 +988,9 @@ points to a US-centric schema, but with the caption cropped I cannot state the r
 
 ### Headings
 - **Bibliography** (chapter-level heading, large type)
+- No running header on this page — it is the chapter-opening page, so the grey "BLACKROCK FUNDAMENTAL RISK FOR
+  EQUITIES (BFRE)" banner used on pp.59/61 is absent; p.65 then carries the running header **BIBLIOGRAPHY**.
+  Footer: aladdin logo (bottom-left) and "Page 64" (bottom-right).
 
 ### Equations
 - None.

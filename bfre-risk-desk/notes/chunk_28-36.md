@@ -6,7 +6,27 @@ Every page carries the running header banner **BLACKROCK FUNDAMENTAL RISK FOR EQ
 
 **Source-quality caveat (applies to everything below).** The "PDF" pages are phone photographs of a printed copy (a "Galaxy Z Flip7" watermark is burned into each frame) at roughly **950 × 1300 px per full page**, and `scratchpad/pages/*.txt` is empty — there is **no text layer**, so every character here was read off a photograph. Body text at that resolution is reliable; 5–6 px glyphs (chart tick labels, rotated category labels, the small figures in the banner of Figure 1.18) are at the edge of legibility and are flagged individually. Where a small glyph was recovered it was done by cropping, upscaling ×10–24 with Lanczos, autocontrast and — for 45°-rotated labels — a −45° deskew before reading.
 
-Two pages (29 and 33) are largely blank apart from a short block of text; the remainder of each shows a faint, low-contrast "ghost" of the text of the *following* page. I enhanced those regions (autocontrast + unsharp) and confirmed the ghost text is a duplicate of pp. 30 and 34 respectively — i.e. show-through / bleed-through from the reverse of the leaf, not distinct content. It is recorded as such, not transcribed as page content.
+Two pages (29 and 33) are largely blank apart from a short block of text; the remainder of each shows a faint, low-contrast "ghost" of the text of the *following* page. I enhanced those regions (autocontrast + unsharp) and confirmed the ghost text is a duplicate of pp. 30 and 34 respectively — i.e. show-through / bleed-through from the reverse of the leaf, not distinct content. It is recorded as such, not transcribed as page content. The same show-through appears in the lower half of pp. 31 and 36 (from pp. 32 and 37).
+
+**Audit pass.** Every page image in this range was re-read independently against this file. Findings and their disposition:
+
+| # | Page | Issue | Disposition |
+|---|---|---|---|
+| 1 | 35 | Claimed the ten "Top Style Contributions" labels were illegible and unrecoverable | **Wrong — withdrawn.** All ten recovered by deskewing: Volatility, Momentum, Size, Yield, Reversal, Emerging, Sentiment, Growth, Market, Profitability |
+| 2 | 35 | Second large negative industry exposure attributed to **Media** | **Wrong — corrected.** It belongs to Food Household (4th); Media's exposure is ≈ +4.5% of NAV. A third negative (Chemicals - Agr, ≈ −3%) had been missed entirely |
+| 3 | 35 | Asset-exposure dots stated as "+1 to +2.5% of NAV" | Corrected to ≈ +1.3 to +3.0% |
+| 4 | 35 | FX base-currency codes listed as confirmed terms | **Demoted to `[TENTATIVE]`** — only the `/USD` suffix is actually legible |
+| 5 | 35 | "~15" asset bars; 9 jumbled tentative names, "several others unrecoverable" | Replaced with the ordered 15-name list, per-item confidence, and 2 explicit `[UNREADABLE]` slots |
+| 6 | 30 | Terms line implied **style** exposures are dummy variables | **Wrong — corrected.** The source assigns dummy variables to industry, country and currency only |
+| 7 | 32 | Opening sentence of MODEL ESTIMATION DIAGNOSTICS omitted | Restored ("The model estimation is a core component of the model construction process.") |
+| 8 | 28 | Structural/empirical passage paraphrased | Replaced with verbatim text incl. "The first approach…" / "In contrast, the second – empirical– approach" |
+| 9 | 31 | Row-alignment flagged as broadly ambiguous | Narrowed — three cells resolved at zoom, four genuinely straddle; listed individually |
+| 10 | 36 | "daily basis" | Source actually prints **"dailybasis"**; marked *[sic]* |
+| 11 | 35 | Pie "Act Sec 1%" | Kept, but relabelled `[INFERRED]` — the glyph is at least as consistent with 2%; only the sum-to-100 argument selects 1% |
+| 12 | 35 | Bar magnitudes stated alongside transcribed numbers | Explicit warning added: all bar/dot magnitudes are pixel measurements (±10%), not printed values |
+| 13 | all | No note on source resolution | Source-quality caveat added above |
+
+**Re-verified correct, no change needed:** Table 1.3 (every cell, digit for digit); ±8% / ±20% currency truncation bounds; 1–2 day lag; 1-month horizon; 1996 to 2013; 10% t-statistic threshold; footnote markers 16 and 17 and their text; references [17] and [27]; February 2018; the entire p.31 table body and all four of its footnotes; the p.35 banner (2.99% / 1.02 / 15.62% / 14.98% / EUR); all five directly-read pie percentages; all six axis tick-label sets in Figure 1.18; the ten country and ten industry category labels; the Thursday / previous-Wednesday update cycle; and the ghost-page attributions.
 
 ---
 
@@ -100,7 +120,7 @@ This is the whole of the page's own printed content; the "Model Assumptions & Li
 None.
 
 ### Unreadable
-- p.29: The lower ~70% of the page carries a very faint block of text. After contrast enhancement (`enh_p029_a.png`, `enh_p029_b.png`) the visible line structure and the readable fragments ("Due to vendor limitations, certain equity assets… 1-2 day lag… Chinese MMA securities", "The forecast horizon of the model is 1-month…", "Model users are referred to [17]…") match **page 30 exactly, line for line**. Assessment: this is show-through / ghosting of the facing-or-reverse page 30, not distinct page-29 content. It is *not* transcribed here as page-29 text. Individual characters within the ghost block are not reliably readable.
+- p.29: The lower ~70% of the page carries a very faint block of text. After contrast enhancement (`enh_p029_a.png`, `enh_p029_b.png`) the visible line structure and the readable fragments ("Due to vendor limitations, certain equity assets… 1-2 day lag… Chinese MMA securities", "The forecast horizon of the model is 1-month…", "Model users are referred to [17]…") match **page 30**. Assessment: this is show-through / ghosting of the reverse of the leaf (page 30), not distinct page-29 content. (Stated more carefully than before: what is actually verifiable is that the bullet/indent structure and the legible fragments correspond to p.30's bullet list; "line for line" overstated it, since individual characters in the ghost are not readable.) It is *not* transcribed here as page-29 text. Individual characters within the ghost block are not reliably readable.
 
 ---
 
@@ -310,7 +330,7 @@ NOTE (methodological gap): no bias-statistic values, no pass/fail criteria and n
 None.
 
 ### Unreadable
-- p.33: Below the closing paragraph, roughly the bottom two-thirds of the page carries a faint ghost block of text. After enhancement (`enh_p033_a.png`, `enh_p033_b.png`, `enh_p033_c.png`) the readable fragments and paragraph structure match **page 34 exactly** ("Top-line risk numbers are shown along the top of the report…", "For each factor block, there is a corresponding bar chart…", "MODEL PRODUCTION PROCESS & QUALITY CONTROLS", "PROXYING IN ALADDIN"-adjacent headings). Assessment: show-through from p.34, not page-33 content. Individual characters in the ghost are not reliably readable.
+- p.33: Below the closing paragraph, roughly the bottom two-thirds of the page carries a faint ghost block of text. After enhancement (`enh_p033_a.png`, `enh_p033_b.png`, `enh_p033_c.png`) the readable fragments and paragraph structure match **page 34** (paragraph block structure and heading positions; not character-level — "Top-line risk numbers are shown along the top of the report…", "For each factor block, there is a corresponding bar chart…", "MODEL PRODUCTION PROCESS & QUALITY CONTROLS", "PROXYING IN ALADDIN"-adjacent headings). Assessment: show-through from p.34, not page-33 content. Individual characters in the ghost are not reliably readable.
 
 ---
 
@@ -383,7 +403,7 @@ None (the page is a single full-page figure).
 - p.35: **Portfolio Risk: 15.62%**
 - p.35: **Benchmark Risk: 14.98%**
 - p.35: **Base Currency: EUR**
-- p.35 (pie "Risk Contributions by Block"): **Specific 50%**, **Style 25%**, **Industry 14%**, **Country 6%**, **FX 4%**, **Act Sec 1%** (these six sum to 100%)
+- p.35 (pie "Risk Contributions by Block"): **Specific 50%**, **Style 25%**, **Industry 14%**, **Country 6%**, **FX 4%**, **Act Sec 1%** `[INFERRED — the glyph reads 1 or 2; see Unreadable]`. The five directly-read values plus 1% sum to exactly 100%. Geometry corroborates the two largest: the Specific slice is drawn as the exact right half of the circle (12 → 6 o'clock) and the Style slice as the exact upper-left quadrant.
 - p.35 axis ranges — Top Style Contributions: left axis "Contrib. (% of Act. Risk)" ticks at −5, 0, 5, 10, 15; right axis "Exposure (Std. Devs)" ticks at −0.4, −0.3, −0.2, −0.1, 0.0, 0.1, 0.2, 0.3, 0.4
 - p.35 axis ranges — Top Asset Contributions: left axis "Contribution (%)" ticks at 0, 2, 4, 6, 8; right axis "Exposure (% of NAV)" ticks at −3, −2, −1, 0, 1, 2, 3
 - p.35 axis ranges — Top Industry Contributions: left axis "Contrib. (% of Act. Risk)" ticks at 0, 1, 2, 3, 4; right axis "Exposure (% of NAV)" ticks at −6, −4, −2, 0, 2, 4
@@ -400,27 +420,43 @@ None (the page is a single full-page figure).
 - FX pair categories (Top & Bottom FX Contributions, left→right): the **`/USD`** quote suffix is unambiguous on all five. The three-letter base codes read as **EUR/USD, GBP/USD, CHF/USD, DKK/USD, SEK/USD** but these are **best readings, not confirmed** — at this resolution each base code is a 3-glyph blob. Treat as `[TENTATIVE]`. (They are consistent with the portfolio's EUR base currency and its UK/Swiss/Nordic country exposures, which is corroboration, not evidence.)
 
 ### Claims / methodological choices
-The figure is presented purely as an illustration of model output; no methodological statements are printed on the page beyond the caption. The pie visually corroborates p.34's claim that Active Risk splits roughly equally between common-factor sources (25+14+6+4+1 = 50%) and stock-specific sources (50%).
+The figure is presented purely as an illustration of model output; no methodological statements are printed on the page beyond the caption. Two independent cross-checks against p.34's prose both hold:
+- The pie corroborates "Active Risk is split equally between common factors and stock specific sources": common-factor slices 25 + 14 + 6 + 4 + 1 = 50%, Specific = 50%. It also corroborates "Style and industry factors account for most of the common factor risks" (25 + 14 = 39 of the 50 common-factor points).
+- With the style labels now recovered, the style panel corroborates "significant tilts towards high volatility, momentum driven, low-yielding, smaller stocks" factor by factor: Volatility ≈ +0.42 sd and Momentum ≈ +0.38 sd (long), Yield ≈ −0.30 sd and Size ≈ −0.20 sd (short). Nothing in the figure contradicts the text.
 
 ### Figures
 **Figure 1.18 — a sample Equity Daily Risk (EDR) report in Aladdin.** Landscape, six panels in a 2×3 arrangement beneath a banner of top-line statistics.
 
 - Banner (top): Active Risk 2.99% | Portfolio Beta 1.02 | Portfolio Risk 15.62% | Benchmark Risk 14.98%, with "Base Currency: EUR" at far right.
-- **Panel 1 (top-left) — "Risk Contributions by Block":** pie chart. Specific 50% is the single largest slice; Style 25%; Industry 14%; Country 6%; FX 4%; Act Sec 1%. Only the FX/Act Sec sliver is drawn in a light shade; the rest is solid dark in this monochrome scan.
-- **Panel 2 (top-centre) — "Top Asset Contributions":** paired vertical bars for ~15 named holdings, sorted by descending contribution to active risk. Light bar = Contrib. to Act. Risk, dark bar = Contrib. to Spec. Risk, dot = Act. Exp. on the right-hand "Exposure (% of NAV)" axis. Shape: contribution declines gently from ~7–8% for the first name to ~1.5–2% for the last; specific-risk contribution is sometimes above and sometimes well below the active-risk contribution. All exposure dots sit between roughly +1 and +2.5% of NAV except one clear outlier at about −2% of NAV (the 6th/7th name).
-- **Panel 3 (top-right) — "Top & Bottom FX Contributions":** five bars, monotonically decreasing left to right: EUR/USD ≈ +2.5% of active risk (with exposure dot near +10% of NAV), GBP/USD and CHF/USD ≈ +0.5, DKK/USD ≈ +0.1, SEK/USD slightly negative. One exposure dot (GBP/USD) sits far below at roughly −10% of NAV.
-- **Panel 4 (bottom-left) — "Top Style Contributions":** ten style factors, bars declining steeply from ~12% of active risk for the first factor to ~0 for the last. Exposure dots (right axis, Std. Devs) range from about +0.4 for the top two factors down to about −0.3 for two mid-list factors — i.e. the portfolio has both positive and negative style tilts, and some factors with near-zero contribution still carry non-trivial exposure. Consistent with p.34's description of tilts to high volatility, momentum, low yield and smaller size.
-- **Panel 5 (bottom-centre) — "Top Industry Contributions":** ten industries, bars declining from ~3% of active risk (Integrated Oil) to ~0.2%. Exposure dots mostly between 0 and +4% of NAV, with two notable negative exposures (Integrated Oil and Media at roughly −5 to −6% of NAV) and one at about −2%.
-- **Panel 6 (bottom-right) — "Top Country Contributions":** ten countries, bars declining from ~2.4% of active risk (United Kingdom) to near 0 (Germany). United Kingdom carries a large negative active exposure of roughly −10% of NAV; the remaining exposures cluster between about −2 and +5% of NAV.
+- **Panel 1 (top-left) — "Risk Contributions by Block":** pie chart. Specific 50% is the single largest slice (drawn as the exact right half); Style 25% (upper-left quadrant); then Industry 14%, Country 6%, FX 4%, Act Sec 1%. The scan is effectively monochrome here — the slices are separated by hairlines rather than by distinguishable fills, except for one light sliver at about the 6-o'clock position corresponding to the FX / Act Sec pair. Slice-to-label mapping is by leader line and by the geometry above, not by colour.
+- **Panel 2 (top-centre) — "Top Asset Contributions":** paired vertical bars for **exactly 15** named holdings (counted at 5×), sorted by descending contribution to active risk. Light bar = Contrib. to Act. Risk, dark bar = Contrib. to Spec. Risk, dot = Act. Exp. on the right-hand "Exposure (% of NAV)" axis. Shape: the light (active-risk) bar declines gently from ≈6.7% for the first name to ≈2% for the last; the dark (specific-risk) bar is sometimes above it (≈7.5% on the first name, and a spike to ≈5.3% at the 12th) and sometimes well below (≈0.5% at the 6th). Exposure dots run roughly **+1.3 to +3.0% of NAV**, with **one clear outlier at about −2% of NAV** (6th name) sitting below the plot area.
+- **Panel 3 (top-right) — "Top & Bottom FX Contributions":** five bars, monotonically decreasing left to right: 1st ≈ +2.55% of active risk (exposure dot ≈ +9% of NAV), 2nd ≈ +0.55, 3rd ≈ +0.45 (dot ≈ +3.6% NAV), 4th ≈ +0.13 (dot ≈ +0.9% NAV), 5th ≈ −0.05 (dot ≈ −0.7% NAV). The 2nd pair's exposure dot is the outlier, sitting far below at roughly **−10% of NAV** — i.e. a large short in that currency alongside a positive risk contribution.
+- **Panel 4 (bottom-left) — "Top Style Contributions":** the ten style factors named above. Bars decline steeply: Volatility ≈ 11% of active risk, Momentum ≈ 6, Size ≈ 3.5, Yield ≈ 3, Reversal ≈ 1, and Emerging through Profitability all ≈ 0. Exposure dots (right axis, Std. Devs), matched to the recovered labels: **Volatility ≈ +0.42, Momentum ≈ +0.38, Size ≈ −0.20, Yield ≈ −0.30, Reversal ≈ +0.17, Emerging ≈ −0.10, Sentiment/Growth/Profitability ≈ +0.05 to +0.06, Market ≈ 0.0.** This is a direct, independent confirmation of p.34's prose — long Volatility and Momentum, short Yield and Size = "high volatility, momentum driven, low-yielding, smaller stocks" — and it also shows two factors (Emerging, and the near-zero-contribution tail) carrying exposure without contributing risk.
+- **Panel 5 (bottom-centre) — "Top Industry Contributions":** ten industries, bars declining from ≈3.05% of active risk (Integrated Oil) through Airlines ≈1.9 and Media ≈1.0 to ≈0.3% (Trading Compan[ies]). Exposure dots, matched to labels: **Integrated Oil ≈ −6% of NAV, Airlines ≈ +2.2, Media ≈ +4.5, Food Household ≈ −5.5, HR & Employment ≈ +2.0, Diversified Fin ≈ +4.3, Biotechnology ≈ +4.3, Chemicals - Agr ≈ −3.0, Software & Serv ≈ +3.9, Trading Compan ≈ +3.8.** So there are **three** negative industry exposures, at positions 1, 4 and 8.
+  - *(Correction to an earlier reading of this panel: the second large negative dot belongs to **Food Household** (4th), not to Media. Media's dot is clearly positive at ≈ +4.5% of NAV — it is the third-highest positive exposure in the panel.)*
+- **Panel 6 (bottom-right) — "Top Country Contributions":** ten countries, bars declining from ≈2.4% of active risk (United Kingdom) through Poland ≈0.85, Switzerland ≈0.7, Portugal ≈0.7, then France ≈0.15 and a flat tail to ≈0.03 (Germany). United Kingdom carries a large negative active exposure of roughly **−10% of NAV** (its dot sits below the plot area); the remaining exposures cluster between about −2 and +5% of NAV, with Poland ≈ +4.7 and Switzerland ≈ +5.0 the largest positives.
 
 ### Unreadable
-- p.35: **All ten x-axis category labels in the "Top Style Contributions" panel are illegible** — the labels are set at 45°, only a few pixels tall in the scan, and did not resolve under enhancement. The style names cannot be recovered from this image.
-- p.35: **Most of the ~15 asset names in "Top Asset Contributions" are not reliably readable.** Tentative-only readings (do NOT treat as confirmed): "Commerzbank", "ING Groep NV", "Royal Dutch Sh…", "Randstad Hold…", "Kingspan Group", "Continental", "Telecom Italia", "Capgemini", "Societe Generale". Several others are unrecoverable.
-- p.35: Industry labels are partly cut/illegible: "Food [?] Household", "HR & Employment [?]", "Diversified Fin[?]", "Chemicals - Agr[?]", "Software & Serv[?]", "Trading Compan[?]".
-- p.35: "Active Risk: 2.99%" — the second digit is blurred; 2.99% is the best reading but 2.89% cannot be fully excluded.
-- p.35: "Portfolio Risk: 15.62%" and "Benchmark Risk: 14.98%" — read at 10× enlargement; the final digit of each is slightly blurred (15.62 vs 15.67; 14.98 vs 14.90 were the competing readings; 15.62% and 14.98% are the best readings).
-- p.35: Pie "Act Sec" slice label — the glyph is ambiguous between 1% and 2%; **1%** is recorded because the six slices then sum exactly to 100%.
-- p.35: No individual bar values are printed in the figure; all bar magnitudes quoted above are estimated from pixel positions against the printed axis ticks, not read from labels.
+- p.35: ~~All ten style labels are illegible~~ — **withdrawn; this was wrong.** All ten *are* recoverable, and are listed under Terms above (Volatility … Profitability). The earlier attempt failed because the labels were read at 45°; deskewing the label strip by −45° after upscaling makes them plainly legible. Same technique recovered the country and industry labels.
+- p.35: **Asset names in "Top Asset Contributions" — 15 in order, with per-item confidence.** Positions 1–4 and 12–14 are solid; the rest are tentative or unrecoverable:
+  1. Commerzbank — confident
+  2. Ryanair Holdin[gs] — confident
+  3. Ing Groep NV — confident
+  4. Prosiebensat1 — confident
+  5. Volkswagen — `[TENTATIVE]`
+  6. Royal Dutch Sh[ell] — confident (truncated by chart)
+  7. Randstad Holdi[ng] — confident (truncated by chart)
+  8. KBC Groep NV — `[TENTATIVE]` (first glyph could be K or V)
+  9. Kingspan Group — confident
+  10. Continental — confident
+  11. `[UNREADABLE: renders roughly as "CN Sh--- Ra--"; not recoverable at this resolution]`
+  12. Telecom Italia — confident
+  13. Capgemini — confident
+  14. Societe Generale — confident
+  15. `[UNREADABLE: ends "… Ltd"; the preceding word renders roughly as "Ashtead"/"Amsterdam" but is not resolvable]`
+- p.35: Banner figures re-verified at 9× on the 90°-CCW view: **Active Risk 2.99%**, **Portfolio Beta 1.02**, **Portfolio Risk 15.62%**, **Benchmark Risk 14.98%**, **Base Currency: EUR**. Residual doubt: the middle digit of "2.99" is blobby (2.89 not fully excluded) and the last digit of "15.62" is soft (15.67 not fully excluded). "14.98" and "1.02" are clean.
+- p.35: Pie "Act Sec" slice label — the percent glyph is genuinely ambiguous between **1%** and **2%**, and on shape alone 2% is at least as good a reading. **1%** is recorded solely because the six slices then sum to exactly 100 (50 + 25 + 14 + 6 + 4 + 1). Treat as an inference from the arithmetic, not a reading. The other five pie values (Specific 50%, Style 25%, Industry 14%, Country 6%, FX 4%) are read directly and are unambiguous.
+- p.35: No individual bar values are printed anywhere in the figure. **Every bar magnitude and every exposure-dot value quoted above is measured from pixel position against the printed axis ticks**, so treat all of them as ±10% of the stated figure, not as transcribed numbers. The axis tick *labels* themselves (listed under Numbers) are read directly and are reliable.
 
 ---
 
@@ -458,7 +494,7 @@ None printed on this page (a faint ghost of a table from p.37 is visible in the 
   - "changes in factor exposures"
   - "model estimation diagnostics and"
   - "risk outputs: common factor volatilities, specific risk forecasts and specific return correlations"
-- "**Daily Model QC** comprises all checks that are performed on a daily basis to ensure that the models correctly reflect updates to factor returns, factor covariance matrices and incorporate new listings. The **model universes, factor exposures, specific risk and specific return correlations are updated on a weekly basis on Thursday to incorporate the data as of previous Wednesday market close**, which necessitates additional checks on these items beyond those covered in the Daily Model QC."
+- "**Daily Model QC** comprises all checks that are performed on a **dailybasis** [*sic* — printed as one word in the source] to ensure that the models correctly reflect updates to factor returns, factor covariance matrices and incorporate new listings. The **model universes, factor exposures, specific risk and specific return correlations are updated on a weekly basis on Thursday to incorporate the data as of previous Wednesday market close**, which necessitates additional checks on these items beyond those covered in the Daily Model QC." (Whole passage re-verified at 4×; the Thursday / previous-Wednesday pairing is unambiguous.)
 - PROXYING IN ALADDIN: "As described in **Figure 1.20**, securities need to pass several criteria to be covered in the BFRE models. For securities not covered by the model, there are **two types of proxy** available depending on the availability of security meta-data. Typically, for a security with country and/or industry information, we apply a **unit proxy** that calculates a security's factor exposures using the **average value from those in the same country and/or industry**. For a security with no such data, **sedol proxying** may be applied to map the security to another one with the same issuer."
 
 ### Figures
