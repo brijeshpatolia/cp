@@ -225,10 +225,17 @@ BFRE *does* centre it (**p.10**) — but with weights, and Section 11 shows what
 ```
 
 `f_Mkt = 5` is the **plain average return of the five stocks**. That is Level 1's collapse:
-a column of ones has `x = 1` everywhere, so `Σxr/Σx²` becomes `Σr/n`. BFRE's footnote 2 on
-**p.4** says the market factor return *is* the cross-sectional average return — and Level 5
-showed why it survives having other columns in the regression: because the other columns are
-centred. This month is that argument in five numbers.
+a column of ones has `x = 1` everywhere, so `Σxr/Σx²` becomes `Σr/n`. The body text of **p.4**
+says the market factor return is *"the cross-sectional average return across all assets in the
+model estimation"* — and Level 5 showed why it survives having other columns in the regression:
+because the other columns are centred. This month is that argument in five numbers.
+
+**But read footnote 2 before believing the word "plain".** Footnote 2 on the same page attaches
+to that sentence and says: *"Average return based on regression weights, i.e. square-root of
+market capitalisation"*. So the paper's average is a **weighted** one, and our `5` is the
+equal-weighted special case. Section 11 redoes this month with the weights on and gets
+`77/16 = 4.8125` instead — the same argument, a different number. Do not cite footnote 2 for
+"plain average"; it is the sentence that forbids it.
 
 ### 4c. Fitted, missed, balanced
 
@@ -775,11 +782,15 @@ And AXL's market exposure in the model? **1.** Every asset's is 1, in every mont
 they are different objects.
 
 **Here is the sentence the level exists to produce.** BFRE does run a time-series regression —
-and its output is fed back in as an **input substyle to Volatility** (Historical Beta,
-**p.42**, **p.44**). It is a *characteristic of the stock*, one more column of `X`. It is
-**never** the mechanism by which exposures are obtained, and it never produces a factor
-return. In BFRE, time-series regressions make columns; cross-sectional regressions make the
-row.
+and its output is fed back in as **input substyles**. Its slope is Historical Beta and the
+standard deviation of its residuals is Historical Sigma, both substyles of **Volatility**
+(**p.42**); its intercept is Historical Alpha, a substyle of **Momentum** (**p.44**). One
+regression, three outputs, two different styles — and Table A on **p.40** prints the weights
+(NAMR: Historical Beta 0.34 and Historical Sigma 0.33 inside Volatility, Historical Alpha 0.50
+inside Momentum). Each is a *characteristic of the stock*, one more column of `X`. Not one of
+them is **ever** the mechanism by which exposures are obtained, and none of them produces a
+factor return. In BFRE, time-series regressions make columns; cross-sectional regressions make
+the row.
 
 ---
 
@@ -1014,7 +1025,7 @@ either. Demand both, each with numbers from the file or pages from the paper.
 | **5. You need identifying restrictions that a time-series model never needs.** | **p.26**: market, industry and country are all columns of ones for every asset, so the specification *"is not uniquely identified as there are an infinite number of possible solutions"* until (1.10) is imposed by hand. And the fix changes meanings: *"the industry and country factors are **net of** the market factor return, which impacts their interpretation."* Level 2's lesson, now a running cost. |
 | **6. The exposures are refreshed weekly while the regression runs daily.** | **p.24**: *"These regressions are performed **daily** for country and regional models and **weekly** for the World model."* **p.36**: *"The model universes, **factor exposures**, specific risk and specific return correlations are updated on a **weekly basis on Thursday** to incorporate the data as of previous Wednesday market close."* **INFER, and say so**: it follows that roughly five consecutive daily cross-sections are run against **the same** exposure matrix. So p.2's *"immediately"* is, operationally, *by next Thursday*. The paper never remarks on the gap. (`gm/CRITIQUE.md` **B-1** lists four frequencies for one horizon; this is a fifth, and it belongs there.) |
 | **7. The World model is coarser for no stated reason.** | **p.24**, again: weekly for the World model. `notes/` records explicitly that **no justification is given**. Its factor returns are a coarser row feeding the same downstream machinery. |
-| **8. You still cannot answer "how sensitive is this stock?" from a cross-section.** | The cross-section answers *what did this characteristic pay this month*. To get a sensitivity you must run a time-series regression — which BFRE does, once, at (1.12) on **p.42** — and then it enters as **an input substyle to Volatility** (p.42, p.44), never as the exposure mechanism. The player must be able to state that round trip. |
+| **8. You still cannot answer "how sensitive is this stock?" from a cross-section.** | The cross-section answers *what did this characteristic pay this month*. To get a sensitivity you must run a time-series regression — which BFRE does, once, at (1.12) on **p.42** — and then it enters as **input substyles**: slope and residual sd into Volatility (p.42), intercept into Momentum (p.44), with the weights in Table A (p.40). Never as the exposure mechanism. The player must be able to state that round trip. |
 
 ## 15.4 The trap the good players fall into — have this ready
 
@@ -1183,8 +1194,18 @@ autocorrelation **0.22**; Reversal's **0.17**.
 **Two GAPs on this table, both real:** the paper never states its annualisation convention, and
 never defines "Sharpe Ratio" — no formula, no risk-free rate named. And a warning carried
 forward from Level 1: **do not derive one printed column from another**. Return and volatility
-are each rounded to one decimal before the Sharpe column is printed, so three of the thirteen
-rows do not reproduce (Profitability 3.1/2.2 = **1.41** *(rounded)* against a printed **1.37**).
+are each rounded to one decimal before the Sharpe column is printed, so **eight of the thirteen
+rows do not reproduce** — Size, Mid-cap, Momentum, Earnings Yield, Dividend Yield, Profitability,
+Growth and Sentiment. Three of the eight, worked:
+
+```
+Profitability   3.1/2.2 = 1.409091 (rounded) → 1.41   printed 1.37
+Mid-cap         0.9/1.8 = 0.5 exactly        → 0.50   printed 0.52
+Dividend Yield −0.3/1.9 = −0.157895 (rounded)→ −0.16  printed −0.18
+```
+
+Only Market, Volatility, Reversal, Liquidity and Value reproduce to two decimals. The Sharpe
+column is computed from unrounded inputs; the printed columns are not those inputs.
 
 ### 17d. p.14, p.18, p.20 — the plots are the running sums
 
@@ -1221,9 +1242,11 @@ the row of `f` are the two inputs to (1.7) and (1.8) on **p.24**.
 
 Equation **(1.12)**, Historical Beta: weekly excess returns, five years, exponentially weighted
 with a **52-week half-life**, against the cap-weighted Estimation Universe. Its slope becomes
-the **Historical Beta** substyle and its intercept becomes the **Historical Alpha** substyle
-(**p.44**); the equally-weighted standard deviation of its residuals becomes **Historical
-Sigma** (p.42).
+the **Historical Beta** substyle and the equally-weighted standard deviation of its residuals
+becomes **Historical Sigma** — both substyles of **Volatility**, both defined on **p.42**. Its
+intercept becomes the **Historical Alpha** substyle, and that one sits under **Momentum**
+(**p.44**), not Volatility. Table A on **p.40** gives the NAMR weights: Historical Beta `0.34`
+and Historical Sigma `0.33` within Volatility, Historical Alpha `0.50` within Momentum.
 
 **Every one of those is a column of `X`.** Not one of them is a factor return. The rival design
 is present inside BFRE — as a supplier of characteristics, on the input side of the very
