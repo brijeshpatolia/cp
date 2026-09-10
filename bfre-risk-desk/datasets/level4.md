@@ -323,8 +323,10 @@ step 2:  regress that leftover on x₂ (raw x₂):
 true b₂ / sequential b₂ = (−5) / (−1/3) = 15
 ```
 
-**Fifteen. Exactly.** Not approximately. And 15 is `A·C/det = (15/2)(7)/(7/2)` — a quantity
-that has now appeared twice and will be named in Section 7, not before. This is a general
+**Fifteen. Exactly.** Not approximately. And 15 is `A·C/det = (15/2)(7)/(7/2)` — the third
+appearance of the same number in three sections (Section 4b's *fourteen fifteenths*, Section
+5a's *one fifteenth*, and now this ratio). It gets a name in Section 7 and not before, so do
+not hand the player one here. This is a general
 theorem, proved in Section 6c and brute-forced over 3,983 datasets by the verifier: *the
 sequential method understates the second coefficient by exactly the factor `A·C/det`,
 always.* It is the cleanest possible statement of what the shortcut leaves out.
@@ -1232,3 +1234,12 @@ datasets; the whole `t`-family with its invariant fitted vector, invariant resid
 tightnesses; and brute-force sweeps over 4,092 datasets confirming Frisch–Waugh, the
 sequential-VIF identity, the explained-variation identity and the "at most one sign flips"
 theorem. If any printed value ever disagrees with this markdown, the markdown is wrong.
+
+Its final section (`SECTION 9`) does a different job: it checks the *sentences*, because a
+page can be arithmetically flawless and still say something false about its own numbers. It
+verifies that one-at-a-time throws away fourteen fifteenths and not "94%"; that `b₁` really
+is deaf to DLT's and EMK's returns while `b₂` is not; that the `t = 1/2` naive `SS` traces
+back through Section 7b's closed form rather than appearing from nowhere; that a coefficient's
+sensitivity scales with `√VIF` and not `VIF`, using Section 8's own doubling to prove it; and
+that a portfolio's total factor return is *exactly* invariant to the collision while its two
+factor contributions run away to ±125 — the claim Section 14f rests on.
