@@ -135,7 +135,7 @@ where the misconception lives.
   needs relationships between the handful of currencies — and there are far fewer currencies
   than notes. That is the paper's own architectural claim, **PAPER, p.2**: BFRE "imposes far
   more structure on the asset covariance matrix, reducing the modelling problem to a smaller set
-  of factors, which capture the most important sources of asset return commonality."
+  of factors, which capture the most important sources of asset return commonality".
 - **Not landed** sounds like: *"because it's more accurate."* It is not obviously more accurate.
   It is vastly more **estimable**. A player who says "accurate" has missed the entire argument
   and will not understand Section 6d when it arrives.
@@ -862,7 +862,7 @@ Equation (1.8) is that expression **with the two middle terms crossed out**, and
 cross them out is printed in the paper's own list of assumptions, **PAPER, p.30**:
 
 > "Factor returns have **zero correlation** with asset specific returns, and specific returns
-> from different issuers are unrelated and have **zero correlation**."
+> from different issuers are unrelated and have **zero correlation**"
 
 **Mark this clearly: the expansion is standard algebra a Level-10 player can do, and it is
 absolutely not in the paper.** The paper never writes it and never connects its p.30 bullet to
@@ -1328,7 +1328,8 @@ formula** for it and never uses the phrase); *bias statistic* (Level 12).
 
 1. **How `F` is really built.** p.27 gives the window (104 weeks), the weighting (exponential
    decay), the half-life (26 weeks), and then defers everything else: "Model users are referred
-   to the BRS Covariance Matrix Estimation documentation." Level 8 said this; it is still true.
+   to the BRS Covariance Matrix Estimation documentation for technical details on the factor
+   covariance matrix methodology." Level 8 said this; it is still true.
 2. **How `D` is really built.** p.27 and Table 1.3 (p.28) give half-lives, observation counts and
    a Newey–West lag; the weighting function that blends a time-series forecast with a
    cross-sectional one is described in words and **its functional form is not given** (p.28).
@@ -1418,8 +1419,8 @@ risks."
 | Act Sec | 1% `[INFERRED — the glyph reads 1 or 2; 1% is recorded only because the six then sum to exactly 100]` |
 
 The five other values are read directly and are unambiguous. `25 + 14 = 39` of the 50
-common-factor points, which is p.34's "style and industry account for most of the common factor
-risks", checked. And the pie summing to exactly 100 is itself the Section 8 lesson in print: **a
+common-factor points, which is p.34's "Style and industry factors account for most of the common
+factor risks", checked. And the pie summing to exactly 100 is itself the Section 8 lesson in print: **a
 pie can only add up because it is splitting variance contributions, not volatilities.** Six
 square roots would not sum to anything.
 

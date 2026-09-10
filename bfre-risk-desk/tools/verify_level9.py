@@ -238,6 +238,8 @@ covc = (sfu - F(T8) * fbar * ubar) / F(T8)
 check("centred covariance of f_Chp with u_CHR = (6 - 5*1*(-6/5))/5", covc, F(12, 5))
 show("that covariance as a decimal", dec(covc))
 check("sum_t u_BRN(t)*u_DLT(t) is NOT zero", dot(U["BRN"], U["DLT"]), F(10))
+check("... and it is exactly as large as sum_t u_BRN^2 itself",
+      dot(U["BRN"], U["DLT"]), dot(U["BRN"], U["BRN"]))
 
 # ===========================================================================
 head("SECTION 4  BUILDING THE DIAGONAL of Delta from the misses")
@@ -319,6 +321,14 @@ check("so their sample specific-return correlation is exactly 1",
       S8[1][3] ** 2, D8["BRN"] * D8["DLT"])
 check("with 5 assets and 2 columns the misses have only 3 free directions",
       5 - 2, 3)
+# and the five observed monthly miss vectors span only 2 of those 3
+M = [[U[nm][t] for nm in NAMES8] for t in range(T8)]
+check("month 4's misses are exactly minus month 1's",
+      M[3], [-v for v in M[0]])
+check("month 5's misses are exactly month 2's", M[4], M[1])
+check("month 3's misses are month 1's plus twice month 2's",
+      M[2], [M[0][i] + 2 * M[1][i] for i in range(5)])
+check("so the observed misses span a 2-dimensional slice of the 3 available", 2, 2)
 check("CHR alone supplies 4 of the file's 46/5 of total specific variance",
       F(4) / F(46, 5), F(10, 23))
 show("10/23 as a decimal", dec(F(10, 23), 6))
@@ -439,6 +449,14 @@ print(f"        the diagonal model reports this share of the truth, 2/sqrt(7) = 
 missP = dsqrt(F(7))[0] - Decimal(2)
 print(f"        risk missing, in percentage points = {missP:.6f} (ROUNDED)")
 print(f"        risk missing, in basis points      = {missP*100:.2f} (ROUNDED)")
+print(f"        the shortfall as a share of the truth, 1 - 2/sqrt(7) = "
+      f"{(Decimal(1) - sP):.6f} (ROUNDED)")
+check("the risk ratio is 1 + 0.322876... i.e. 32.3% more risk (rounded)",
+      (rP - Decimal(1)).quantize(Decimal("1.000000")), Decimal("0.322876"))
+check("the truth carries 75% more variance: 7/4 - 1", F(7, 4) - 1, F(3, 4))
+check("Book P's own leftover series has sum of squares 42",
+      sum(x * x for x in book_variance_direct(wP)[0]), F(42))
+check("... and 42/6 is the 7 the matrix gave", F(42) / F(6), F(7))
 
 sub("8b. Book H -- long KVR, short TLM: the error changes sign")
 wH = BOOKS["H  (hedged pair)     "]
@@ -473,6 +491,7 @@ print(f"        reported share = {sA:.6f} (ROUNDED)")
 missA = (dsqrt(F(43))[0] - dsqrt(F(31))[0]) / Decimal(4)
 print(f"        risk missing, percentage points = {missA:.6f} (ROUNDED)")
 print(f"        risk missing, basis points      = {missA*100:.2f} (ROUNDED)")
+print(f"        the shortfall as a share of the truth = {(Decimal(1) - sA):.6f} (ROUNDED)")
 
 sub("8d. Book W -- fifty names at 2% each, our four among them")
 # the other 46 names are declared to have d = 8 and no specific links at all
@@ -510,11 +529,26 @@ check("Book H: the discarded term is -3 against a full variance of 1",
       F(-3) / F(1), F(-3))
 check("the discarded matrix is the same in all four books", DFULL[0][1], F(6))
 sub("8e(ii). how many pairs each book has, and how many are linked")
+check("Section 1's town: 400 shops make 400*399/2 pairs",
+      F(400) * F(399) / 2, F(79800))
 for N, pairs in ((2, 1), (4, 6), (50, 1225)):
     check(f"a {N}-name book has N(N-1)/2 = {pairs} pairs, exactly one of them linked",
           F(N) * (F(N) - 1) / 2, F(pairs))
 check("1 of 1 pairs versus 1 of 1225 pairs", F(1) / F(1225), F(1, 1225))
 show("1/1225 as a decimal", dec(F(1, 1225), 6))
+
+sub("8e(v). the two wrong formulas in the traps table, priced")
+check("adding the two volatilities instead of the variances: 2*sqrt(8)",
+      F(8), F(8))
+print(f"        2 x sqrt(8) = {2*dsqrt(F(8))[0]:.4f} (ROUNDED), against the truth "
+      f"{dsqrt(F(7))[0]:.4f} (ROUNDED)")
+wrong_grid = [[F(8), F(3, 4)], [F(3, 4), F(8)]]
+vwrong = quad(wrong_grid, [F(1, 2), F(1, 2)])
+check("putting the CORRELATION 3/4 in the grid instead of the covariance 6",
+      vwrong, F(35, 8))
+show("35/8 as a decimal", dec(vwrong))
+print(f"        its risk = {dsqrt(vwrong)[0]:.4f} (ROUNDED), against the truth "
+      f"{dsqrt(F(7))[0]:.4f} (ROUNDED)")
 
 sub("8e(iii). the discarded part is indefinite -- which is why the sign can flip")
 OFFONLY = [[DFULL[i][j] if i != j else F(0) for j in range(4)] for i in range(4)]
@@ -629,11 +663,15 @@ head("SECTION 14  BOSS ROUND -- the counting argument that defends the paper")
 sub("14.4 how many numbers a full specific covariance matrix would need")
 # Table 1.3, p.28: daily specific-risk model uses 375 observations; weekly uses 104.
 OBS_DAILY, OBS_WEEKLY = F(375), F(104)
+WANT = {100: (F(5050), F(37500)), 375: (F(70500), F(140625)),
+        749: (F(280875), F(280875)), 750: (F(281625), F(281250)),
+        3000: (F(4501500), F(1125000))}
 for N in (100, 375, 749, 750, 3000):
     params = F(N) * (F(N) + 1) / 2
     data = OBS_DAILY * F(N)
-    show(f"N={N}: distinct entries {params}, numbers available {data}, "
-         f"{'ENOUGH' if data >= params else 'NOT ENOUGH'}", "")
+    check(f"N={N}: distinct entries N(N+1)/2", params, WANT[N][0])
+    check(f"N={N}: numbers available 375N", data, WANT[N][1])
+    show(f"N={N}: {'ENOUGH' if data >= params else 'NOT ENOUGH'}", "")
 check("N(N+1)/2 <= 375N exactly when N <= 749: at N=749",
       F(749) * F(750) / 2 <= OBS_DAILY * F(749), True)
 check("... and it fails at N=750", F(750) * F(751) / 2 <= OBS_DAILY * F(750), False)
