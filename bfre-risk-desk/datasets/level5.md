@@ -1,7 +1,7 @@
 # Level 5 — The Intercept
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level5.py`
-(341 assertions plus 11,950 brute-forced cases, exits 0). Nothing here is rounded by hand.
+(351 assertions plus 11,950 brute-forced cases, exits 0). Nothing here is rounded by hand.
 Where a decimal does not terminate it is written with the word **rounded** next to it; every
 other decimal on this page is exact.
 
@@ -345,9 +345,9 @@ untouched by `x`, `m·m` would have been the full `5`, and the two dials would n
 at all. Hold that thought — it is the whole of Section 12.
 
 > **Name still locked.** The share of the up-and-down movement in `r` that the line accounts for
-> is `20164/24309 = 0.8295` (rounded), and it equals `Sxr²/(Sxx·Srr)` with the centred sums of
-> Section 8. The name for that number is **not** unlocked until Level 6, where it turns out to be
-> the same fact as the t-statistic. Compute it, do not name it.
+> is `20164/24309 = 0.8295` (rounded), and it equals `(Σuv)²/(Σu²·Σv²)` with the centred sums
+> built in Section 8. The name for that number is **not** unlocked until Level 6, where it turns
+> out to be the same fact as the t-statistic. Compute it, do not name it.
 >
 > Warning against a false pattern: on *this* dataset `1 − (13/2)/(73/2)` also equals `60/73`, the
 > same fraction as the SS drop. **That is an arithmetic coincidence of these five numbers, not a
@@ -522,8 +522,9 @@ step 1:  a = r̄ = 4/5                    step 2:  b = Σ(x·v)/Σx² = 142/75 =
 Σe²  = 4811/750 = 6.4147 (rounded)
 ```
 
-**Cost:** `4811/750 − 829/146 = 20164/27375 = 0.7366 (rounded)`. Thirty-four times the cost of
-trap 9a.
+**Cost:** `4811/750 − 829/146 = 20164/27375 = 0.7366 (rounded)`. Against trap 9a the ratio is
+exactly `(20164/27375)/(8/365) = 5041/150 = 33.6067 (rounded)` — **thirty-three and a half times**
+as expensive, not thirty-four.
 
 The sharpest way to show the damage: having no intercept at all gives `Σe² = 6.5`. This method
 spends a whole extra parameter and gets to `6.4147` (rounded) — a gain of `13/2 − 4811/750 =
@@ -535,7 +536,7 @@ the numerator `Σ(x·v) = 71/5` is *right*; the denominator `Σx² = 15/2` is *i
 the `n·x̄² = 1/5` that the constant column had already accounted for. The deflation factor is
 
 ```
-Sxx/Σx² = (73/10)/(15/2) = 73/75          and     (142/73)(73/75) = 142/75
+Σu²/Σx² = (73/10)/(15/2) = 73/75          and     (142/73)(73/75) = 142/75
 ```
 
 which is the Level 4 variance-inflation story with the constant column playing the part of the
@@ -827,7 +828,9 @@ Play this straight and hard. The player passes only if they answer all five from
    scoreboard?"** — Wanted: no, it is one constraint out of `n`, and it is *why* `Σe` is useless as
    a quality measure — which is Level 0's boss round arriving from the other side. Also: the
    average stock is not a stock. Nothing in the portfolio is at `(x̄, r̄)`.
-4. **"Your slope moved from 2 to 1.9452. Half a percent. You wasted my morning."** — Wanted:
+4. **"Your slope moved from 2 to 1.9452 (rounded). Under three percent. You wasted my
+   morning."** — the CRO's arithmetic is right: the move is `4/73` in absolute terms, and
+   `(4/73)/2 = 2/73 = 0.0274` (rounded), i.e. 2.74% of the original slope. Wanted:
    Section 9e. The slope is not what changed. `Σe²` fell by `(60/73)/(13/2) = 120/949 = 0.1264`
    (rounded), the risk number built from it is about 7% too high without the intercept, and the
    fit was handing out `0.4110%` (rounded) of unexplained return to every asset in the file.
@@ -951,14 +954,24 @@ r = X_Mkt f_Mkt + Σ_{i∈Sty} X_Sty,i f_Sty,i + Σ_{j∈CInd} X_CInd,j f_CInd,j
 > identification simply represents a rotation of the factor returns. It does not impact the
 > efficacy of the risk model."*
 
-**Equation (1.10)**, the two restrictions, as transcribed:
+**Equation (1.10)**, the two restrictions:
 
 ```
 Σ_j ω_CInd,j · f_CInd,j = 0            Σ_k ω_CCty,k · f_CCty,k = 0
 ```
 
-with **footnote 15**: *"The average return is a square-root of market capitalisation weighted
-return."*
+**Read the transcription note before quoting this to the player.** Both summation signs are
+*printed* as `Σ_j` — the transcriber re-verified it at 6× and records it as a **source typo** in
+the second restriction, whose summand is subscripted `k`. The `Σ_k` written above is the
+correction, not the page. Say so; it is exactly the kind of thing the player is being trained to
+notice.
+
+The paper's own sentence introducing (1.10) is the one that matters most here, and it is the one
+Section 12c will hang on:
+
+> **p.26, verbatim:** *"The restrictions force the average[15] industry and country returns to be
+> zero"*, with **footnote 15**: *"The average return is a square-root of market capitalisation
+> weighted return."*
 
 > **Difficulty flag, as promised in the header. From here to the end of 12c is graduate-level.**
 > The player should be told that plainly. What follows is factor-model identification, and it is
@@ -977,7 +990,9 @@ average weight per asset, MAT = 5/3               average weight per asset, TEC 
 
 The transcription of `ω` in (1.10) is glossed in the notes as *"The average (square-root of
 capitalisation) weight for Core Industries"*, which is **ambiguous between two readings**. Work
-both. They differ, and the difference is exactly this level's subject.
+both. They differ, and the difference is exactly this level's subject. Work them *before* going
+back to the p.26 sentence quoted in 12b — that sentence is the answer key, and it is worth more
+to a player who has already computed what turns on it.
 
 **Reading A — `ω` = the industry's aggregate weight.** Then `5·f_MAT + 5·f_TEC = 0`, so
 `f_TEC = −f_MAT`, and the two industry columns collapse to one:
@@ -1026,11 +1041,30 @@ paper's own sentence from two ingredients: p.10's centring, and p.26's restricti
 Σw·g₂ = 5 − (2/3)(5) = 5/3 ≠ 0        ← NOT orthogonal to the constant
 ```
 
-Solving the same way:
+**This one cannot be solved the easy way, and saying so is half the lesson.** With `Σw·g₂ ≠ 0`
+the constant column no longer decouples, so the 3×3 weighted system does not fall apart into
+"average return, then a 2×2 block". The player does not have to grind it: p.26 says the two
+readings are a *rotation*, so the **fitted values are the same numbers**, and Reading A has
+already produced them. Read the two industry levels straight off Reading A and re-label:
+
+```
+level of a MAT asset = f_Mkt + f_MAT = 11/10 − 51/25 = −47/50 = −0.94%
+level of a TEC asset = f_Mkt + f_TEC = 11/10 + 51/25 = 157/50 = +3.14%
+```
+
+Those two numbers are what the data fixes. Reading B just splits them differently, under
+`f_TEC = −(2/3)f_MAT`:
+
+```
+f_Mkt + f_MAT        = −47/50
+f_Mkt − (2/3)·f_MAT  = +157/50
+subtract:  (5/3)·f_MAT = −204/50 = −102/25   →   f_MAT = −612/250 = −306/125
+then:      f_Mkt = −47/50 + 306/125 = −235/250 + 612/250 = 377/250
+```
 
 ```
 f_Mkt = 377/250 = 1.508%       f_MAT = −306/125 = −2.448%       f_TEC = +204/125 = +1.632%
-f_Sty = 7/15                    (unchanged)
+f_Sty = 7/15                    (unchanged — the style column is untouched by the relabelling)
 ```
 
 **Two things fall out, and they are the payoff of the whole level.**
@@ -1041,8 +1075,9 @@ f_Sty = 7/15                    (unchanged)
    factor return is the same `7/15` either way.
 2. **But `f_Mkt` moved, by `51/125 = 0.4080` percentage points**, from `1.10%` to `1.508%`. So the
    restriction does not choose the model; it chooses **what the market factor return means**. And
-   only Reading A makes it mean what p.4 says it means. Reading B's factor returns fail Reading
-   A's own restriction by `5·f_MAT + 5·f_TEC = −102/25 = −4.08`.
+   only Reading A makes it mean what the paper says it means — by p.26's own lead-in sentence and
+   by p.4 alike. Reading B's factor returns fail Reading A's own restriction by
+   `5·f_MAT + 5·f_TEC = −102/25 = −4.08`.
 
 The general rule, which a player at tier 4 should be able to state: the reduced column
 `g_j = d_j − (ω_j/ω_J)·d_J` has `Σw·g_j = W_j − (ω_j/ω_J)·W_J`, where `W_j` is industry `j`'s
@@ -1051,17 +1086,31 @@ aggregate weights `W`.** The verifier sweeps 729 (weights, restriction) combinat
 case where the reduced columns are weighted-orthogonal to the constant, `f_Mkt` came out exactly
 equal to the weighted average return; in the 456 cases where they are not, it did not.
 
-**So: p.4 disambiguates p.26.** The transcribed word "average" in the gloss of `ω` must be read as
-the industry's aggregate square-root-cap weight (or anything proportional to it), because only
-that reading reproduces p.4's own definition of the market factor return. **The paper does not say
-this.** It is an inference this level's arithmetic forces, and it is a Level 12 entry: an
-identification convention on which the interpretation of the largest factor in the model depends,
-stated in a footnote, in words that admit two readings.
+**So: the paper disambiguates its own gloss, twice, and neither time in the gloss.** The
+transcribed word "average" in the definition of `ω` must be read as the industry's aggregate
+square-root-cap weight (or anything proportional to it), on two independent grounds:
 
-### 12d. p.42 (1.12), p.44, p.47 (1.31), p.52 (1.49) — Cov/Var in four places in the paper
+- **p.26's own sentence.** *"The restrictions force the average[15] industry and country returns
+  to be zero"*, and footnote 15 says that average is *"a square-root of market capitalisation
+  weighted return"*. The square-root-cap weighted average industry return, taken over assets, is
+  `Σ_i w_i·f_{ind(i)} / Σ_i w_i = Σ_j W_j·f_j / Σ_j W_j` — aggregate weights `W_j`, not
+  per-asset averages. Setting that to zero **is** Reading A.
+- **p.4's definition of the market factor return** as the weighted cross-sectional average return,
+  which 12c has just reproduced exactly, and only under Reading A.
 
-The formula built in Section 8c is not decoration. It is the estimator behind four separate BFRE
-descriptors, every one of which is a regression *with an intercept*:
+What the paper never does is write `ω` in a form that settles it *where `ω` is defined*: the
+where-list gloss says "average … weight", the sentence above the equation says "average … return",
+and the two words do different jobs. That gap is the Level 12 entry — an identification convention
+on which the interpretation of the largest factor in the model depends, settled nowhere in the
+symbol's own definition, but only by reading the sentence above the equation together with its
+footnote, and confirmed only by a definition printed twenty-two pages earlier.
+
+### 12d. p.42 (1.12), p.44, p.47 (1.31), p.52 (1.49), p.39 — the intercept in five places
+
+The formula built in Section 8c is not decoration. Three BFRE descriptors are *univariate*
+regressions with an intercept, so each of them is literally `Cov/Var`; a fourth regression, the
+Fill-Miss imputation, is multivariate — not `Cov/Var`, but the same machinery, with the market
+column doing the intercept's job:
 
 | Page | Equation | Regression | This level's `a` | This level's `b` |
 |---|---|---|---|---|
@@ -1085,10 +1134,10 @@ Three notes the player should be able to make unprompted:
   be wrong.
 - **p.47 (1.30)–(1.31) is the boss round in production.** Normalised Earnings-to-Price replaces
   the latest EPS by `(α̂ + β̂·s)` — the fitted value of a five-year EPS-on-time regression at the
-  most recent date. The boss round says that line passes through `(ū, EPS)`, the average time and
-  the average EPS of the window. So "normalised EPS" is anchored on the five-year average EPS and
-  tilted by the trend — which is why it smooths, and it is the reason the paper can call it
-  normalised at all.
+  most recent date. The boss round says that line passes through the balance point of that
+  window — the average time paired with the average EPS. So "normalised EPS" is anchored on the
+  five-year average EPS and tilted by the trend — which is why it smooths, and it is the reason
+  the paper can call it normalised at all.
 
 ### 12e. Where it lands in the finished model
 
@@ -1117,9 +1166,9 @@ That is why the market factor is the first thing p.4 introduces and the first co
 Searched all 65 transcribed pages in `notes/`:
 
 - **`least squares`** — **zero hits** across all 65 pages. The paper never names the estimator it
-  uses. (`OLS` appears three times — chunk_37-45 on (1.23), chunk_46-55 on (1.31) and on the
-  Growth trend descriptors — and all three are the **transcriber's** symbol glosses, not quoted
-  paper text.)
+  uses. (`OLS` appears three times — chunk_37-45 on (1.23), chunk_46-55 on (1.31) and on p.49's
+  Growth trend descriptors — and all three are the **transcriber's** own words: two symbol glosses
+  and one audit note. None is quoted paper text.)
 - **`covariance of`, `Cov(`, `centred`/`centered` in the estimation sense, `demeaned`,
   `column of ones`, `constant term`** — **zero hits.** Every mechanism in Sections 4 through 8 is
   used by BFRE and named by BFRE in none of them.
@@ -1131,10 +1180,15 @@ Searched all 65 transcribed pages in `notes/`:
   average return… based on regression weights"*) and never as an equation. The identity
   `f_Mkt = Σw·r/Σw` verified in 12c is **our arithmetic on our invented weights**, reproducing the
   paper's verbal claim; it is not a number the paper prints.
-- **The exact meaning of `ω` in (1.10)** — the transcription's gloss admits two readings, worked
-  as A and B in 12c, and the two give different market factor returns (`1.10%` vs `1.508%` on our
-  invented file). **No anchor in `notes/` resolves it directly.** p.4's verbal definition forces
-  Reading A by implication, which is the inference made in 12c and flagged there as an inference.
+- **The exact meaning of `ω` in (1.10)** — the where-list gloss ("The average (square-root of
+  capitalisation) weight for Core Industries") admits two readings, worked as A and B in 12c, and
+  the two give different market factor returns (`1.10%` vs `1.508%` on our invented file). **Two
+  anchors do resolve it, and neither is the gloss itself:** p.26's own lead-in sentence *"The
+  restrictions force the average[15] industry and country returns to be zero"* with footnote 15
+  (*"The average return is a square-root of market capitalisation weighted return"*), and p.4's
+  definition of the market factor return. Both force Reading A. What is genuinely missing from
+  `notes/` is any place where `ω` itself is written out — the paper never defines the symbol in a
+  way that closes the question where the symbol appears.
 - **Any statement that the fitted line passes through the weighted mean point** — **no anchor
   found.** The boss round's theorem is nowhere in the paper, although the paper depends on it in
   at least four places (12d).
@@ -1150,7 +1204,7 @@ piece of the whole model.**
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level5.py     # 341 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level5.py     # 351 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page from the raw `x`, `r` and `w` vectors in
@@ -1167,7 +1221,7 @@ different market factor returns.
 
 It also brute-forces 11,950 cases: 7,680 three-asset files and 620 four-asset files confirming
 `a = r̄ − b·x̄`, `Σe = 0` and `Σx·e = 0`; 49 `(a, b)` pairs confirming the completed square; 2,401
-columns confirming `Σx² = Sxx + n·x̄²`; 81 weighted files confirming the weighted balance point;
+columns confirming `Σx² = Σu² + n·x̄²`; 81 weighted files confirming the weighted balance point;
 729 (weights, restriction) pairs confirming that `f_Mkt` equals the weighted average return
 exactly when the reduced industry columns are weighted-orthogonal to the constant, and does not
 otherwise; and 390 (scale, column) pairs confirming `b → b/c` with `a` and the residuals fixed.

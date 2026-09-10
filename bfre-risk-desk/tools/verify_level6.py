@@ -146,6 +146,14 @@ check("r reconstructed as 2x + e", [F(2) * xi + ei for xi, ei in zip(x, e)], r)
 check("Sum x*r  =  2*Q + Sum x*e", Sxr, F(2) * Q + dot(x, e))
 check("b_hat - b = Sum x*e / Q", b - F(2), dot(x, e) / Q)
 
+sub("2. bedrock: Q is reach from zero, NOT spread about the mean (no intercept here)")
+xbar = sum(x) / n
+check("x-bar", xbar, F(1, 5))
+check("Q = Sum x^2 (what Var(b) = sigma^2/Q divides by here)", Q, F(15, 2))
+check("Sum (x - xbar)^2 (what it would become WITH an intercept)",
+      sum((xi - xbar) ** 2 for xi in x), F(73, 10))
+check("   the two are different numbers", Q == F(73, 10), False)
+
 sub("4b. the weights w_i = x_i / Q")
 w = [xi / Q for xi in x]
 check("w", w, [F(-1, 5), F(-1, 15), F(0), F(2, 15), F(4, 15)])
@@ -448,6 +456,7 @@ check("SSE = Sum (r - r-bar)^2", SSE1, F(333, 10))
 check("   = Sum r^2 - (Sum r)^2/n", dot(r, r) - S1 * S1 / F(5), F(333, 10))
 s2_1 = SSE1 / (5 - 1)
 check("sigma^2_hat = SSE/(n-1)", s2_1, F(333, 40))
+showsqrt("sigma_hat", s2_1)
 var1 = s2_1 / Q1
 check("Var(r-bar) = sigma^2/n", var1, F(333, 200))
 showsqrt("SE(r-bar) = sigma/sqrt(n)", var1)
@@ -589,6 +598,16 @@ showd("   C/A", C / A, 3)
 check("t_g^2 = b_g^2 (det/C) / sigma^2", bg * bg * (det / C) / s2b, F(16, 15))
 check("t_x^2 = b_x^2 (det/A) / sigma^2", bx * bx * (det / A) / s2b, F(140, 9))
 
+sub("14.4b2 det/C IS Level 4's leftover column: w = g - (B/C) x, Sum w^2 = det/C")
+wlo = [gi - (B / C) * xi for gi, xi in zip(g, xv)]
+check("Sum x*w = 0 (nothing of cheapness left in w)", dot(xv, wlo), F(0))
+check("Sum w^2 = det/C", dot(wlo, wlo), det / C)
+check("   = A - B^2/C", A - B * B / C, F(1, 2000))
+vlo = [xi - (B / A) * gi for gi, xi in zip(g, xv)]
+check("Sum g*v = 0", dot(g, vlo), F(0))
+check("Sum v^2 = det/A", dot(vlo, vlo), det / A)
+check("   = C - B^2/A", C - B * B / A, F(35, 3))
+
 sub("14.4c overlap between the two columns")
 cos2 = B * B / (A * C)
 check("cos^2 = B^2/(AC)", cos2, F(7, 12))
@@ -597,12 +616,28 @@ showsqrt("   cos", cos2)
 check("VIF = 1/(1-cos^2)", 1 / (1 - cos2), F(12, 5))
 showd("   VIF", 1 / (1 - cos2))
 
+check("det/C = A / VIF (Level 4's number doing Level 4's job)", A / (1 / (1 - cos2)), det / C)
+
 sub("14.4d leverages, which must sum to k = 2")
 hb = [(C * gi * gi - 2 * B * gi * xi + A * xi * xi) / det for gi, xi in zip(g, xv)]
 check("h", hb, [F(13, 35), F(1, 7), F(17, 35), F(17, 35), F(1, 7), F(13, 35)])
 for i in range(6):
     print(f"        h[{bnames[i]}] = {S(hb[i])} = {dec(hb[i],6)} (ROUNDED)")
 check("Sum h = k", sum(hb), F(2))
+check("h[PRM] worked by hand: (C g^2 - 2B g x + A x^2)/det",
+      (C * g[0] * g[0] - 2 * B * g[0] * xv[0] + A * xv[0] * xv[0]) / det, F(13, 35))
+# with B = 0 the two-column leverage separates into the two one-column leverages.
+# demonstrated on the orthogonal Hadamard pair c1, c2 of Section 6e.
+Ao, Co = dot(H[0], H[0]), dot(H[1], H[1])
+Bo, deto = dot(H[0], H[1]), Ao * Co - dot(H[0], H[1]) ** 2
+check("orthogonal pair: B = 0", Bo, F(0))
+h_two = [(Co * a * a - 2 * Bo * a * c + Ao * c * c) / deto for a, c in zip(H[0], H[1])]
+check("orthogonal pair: two-column h", h_two, [F(1, 2)] * 4)
+check("   separates as g^2/A + x^2/C",
+      h_two, [a * a / Ao + c * c / Co for a, c in zip(H[0], H[1])])
+check("   Sum h = k = 2", sum(h_two), F(2))
+check("dropping g entirely leaves Section 4d's x^2/C",
+      [(A * xi * xi) / (A * C) for xi in xv], [xi * xi / C for xi in xv])
 
 sub("14.5 the case FOR dropping g -- drop g, refit on x alone")
 Qx, Sx, bx_only, ex_only = fit1(xv, rb2)
@@ -673,6 +708,7 @@ print(f"        upper end of b_g's interval, as a multiple of b_g: "
 check("omitted-variable bias in b_x when g is dropped = b_g * B/C", bg * B / C, F(1, 5))
 check("   b_x + bias", bx + bg * B / C, F(6, 5))
 check("   which is exactly b_x alone", bx + bg * B / C, bx_only)
+check("bias as a SHARE of b_x alone = one sixth (NOT 1/5)", (bg * B / C) / bx_only, F(1, 6))
 showd("   bias as a share of b_x alone", (bg * B / C) / bx_only)
 
 sub("14.6b what g is worth in RETURN, not in coefficient units")

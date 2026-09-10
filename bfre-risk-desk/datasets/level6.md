@@ -1,7 +1,7 @@
 # Level 6 — The Verdict
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level6.py`
-(288 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
+(306 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
 terminate it is written with the word **rounded** next to it; every other decimal on this
 page is exact.
 
@@ -38,7 +38,7 @@ b = Σxr/Σx² = 15/(15/2) = 2 exactly
 e = r − 2x = [+1, −1, +1/2, +2, −1/2]       Σe = 2      Σx·e = 0      Σe² = 13/2
 ```
 
-Also from Level 0, and used again in Section 7b: `SS(b) = 36.5 − 30b + 7.5b²`, with
+Also from Level 0, and used again in Section 8b: `SS(b) = 36.5 − 30b + 7.5b²`, with
 `SS(0) = 36.5`, `SS(2) = 6.5`, and `SS(3/2) = SS(5/2) = 67/8 = 8.375` — the symmetry that
 let the player find the minimum without calculus.
 
@@ -96,8 +96,12 @@ flails. Now suppose all six rides were 20 kilometres long. The same ₹10 roundi
 So:
 
 > **The precision of a rate does not come from how many rides you took. It comes from how
-> far apart the distances were.** Long rides pin a per-kilometre rate down. Short rides
-> cannot, no matter how many of them you take.
+> much distance those rides actually covered.** Long rides pin a per-kilometre rate down.
+> Short rides cannot, no matter how many of them you take.
+
+Say **covered**, not "spread out", and hold the player to it. Six rides of exactly 20 km each
+are not spread out at all — every distance is identical — and they still pin the rate down
+beautifully. What the formula will add up is `Σ(distance)²`, measured **from zero**.
 
 And one more, which is the whole boss round:
 
@@ -126,7 +130,7 @@ anything is mapped:
 | the going rate, ₹/km | the factor return `b` |
 | the accidents on ride *i* | that stock's miss `e_i` |
 | "how accident-prone is a fare" | `σ²`, the typical squared miss |
-| "how far apart were the distances" | `Q = Σx²` |
+| "how much distance the rides covered" | `Q = Σx²` — the squared exposures added up, measured from zero |
 | "how wide is the *or*" | `Var(b)` — the thing this level builds |
 | a 200-metre ride | a stock with `x` near zero |
 | **a ride of exactly zero metres** | **CHR**, `x = 0`. Its fare is pure accident and it changes the rate not at all. |
@@ -135,6 +139,19 @@ anything is mapped:
 That CHR row is the one to point at. CHR was Level 0's hook — the stock no `b` can predict.
 In Level 6 it earns a second job: **CHR's miss carries zero weight in the answer.** Whatever
 happens to CHR, `b` does not move. Section 4c proves it with a return of +100.5%.
+
+**One line of bedrock, because a player coming out of Level 5 will get this wrong.** `Q = Σx²`
+is reach **from zero**, not spread **about the average**. This level fits with no intercept, so
+zero is where the ruler is pinned and `Σx²` is the right sum. On the cold open:
+
+```
+Σx²        = 15/2  = 7.5        ← what Var(b) = σ²/Q actually divides by, here
+Σ(x − x̄)²  = 73/10 = 7.3        ← x̄ = 1/5; what it would become once an intercept is added
+```
+
+Put an intercept in and `Σx²` becomes `Σ(x − x̄)²` and *then* the word "spread" is earned — that
+swap is Level 5's, and Section 4b's `Σw = 2/15 ≠ 0` is the standing reminder that we have not
+made it here. A player who reaches for 7.3 on this page has imported Level 5 by reflex.
 
 ---
 
@@ -232,7 +249,7 @@ Define `h_i = w_i·x_i = x_i²/Q`:
 h = [ 3/10,  1/30,  0,  2/15,  8/15 ]          Σ h = 1
 ```
 
-`h_i` is stock *i*'s share of the total spread — how much of the column's "long rides" it
+`h_i` is stock *i*'s share of the total `Q` — how much of the column's "long rides" it
 personally supplies. EMK alone supplies 8/15 of it. CHR supplies none.
 
 **The leverages sum to `k`, the number of columns.** Here `k = 1` and `Σh = 1`. Hold onto
@@ -290,7 +307,9 @@ average of (b̂ − 2)² over the 32 worlds         = 2/15     exactly
 ```
 
 The average is the truth — the procedure is not tilted. The average squared deviation is the
-answer to "how wide is the *or*". **That is a standard error, computed by counting.**
+answer to "how wide is the *or*", **and its square root, `0.365148`, is a standard error —
+computed by counting.** Keep the two apart out loud: `2/15` is a squared width, `0.365148` is a
+width. Every "standard error" on this page is the square root of something.
 
 ### 5d. Now the formula falls out, and it is not a new idea
 
@@ -315,8 +334,8 @@ that common size `σ²` — and `Σ x_i²e_i²` becomes `σ²·Σx_i² = σ²·Q
         └───────────────────────────┘
 ```
 
-Read it as the story: **accident-proneness on top, spread-of-distances underneath.**
-More raggedness → wider. More spread in `x` → narrower. Number of stocks appears nowhere,
+Read it as the story: **accident-proneness on top, distance-covered underneath.**
+More raggedness → wider. More reach in `x` → narrower. Number of stocks appears nowhere,
 except through `Q`.
 
 ### 5e. The two assumptions, named as assumptions
@@ -404,7 +423,7 @@ Read the table, because it says something a working quant needs to know:
 - **CHR is untouched.** `h = 0`, so its residual is never shrunk. The fit cannot reach it, so
   the fit cannot hide its error either.
 - **EMK's residual is shrunk hardest.** Its average squared miss is only `7/15` of the true
-  `σ² = 1`. It supplies `8/15` of the spread, so the line swings towards it, and **it hides
+  `σ² = 1`. It supplies `8/15` of `Q`, so the line swings towards it, and **it hides
   more than half its own error**. High-leverage stocks flatter the model fitted to them.
 
 ### 6d. And therefore the denominator
@@ -464,7 +483,7 @@ one. That is `Σh = k` again, seen from the other side.
 boss round will punish it: there `n = 6`, `k = 2`, `n − k = 4`, while `n − 1 = 5`.
 
 **Trap 2 — "the intercept is free."** It is not. An intercept is a column of ones. It costs a
-degree of freedom like any other column. In Section 8's `√n` example `k = 1` and the one
+degree of freedom like any other column. In Section 8g's `√n` example `k = 1` and the one
 column *is* the intercept, which is why `n − 1` is correct **there**.
 
 ---
@@ -545,7 +564,7 @@ t²  =  ─────  =  ────────  =  ───────�
 | Piece | Formula | What it is, in words |
 |---|---|---|
 | `S` | `Σ x·r` | **the signal sum** — how strongly the column and the returns move together |
-| `Q` | `Σ x²` | **the leverage sum** — how far apart the "ride distances" were |
+| `Q` | `Σ x²` | **the leverage sum** — how much distance the "rides" covered, squared and added |
 | `S²/Q` | `= b²Q` | **the earned miss** — how much of the total miss the dial actually removed |
 | `σ²` | `SSE/(n − k)` | **the going rate** — how much miss one free direction is worth |
 | `t²` | earned ÷ going rate | **how many free directions' worth of miss this one dial earned** |
@@ -557,7 +576,7 @@ S = 15      S² = 225      Q = 15/2      S²/Q = 30      σ̂² = 13/8
 t² = 30 / (13/8) = 240/13 = 18.461538 (rounded)      ✓ same as Section 7b
 ```
 
-### 8b. `S²/Q` is a number the player computed three levels ago
+### 8b. `S²/Q` is a number the player computed six levels ago
 
 From Level 0's parabola: `SS(0) = 36.5`, `SS(2) = 6.5`.
 
@@ -585,7 +604,9 @@ Be precise about the scope, because it matters at the boss round: this identity 
 cross-sectional variation in asset returns explained by the set of common factors" — while the
 t-statistics on **p.8** and **p.14** are *per-factor*. So they are not literally the same
 number in the paper; they are the same *machine*, run once on all columns together and once on
-each column separately. The multi-column version of `t²` is a topic this level does not open.
+each column separately. The multi-column version of **this `R²` identity** — the whole-model
+`F`, which relates `R²` to *all* the columns at once — is a topic this level does not open. (The
+per-column `t²` in two columns *is* opened, in 14.4; it is a different object.)
 
 ### 8d. `t` is scale-free; `b` is not
 
@@ -645,38 +666,85 @@ Put `Z = t²`. If a factor is worthless then `E[t²] = 1` — using the true `σ
 
 ```
         ┌──────────────────────────────────────────────────────────────┐
-        │  A worthless factor cannot show |t| > 2 in more than 1/4     │
-        │  = 25% of months. No distribution assumed.                    │
+        │  In any one month, a worthless factor has at most a 1-in-4   │
+        │  chance of showing |t| > 2 — so over many months it cannot   │
+        │  be *expected* to clear the bar more than 25% of the time.    │
+        │  No distribution assumed.                                     │
         └──────────────────────────────────────────────────────────────┘
 ```
 
-Check it against the 32-world enumeration: 4 worlds out of 32 have `t² ≥ 4`, i.e. `1/8 = 12.5%`,
-comfortably under the bound (which is `1.676788/4 = 0.419197`, rounded, at `df = 4`). The bound
-is valid and loose — say so; a bound that is never violated and rarely tight is exactly what a
-bound is.
+Be exact about what that bounds, because Section 16c leans on it: Markov bounds the **chance in
+one month**, and therefore the **expected proportion** over many. Going from "expected at most
+25%" to "the proportion actually observed in one 15-year history is at most 25%" is a further
+step, and it is the same law-of-large-numbers IOU already flagged in 8e and Section 15. Do not
+let the player skip it silently.
+
+Check it against the 32-world enumeration, where the 32 worlds *are* the whole probability
+space, so the observed fraction is the chance exactly: 4 worlds out of 32 have `t² ≥ 4`, i.e.
+`1/8 = 12.5%`, comfortably under the bound (which is `1.676788/4 = 0.419197`, rounded, at
+`df = 4`). The bound is valid and loose — say so; a bound that is never violated and rarely
+tight is exactly what a bound is.
 
 This is used against the paper itself in Section 16c.
+
+### 8g. The `√n` the player already knows, shown to be this same formula (CALL BACK)
+
+Fit the *same five returns* against a column of **ones**. Nothing new is needed: it is Level 1's
+one-column machine, on the dullest column there is.
+
+```
+column = [1, 1, 1, 1, 1]        Q = Σ1² = n = 5        S = Σr = 4
+b = S/Q = 4/5 = 0.8             ← the plain average return, arriving as a least-squares fit
+e = r − 0.8 = [−2.8, −2.8, −0.3, +3.2, +2.7]      Σe = 0        Σe² = 333/10 = 33.3
+   (check: Σe² = Σr² − (Σr)²/n = 36.5 − 16/5 = 33.3 ✓)
+
+k = 1 — and the one column *is* the intercept, so df = n − k = 4 = n − 1
+σ̂²     = (333/10)/4 = 333/40  = 8.325                σ̂ = √(333/40) = 2.885308 (rounded)
+Var(b) = σ̂²/Q = (333/40)/5 = 333/200 = 1.665
+SE(b)  = √1.665 = 1.290349 (rounded)     and     σ̂/√n = 2.885308/√5 = 1.290349 (rounded)
+t² = (S²/Q)/σ̂² = (16/5)/(333/40) = 128/333 = 0.384384 (rounded)     t = 0.619987 (rounded)
+```
+
+Two things fall out, and both are owed to the player:
+
+- **`SE = σ̂/√n` is not a different formula.** It is `SE = σ̂/√Q` on the one column where
+  `Q = Σ1² = n` exactly. The school formula was always this formula; it just never said which
+  column it was standing on. (This is the trap in Section 10 that returns `t = 3.508232` when
+  it is applied to a column with `Q = 15/2 ≠ 5`.)
+- **`n − 1` is right here, and for the reason in Trap 2 of Section 6f** — not because "you always
+  subtract one", but because `k = 1` and that one column is the intercept. It costs a degree of
+  freedom like any other column.
+
+And a result worth saying out loud: the average return of these five names is `+0.8%` with
+`t = 0.62`, so it is **not** distinguishable from zero — while the cheapness slope on the very
+same file is at `t = 4.30`. Same five returns, same machine, opposite verdicts.
 
 ---
 
 ## 9. Unequal wobble sizes (graduate-level aside — flag it, then do it)
 
+### 9a. On the cold open, two sums coincide — and it is only a coincidence
+
 Section 5c computed a wobble using **each stock's own observed miss size**. Section 7b computed
-one using **a single shared `σ̂²`**. On this file they happen to agree in a way that could
-mislead:
+one using **a single shared `σ̂²`**. On this file *two sums* happen to coincide, which makes the
+two routes look more alike than they are:
 
 ```
 Σ x_i² e_i² = 15/2      and      Σ x_i² = Q = 15/2       ← equal, by accident of this data
 ```
 
-so the enumerated wobble is `(15/2)/(15/2)² = 2/15 = 8/60`, while the shared-`σ̂²` route gives
-`13/60`. The ratio is exactly `13/8 = 1.625` — and that `13/8` is `σ̂²` itself, which is the tell
-that the agreement was arithmetic luck, not a law.
+The two answers do **not** agree: the enumerated wobble is `(15/2)/(15/2)² = 2/15 = 8/60`, while
+the shared-`σ̂²` route gives `13/60`. The ratio is exactly `13/8 = 1.625` — and that `13/8` is
+`σ̂²` itself, which is the tell. The ratio collapses to `σ̂²` *only because* `Σx²e² = Q` on this
+file; that is arithmetic luck, not a law, and it is the reason the two routes must never be
+quoted as if they were the same number.
 
 The enumerated version corresponds to `t² = b²/(2/15) = 30` exactly, `t = √30 = 5.477226`
-(rounded) — noticeably bigger than 4.296689.
+(rounded) — noticeably bigger than 4.296689 (rounded).
 
-**A three-asset file where they disagree by a factor of 3**, small enough to check on paper:
+### 9b. A three-asset file where the two routes disagree by a factor of 3
+
+Small enough to check on paper:
 
 ```
 x = [+1, +1, −2]      r = [+2, 0, −2]
@@ -704,12 +772,12 @@ All on the cold open, `b = 2`, `Q = 15/2`, `SSE = 13/2`.
 | "always divide by `n − 2`": `σ̂² = 13/6` | `SE = 0.537484`, **`t = 3.721042`** (rounded) | `t²` ratio `3/4`, too small by `√(3/4) = 0.866025` (rounded). The `2` came from nowhere. |
 | "always `n − 1`" | on this file, right by luck (`n−k = n−1 = 4`) | On the boss file it gives `t_g = 1.1547` instead of `1.0328` (rounded). It is `n − k`. |
 | "`SE` is just the typical miss": `SE = σ̂ = 1.274755` | `t² = 32/13`, **`t = 1.568929`** (rounded) | Units. `σ̂` is in percent; `b` is percent per unit of score. Never divided by `√Q`. |
-| "`SE = σ̂/√n`" (the school formula, applied blind) | `√(13/40) = 0.570088`, `t² = 160/13`, **`t = 3.508232`** (rounded) | Right only when `Q = n`. Here `Q = 15/2 ≠ 5`. Section 8 shows the case where it *is* right. |
+| "`SE = σ̂/√n`" (the school formula, applied blind) | `√(13/40) = 0.570088`, `t² = 160/13`, **`t = 3.508232`** (rounded) | Right only when `Q = n`. Here `Q = 15/2 ≠ 5`. Section 8g shows the case where it *is* right. |
 | "use average absolute miss": `Σ|e|/(n−k) = 5/4` | `SE = √(5/24) = 0.456435`, `t² = 96/5`, **`t = 4.381780`** (rounded) | Level 0 settled which loss function a risk model uses. Changing it here quietly changes the loss function. |
 | "a bigger `b` means a stronger factor" | `b_g = 40` with `t = 1.03` in Section 14 | `b` carries the column's units; `t` does not (8d). |
 | "`t` near 1 is weak evidence for the factor" | — | It is exactly *no* evidence: a worthless column scores `E[t²] = 1` (8e). |
 | "insignificant means zero" | boss round: `b_g ∈ [−37.46, +117.46]` (rounded) | The same data are consistent with `b_g` being **three times larger**. (14.6) |
-| "more stocks always sharpens `b`" | 25 copies → `t` up by `√6` | Adding stocks at `x = 0` adds **nothing**: `Q` is unchanged, so `Var(b)` is unchanged. Spread, not count. |
+| "more stocks always sharpens `b`" | 25 copies → `t` up by `√6` | Adding stocks at `x = 0` adds **no `Q` at all**, so `Var(b) = σ²/Q` does not move. (It does buy one more degree of freedom, so `σ̂²` is pinned down slightly better — that, and nothing else.) Distance covered, not count. |
 | "the residuals are `n` independent numbers" | `σ̂²` understated by `k/n` | Give me four of the five and I compute the fifth (6a). |
 | "a perfect fit means a precise estimate" | `n = k`: `SSE = 0` in all 16 worlds | Perfect fit with `n = k` means **zero information**, not infinite precision (6e). |
 
@@ -729,7 +797,8 @@ t = 4.296689 (rounded)                 R² = 0.75
 `R²` is the lie. The player should catch it **without** recomputing `Σr²`, via 8c:
 
 ```
-t² = 240/13 = 18.461538 (rounded)   ⇒   R²/(1−R²) = t²/df = 60/13   ⇒   R² = 60/73 = 0.821918
+t² = 240/13 = 18.461538 (rounded)   ⇒   R²/(1−R²) = t²/df = 60/13   ⇒   R² = 60/73
+                                                             = 0.821918 (rounded)
 ```
 
 `0.75` is impossible given the other numbers on the page. This is the structural check a real
@@ -748,13 +817,13 @@ Locked until now on purpose. Each is now attached to something the player built.
 | **unbiased** | the average of that table is the truth (`= 2`, exactly) |
 | **residual variance / mean squared error** | `σ̂² = SSE/(n − k)` |
 | **degrees of freedom** | `n − k` — how many of the misses were free to be anything (6a) |
-| **leverage `h_i`** | `x_i²/Q` — stock *i*'s share of the spread; `Σh = k`; shrinks its own residual to `(1−h_i)σ²` |
+| **leverage `h_i`** | `x_i²/Q` — stock *i*'s share of `Q`; `Σh = k`; shrinks its own residual to `(1−h_i)σ²` |
 | **t-statistic** | `b/SE` — how many wobble-widths the answer sits from zero |
 | **the null** | "this column's true dial is zero" — the world in which `E[t²] = 1` |
 | **statistically significant** | BFRE's own convention, **p.8**: `|t| > 2` |
 | **confidence interval** | `b ± 2·SE` — the values that would not have been rejected |
 | **F-statistic** | `t²` when one column is tested: earned miss ÷ going rate (8a) |
-| **power** | the ability to detect a real effect. `df = 4` and low `Q` means almost none — 14.6 |
+| **power** | the ability to detect a real effect. `df = 4` and a tiny effective leverage (`det/C = 1/2000`) means almost none — 14.6 |
 | **homoskedasticity** | assumption 2 of 5e: all misses the same typical size |
 | **heteroskedasticity** | its failure — Section 9, and BFRE **p.25** |
 | **robust / sandwich / White standard error** | the "own-size" route of Section 9: `Σx²e²/Q²` instead of `σ̂²/Q` |
@@ -860,6 +929,18 @@ t_g² = b_g²·(det/C)/σ̂²        det/C = 1/2000 = 0.0005      ← g's effect
 t_x² = b_x²·(det/A)/σ̂²        det/A = 35/3 = 11.666667 (rounded)   ← x's effective leverage
 ```
 
+**Where `det/C` comes from — do not let this one arrive as a rabbit (CALL BACK to Level 4).**
+It is not a new object. Level 4 built it and checked it: residualise `g` on `x`, and the
+leftover column `w = g − (B/C)x` has `Σw² = A − B²/C = (AC − B²)/C = det/C`. That leftover sum
+of squares is `g`'s own `Q` — the reach `g` still has after cheapness has taken its share — and
+`Var(b_g) = σ̂²/(det/C) = σ̂²·C/det` is Section 5d's `σ²/Q` with that `Q` in it. Two arithmetic
+checks the player can do in their head:
+
+```
+A − B²/C = 3/2500 − (49/2500)/28 = 0.0012 − 0.0007 = 0.0005 = det/C   ✓
+C − B²/A = 28 − (49/2500)/(3/2500) = 28 − 49/3 = 35/3     = det/A     ✓
+```
+
 `det/C` versus `det/A`: `C/A = 70000/3 ≈ 23333.333` (rounded). **The cheapness column carries
 about twenty-three thousand times the leverage of the buyback column, because buyback is
 reported in units where nobody in the file moves very far.** Every ride was 200 metres long.
@@ -869,8 +950,37 @@ Two supporting numbers for the interrogation:
 ```
 overlap:  cos² = B²/(AC) = 7/12 = 0.583333 (rounded)    cos = 0.763763 (rounded)
           VIF  = 1/(1 − cos²) = 12/5 = 2.4              ← Level 4's number, moderate
+          and the two meet exactly:  det/C = A/VIF = (3/2500)/(12/5) = 1/2000   ✓
 leverages h = [13/35, 1/7, 17/35, 17/35, 1/7, 13/35]    Σh = 2 = k  ✓
 ```
+
+That `det/C = A/VIF` line is the whole of Level 4 collected in one place: the VIF is *exactly*
+the factor by which overlap shrinks a column's usable reach, so it is exactly the factor by
+which it inflates that column's `Var(b)`. Nothing here is a new idea; only the `σ̂²` on top is.
+
+**And the leverages, whose formula Section 4d only gave for one column.** With two columns
+`h_i` is no longer `x_i²/Q`; it is the two-column version, which the player should be handed
+rather than left to guess:
+
+```
+h_i = ( C·g_i² − 2B·g_i x_i + A·x_i² ) / det
+
+PRM (g = −0.02, x = −3):  (28(0.0004) − 2(0.14)(0.06) + 0.0012(9)) / 0.014
+                        = (0.0112 − 0.0168 + 0.0108) / 0.014 = 0.0052/0.014 = 13/35   ✓
+```
+
+Check the shape against Section 4d. With `B = 0` — no overlap at all — `det = AC` and the
+formula separates cleanly:
+
+```
+h_i = C·g_i²/(AC) + A·x_i²/(AC) = g_i²/A + x_i²/C
+```
+
+each column contributing exactly its own Section-4d leverage, and the two simply adding. On
+Section 6e's four non-overlapping columns every `h_i` from the first two is `1/4 + 1/4 = 1/2`,
+and `Σh = 4(1/2) = 2 = k` ✓. Drop the `g` column altogether and `x_i²/C` is all that is left,
+which is 4d verbatim. `Σh = k` survives the move from one column to two — that is Section 6d's
+whole argument, and it is why `df = 4` and not 5 on this file.
 
 ## 14.5 THE CASE FOR DROPPING `g` — every claim a number
 
@@ -901,7 +1011,7 @@ SSE       = Σr² − q²/C = 44.12 − 40.32 = 3.8 = 19/5
 | **4. "Insignificant" is not "zero".** | The same interval that contains 0 also contains `+117.4597` (rounded), which is `2.936492` (rounded) times `b_g`. The file is equally consistent with `g` being **nearly three times stronger** than estimated. Absence of evidence, in a file with `df = 4`, is not evidence of absence. |
 | **5. There is no power here to speak of.** | `n = 6`, `k = 2`, `df = 4`. Section 8e: even a truly worthless column posts `E[t²] = 1.676788` (rounded) at this `df`. A single month of six stocks cannot settle anything. |
 | **6. It is one month.** | BFRE does not judge a factor on one cross-section. **p.14**: a factor is eligible when the *proportion of significant t-statistics* exceeds **10%**; footnote 11 says those t-statistics are per-month cross-sectional. **p.32** repeats it. One `t = 1.03` is one dot in a fifteen-year series. |
-| **7. Overlap, not irrelevance, may be the diagnosis.** | `cos = 0.763763`, `VIF = 2.4` (rounded). Level 4's lesson: when columns overlap, the *split* is unstable while the *fit* is fine. The paper's remedy for that (**p.11**) is to **aggregate** colliding substyles into one style — not to delete one. |
+| **7. Overlap, not irrelevance, may be the diagnosis.** | `cos = 0.763763`, `VIF = 2.4` (rounded). Level 4's lesson: when columns overlap, the *split* is unstable while the *fit* is fine. What BFRE does when substyles cluster on one theme (**p.11**) is **aggregate** them — the four size substyles *"should all be aggregated together to form the size factor"* — not delete one. Be honest about the join: the paper does not present that as a multicollinearity remedy, and where it does discuss VIFs (**p.32**) it reports only that they "were found to be well within suitable thresholds" and prescribes nothing. The aggregation is theirs; reading it as the remedy is ours. |
 | **8. This is a risk model, not a return forecast.** | `g` moves the six predicted returns over a 1.6-point range. That dispersion enters `V = XFXᵀ + D` (Level 10) whether or not this month's mean effect is distinguishable from zero. Dropping a dispersion-generating column pushes its variance into `D` and reports it as diversifiable when it is not (Level 9). |
 
 ## 14.7 The trap the good players fall into — have this ready
@@ -949,7 +1059,9 @@ times as much.
    → 14.7. If the player cannot separate the univariate from the joint number, stop the level
    and go back to Level 4.
 4. *"So drop it. Cheapness gets a t of seven without it. Clean model. Done."*
-   → wants 14.6.3: the 1.2 is contaminated; `1/5` of it is buyback. A clean-looking model that
+   → wants 14.6.3: the 1.2 is contaminated. The contamination is `b_g·B/C = 1/5` in absolute
+   size, which is **one sixth** of the 1.2 — do not let the player quote `1/5` as the share.
+   A clean-looking model that
    attributes buyback's effect to cheapness is worse, not better.
 5. *"You've told me both. Which is it?"*
    → The only acceptable answer names the decision the file cannot make: **six stocks and one
@@ -982,6 +1094,10 @@ Deny promotion unless **all** of these happen:
   (8f). The familiar "about 5% by chance" figure requires a normal distribution and a table,
   and **is not built here**. Flag it as an IOU, do not use it in any derivation.
 - **Why `E[t²] → 1` as `df` grows.** Law of large numbers. Not built here. IOU.
+- **Why an observed proportion of significant months can stand in for the underlying chance.**
+  The Markov bar of 8f caps a *chance*, and therefore an *expected* proportion; reading the
+  measured Figure 1.8 heights against it (16c) treats one 15-year history as if it delivered
+  that expectation. Law of large numbers again. Not built here. IOU.
 - **Multiple testing.** BFRE screens 200-plus candidate substyles (p.10–p.11). Testing many
   columns and keeping the ones with big `t` is a different problem from testing one column.
   Level 12 territory; do not pretend this level covers it.
@@ -1015,7 +1131,8 @@ what its own statistic means.
 
 Also p.8: an industry becomes a candidate factor on four criteria, of which the first two are
 **(a)** a large proportion of significant t-statistics and **(b)** a high average squared
-t-statistic. Both are this level's number.
+t-statistic — the paper's own phrasing for (b) is *"a high number of average squared
+t-statistics"*. Both are this level's number.
 
 ### 16b. p.14 and p.32 — one t-statistic is never the decision
 
@@ -1055,8 +1172,8 @@ Measured heights: Volatility ≈ 63%, Momentum ≈ 50%, Size ≈ 42%, Reversal �
 Liquidity ≈ 32%, Dividend Yield ≈ 23%, MidCap ≈ 20%, Growth ≈ 18%, Profitability ≈ 14%,
 Sentiment ≈ 7%, Earnings Yield ≈ 4–5%.
 
-Apply Section 8f's bar — a worthless factor cannot exceed **25%**, with no distribution
-assumed:
+Apply Section 8f's bar — a worthless factor's *expected* proportion cannot exceed **25%**, with
+no distribution assumed:
 
 | Clears the distribution-free bar (> 25%) | Does not clear it (≤ 25%) |
 |---|---|
@@ -1065,8 +1182,11 @@ assumed:
 
 Two honest readings, and the player should hold both:
 
-- Six of the twelve NAMR styles are established as non-worthless by an argument that assumes
-  **nothing** about distributions. That is a strong result for very little machinery.
+- Six of the twelve NAMR styles come in above a ceiling that a worthless factor's expectation
+  cannot reach, and the top two at roughly **double** it, on an argument that assumes
+  **nothing** about distributions. That is strong evidence for very little machinery. Say
+  *evidence*, not *proof*: the bar caps an expectation, and reading one observed 15-year
+  history against it needs the law-of-large-numbers IOU of 8f and Section 15.
 - The paper's own inclusion threshold is **10%** (p.14), which is **below** the 25% bar. So a
   factor admitted at 10–15% has not been shown by that criterion alone to beat chance in a
   distribution-free sense. This is not a refutation — a sharper bound follows once a
@@ -1131,9 +1251,12 @@ and not.
   hit anywhere in `notes/` is the transcriber's own commentary on p.65, noting that reference
   **[26] Newey–West** is *consistent with* HAC standard errors behind the factor-return
   t-statistics. That is an **inference by the transcriber, not a statement in the paper**, and
-  must be flagged as such to the player. Where the paper does put Newey–West to work — p.27–p.28
-  — it is for the **covariance and specific-risk** estimation (10-day lag daily, 2-week lag
-  weekly), which is a different use entirely.
+  must be flagged as such to the player. Where the paper does name Newey–West it is in the
+  **Specific Risk** subsection on **p.27** — "the Newey-West [26] methodology is used to
+  aggregate daily specific returns" — and in **Table 1.3 on p.28**, which is titled *BFRE
+  specific risk parameters* and carries the lags (10 days daily, 2 weeks weekly). That is a
+  different use entirely, and the paper never names Newey–West in connection with the factor
+  covariance matrix or with any t-statistic.
 - **No p-value and no power calculation appear anywhere.**
 - **One confidence interval does appear, and it is not this one.** p.38 flags bias-statistic
   exceptions using a **95% confidence interval**, and the tail-risk test uses a **99%** 1-day
@@ -1153,19 +1276,21 @@ level exists to break.
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level6.py     # 288 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level6.py     # 306 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page from the raw `x`, `g` and `r` vectors in
-`fractions.Fraction`: the cold open's sums, residuals, weights and leverages; the `+100%` CHR
-nudge; **all 32 sign-flip worlds twice over** (observed miss sizes, then equal miss sizes) with
+`fractions.Fraction`: the cold open's sums, residuals, weights and leverages; `Σx² = 15/2`
+against `Σ(x−x̄)² = 73/10`, the two kept apart; the `+100%` CHR nudge; **all 32 sign-flip worlds twice over** (observed miss sizes, then equal miss sizes) with
 the full distribution of `b̂`, the per-stock `E[e_i²] = (1 − h_i)σ²`, `E[SSE] = n − k` and
 `E[t²] = 1`; the 4×4 Hadamard degrees-of-freedom ladder over all 16 worlds for `k = 1,2,3,4`
 including the all-zero `SSE` at `n = k`; every wrong denominator and wrong shape with the exact
 `t` each returns; the `√n` special case; the replicated 25-stock file; the three-asset
 heteroskedasticity counterexample; and the entire boss round — Gram matrix, Cramer solution,
-both balance conditions, both standard errors, both `t²`, the leverages summing to `k`, all
-three sub-models, the exact omitted-variable bias `b_g·B/C`, the scale-invariance of `t`, and
-the Markov bar applied to the twelve measured Figure 1.8 heights.
+both balance conditions, both standard errors, both `t²`, `det/C` recovered as Level 4's
+leftover column `Σw²` and as `A/VIF`, the two-column leverage formula and its collapse to
+Section 4d, the leverages summing to `k`, all three sub-models, the exact omitted-variable bias
+`b_g·B/C` **and its one-sixth share of `b_x` alone**, the scale-invariance of `t`, and the
+Markov bar applied to the twelve measured Figure 1.8 heights.
 
 If any printed value ever disagrees with this markdown, the markdown is wrong.

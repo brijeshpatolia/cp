@@ -277,6 +277,9 @@ check("improvement in sum e^2: 13/2 - 829/146 = 949/146 - 829/146", drop, F(60, 
 show("improvement as decimal", dec(drop))
 check("b moved by 2 - 142/73", F(2) - b1, F(4, 73))
 show("b move as decimal", dec(F(4, 73)))
+check("that move as a FRACTION of the old slope: (4/73)/2 = 2/73", (F(2) - b1) / 2, F(2, 73))
+show("  as decimal -- the CRO in 11e says 'under three percent'", dec(F(2, 73)))
+check("  it is not half a percent: 2/73 > 1/200", F(2, 73) > F(1, 200), True)
 
 sub("5b. Frisch-Waugh (Level 4) applied to the constant column")
 # residualise the column of ones on x
@@ -412,6 +415,11 @@ show("sum e^2 decimal", dec(F(4811, 750)))
 excess2 = F(4811, 750) - F(829, 146)
 check("excess over the optimum", excess2, F(20164, 27375))
 show("excess decimal", dec(excess2))
+check("ratio to trap 9a's excess: (20164/27375)/(8/365) = 5041/150",
+      excess2 / F(8, 365), F(5041, 150))
+show("  that ratio as decimal (the markdown says 'thirty-three and a half times')",
+     dec(F(5041, 150)))
+check("  it is NOT thirty-four times: 5041/150 < 34", F(5041, 150) < F(34), True)
 check("barely better than having no intercept at all (13/2 = 6.5)", F(4811, 750) < F(13, 2), True)
 check("  the whole gain from the second parameter: 13/2 - 4811/750", F(13, 2) - F(4811, 750), F(64, 750))
 show("  that gain as decimal", dec(F(64, 750)))
@@ -702,7 +710,18 @@ G2 = [D_MAT[i] - F(2, 3) * D_TEC[i] for i in range(N)]
 check("g2", G2, [F(1), F(1), F(1), F(-2, 3), F(-2, 3)])
 check("sum w*g2 = 5 - (2/3)*5 = 5/3  -> NOT orthogonal to the constant",
       wdot(W, ones(N), G2), F(5, 3))
+print("      the markdown does NOT grind the 3x3; it re-labels Reading A's industry levels,")
+print("      which is legitimate precisely because p.26 calls the two readings a rotation.")
+lvl_MAT = Acoef[0] + Acoef[1]
+lvl_TEC = Acoef[0] - Acoef[1]
+check("level of a MAT asset = f_Mkt + f_MAT = 11/10 - 51/25", lvl_MAT, F(-47, 50))
+check("level of a TEC asset = f_Mkt + f_TEC = 11/10 + 51/25", lvl_TEC, F(157, 50))
+check("subtracting: (5/3)*f_MAT = -47/50 - 157/50", lvl_MAT - lvl_TEC, F(-204, 50))
+check("  so f_MAT = (3/5)(-204/50) = -612/250", F(3, 5) * F(-204, 50), F(-306, 125))
+check("  and f_Mkt = -47/50 + 306/125 = -235/250 + 612/250",
+      F(-47, 50) + F(306, 125), F(377, 250))
 Bcoef, Bfit, BE, BSS = wls([ones(N), G2, XS], R, W)
+check("the direct 3x3 solve agrees with the re-labelling", Bcoef[0], F(377, 250))
 check("f_Mkt under Reading B = 377/250", Bcoef[0], F(377, 250))
 check("f_MAT under Reading B = -306/125", Bcoef[1], F(-306, 125))
 check("f_TEC under Reading B = (2/3)*306/125 = 204/125", -F(2, 3) * Bcoef[1], F(204, 125))
@@ -765,9 +784,14 @@ for xs in product([F(-2), F(-1), F(1), F(2), F(1, 2)], repeat=4):
         continue
     rs = [F(1), F(-2), F(3), F(1, 2)]
     n = 4
-    cc, _, _, _ = wls([ones(n), list(xs)], rs)
+    cc, _, ee, _ = wls([ones(n), list(xs)], rs)
     xb = sum(xs) / n
     rb = sum(rs) / n
+    # the three boss-round facts, asserted here too: Section 11e quotes this sweep for them
+    assert cc[0] == rb - cc[1] * xb
+    assert cc[0] + cc[1] * xb == rb
+    assert sum(ee) == 0
+    assert dot(list(xs), ee) == 0
     u = [xi - xb for xi in xs]
     v = [ri - rb for ri in rs]
     assert dot(u, v) / dot(u, u) == cc[1]
@@ -830,11 +854,15 @@ for ws in product([F(1), F(2), F(3)], repeat=5):
         orth = (wdot(ws, ones(N), g) == 0)
         prop = (om_m * WT == om_t * WM)
         assert orth == prop
+        xs_ = [xi - wdot(ws, ones(N), X) / sum(ws) for xi in X]
+        cc, _, _, _ = wls([ones(N), g, xs_], R, list(ws))
+        wavg = wdot(ws, ones(N), R) / sum(ws)
         if orth:
-            xs_ = [xi - wdot(ws, ones(N), X) / sum(ws) for xi in X]
-            cc, _, _, _ = wls([ones(N), g, xs_], R, list(ws))
-            assert cc[0] == wdot(ws, ones(N), R) / sum(ws)
+            assert cc[0] == wavg
         else:
+            # the markdown claims f_Mkt is NOT the weighted average return in these cases;
+            # assert it rather than merely counting them
+            assert cc[0] != wavg
             bad += 1
         cnt += 1
 check("(weights, restriction) pairs swept", cnt, 729)
