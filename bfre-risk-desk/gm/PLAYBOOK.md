@@ -118,8 +118,8 @@ Rule §2: never soften genuinely hard material. Frustration is then correctly ca
    (predict-then-reveal) or **C** (build-the-shape). The player commits before they compute, or they
    are not learning, they are following.
 2. **Never two of the same type back to back** inside a level.
-3. **Every level closes with a boss round, and the boss round is played as E.** For eleven levels the
-   boss round *is* an E interrogation. **Level 2 is the exception the rules name:** Rules §5 makes
+3. **Every level closes with a boss round, and the boss round is played as E.** For every level but
+   one the boss round *is* an E interrogation. **Level 2 is the exception the rules name:** Rules §5 makes
    L2's boss round a *sabotage* — "you corrupt one residual; the player must find it using only the
    balance condition". Run it as **B carrying E on its back**: the player finds the corruption, and
    then the CRO attacks the find with the three objections in §8.2. Passing requires both — the
@@ -635,7 +635,9 @@ hostile because he is unpleasant; he is hostile because he is the one who gets f
 - **He concedes when beaten.** A CRO who never concedes teaches nothing. When the player lands the
   mechanism, say so — "fine" — and switch to the next front.
 - **Three objections per boss round.** All three must be held (§5.1). Hold means: mechanism, direction
-  of error, and the origin of every number used.
+  of error, and the origin of every number used. A **follow-up inside** an objection — "fine, now
+  answer this" on the same front — is part of that objection, not a fourth. Marked `↳` in §8.2. Adding
+  a genuine fourth front because the player is doing well is moving the goalposts; do not.
 
 ### 8.2 The scripts
 
@@ -894,8 +896,18 @@ A wrong guess with an honest reason is worth 0 bps and is exactly what you wante
 
 ## 10. THE CRIB — one screen
 
+**Opening a new concept:** story first, no mathematics, finished, then mapped, then landed on the page
+it changes (Rules §8). *Then* the round. **First session ever:** three sentences → four victory
+conditions → the 60-second cold open, let them fail → Level 0. Never ask if they are ready (§9.6).
+
 **Rotation:** open with A or C, never arithmetic → compute → B or D → fire F mid-task, unannounced →
 close with E. Never two of a type in a row. B needs an invariant; D at least once per level.
+**L2's boss is B+E**, not E: the rules make it the sabotage round.
+
+**When the "why" chain ends:** say so — *"that is the bottom; it is a choice, not a consequence"* — and
+name which kind: forced (`Σx·e = 0`), defined (exposure zero = market average, p.10/p.39), chosen
+(squared loss, (1.10)), conventional (different-issuer independence, p.28) or simply unjustified (26
+weeks, 104 weeks, ±3). Full list §7.4. Never use bedrock as a way to stop early.
 
 **bps:** derivation **+40** · computation **+10** · Round A with correct reason **+15** · sabotage by
 structural check **+30** · build-the-shape **+25** · teach-back **+30** · one objection held **+25** ·
