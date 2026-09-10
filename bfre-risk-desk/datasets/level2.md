@@ -1,9 +1,11 @@
 # Level 2 — The Balance
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level2.py`
-(206 assertions, exits 0). Nothing here is rounded by hand. Every fraction used in this level
-terminates, so **every decimal on this page is exact, not rounded** — `15/2` really is `7.5` and
-`67/8` really is `8.375`.
+(208 assertions, exits 0). Nothing here is rounded by hand. Every fraction used in this level
+terminates, so **every decimal in this level's own arithmetic is exact, not rounded** — `15/2`
+really is `7.5` and `67/8` really is `8.375`. The sole exception is the four bar-chart percentages
+quoted from the BFRE paper in Section 12; those are measurements off a scan, not computed values,
+and carry their uncertainty with them where they appear.
 
 ---
 
@@ -55,8 +57,9 @@ If the plank tips, she has learned something: the weights on one side are winnin
 sits dead level, she has learned something else — the weights have *fought to a draw*.
 
 Note what "a draw" does **not** mean. It does not mean the weights are small. She could hang a
-hundred-kilo block at +2 and a hundred-kilo balloon at −2 and the plank would sit perfectly level
-while being under enormous strain. Level is not the same as light.
+hundred-kilo block two metres out on one side and a hundred-kilo balloon two metres out on the
+other, and the plank would sit perfectly level while being under enormous strain. Level is not the
+same as light.
 
 And note what makes a draw: it is not the weights that matter, it is *weight times distance from
 the stone*. A one-kilo block far out beats a five-kilo block sitting almost on the stone. The thing
@@ -321,12 +324,16 @@ weights are not cosmetic: they moved the answer from 2 to 1.5, a 25% swing in th
 | the whole list `e` | the **residual vector** |
 | "the fit is the setting whose plank balances" | the **first-order condition** of least squares |
 
-Still locked after this level: *design matrix*, *degrees of freedom*, *standard error*, *R²*,
-*heteroskedasticity*, *multicollinearity*.
+Still locked after this level: *design matrix* (Level 3 unlocks it, once the columns are actually
+side by side), *degrees of freedom* (Level 6), *standard error*, *R²*, *heteroskedasticity*,
+*multicollinearity*.
 
-A sentence the player should now be able to produce unprompted, in a quant's register:
+A sentence the player should now be able to produce unprompted, in a quant's register. Note what it
+says and does not say: **exposure column**, not *design matrix*. The player has built one column and
+seen two; they have not built the object that word names, so they may not borrow the word to sound
+fluent. If they reach for it, dock bps and tell them why — that is Victory Condition 2 in miniature.
 
-> *"By construction the residuals are orthogonal to every column of the design matrix, so the
+> *"By construction the residuals are orthogonal to every exposure column the fit used, so the
 > normal equations hold exactly — which makes them a check on the estimation, not evidence of
 > specification."*
 
@@ -478,9 +485,9 @@ conditions, and the reason that is powerful rather than merely tedious is visibl
 | Method a player actually reaches for | What it returns | Verdict |
 |---|---|---|
 | "the biggest residual is the fake" — `\|e\| = 1, 3, 2, 1, 0` | **BRN** (3) | **Wrong stock.** Force BRN to carry the whole `δ = 1`: `e → [+1, −4, +2, +1, 0]`. Now `Σe = 0` ✓ but `Σx·e = −2 + 4 + 0 + 1 + 0 = 3` ✗. Fixing one check by hand while breaking the other is the signature of a guess. |
-| "the biggest turning force is the fake" — `\|x·e\| = 2, 3, 0, 1, 0` | **BRN** (3) | **Wrong stock**, same failure. And note the corrupted cell EMK contributes `2 × 0 = 0` — the *smallest* turning force in the file. The saboteur is invisible on precisely the diagnostic that looks most relevant. |
+| "the biggest turning force is the fake" — `\|x·e\| = 2, 3, 0, 1, 0` | **BRN** (3) | **Wrong stock**, same failure. And note the corrupted cell EMK contributes `2 × 0 = 0` — joint-*smallest* turning force in the file, tied with CHR's zero. The saboteur is invisible on precisely the diagnostic that looks most relevant. |
 | "the residual that is exactly 0 looks fake" | **EMK** | **Right stock, no reasoning — award zero bps.** Hard rule: never accept a right answer with wrong reasoning. Proof it is a coin-flip: in the near-miss below the corrupted cell is the **largest** number on the page, and this heuristic points confidently the other way. |
-| "`Σe²` will show it" | corrupted **15**, clean **16** | **The check points backwards.** The sabotaged file scores *better* on sum of squares than the truth — of course it does, since the truth is the minimum for the real returns, so any tampering that drags a residual toward zero improves the metric. Fit quality is not a data-integrity check. |
+| "`Σe²` will show it" | corrupted **15**, clean **16** | **The check points backwards.** The sabotaged file scores *better* on sum of squares than the truth. `Σe²` is a minimum only over residual vectors the fit could actually have produced; an edited file has left that family, so nothing holds it above 16 — and this edit moved `−1` to `0`, cutting `Σe²` by exactly 1. Nor does it reliably point *forwards*: the three-cell sabotage in Section 9.7 scores **40**. `Σe²` moves in whichever direction the tampering happens to push it, which is precisely why it is not a check. Fit quality is not a data-integrity check. |
 | "re-fit `b` from the file" | there is no `r` in the file | Nothing to re-fit from. And if there were, re-fitting would silently absorb the corruption into `a` and `b` and return a beautifully balanced, wrong model. |
 
 ---
@@ -651,7 +658,7 @@ the first pass never looked. The same shape appears at least four times in the p
 | Where | First step leaves | Second step regresses those residuals on |
 |---|---|---|
 | p.7, eqs (1.1)–(1.2) | `u` from market + core country + Level-`n` industries | Level-`n+1` industries, to price the extra granularity |
-| p.11, eqs (1.3)–(1.4) | `ε` from market + core country + core industry | one candidate substyle at a time (`N ≥ 200` of them) |
+| p.10, eqs (1.3)–(1.4) | `ε` from market + core country + core industry | one candidate substyle at a time (`N ≥ 200` of them) |
 | p.26, eq (1.11) | `u` from the first pass | Extended Industry and Extended Country factors |
 | p.52, eq (1.49) | `lê` from the beta regression (1.12), p.42 | one macro-economic factor's returns |
 
@@ -717,7 +724,8 @@ Searched all 65 transcribed pages in `notes/` for `least squares`, `normal equat
 `first-order condition` and `minimis*` — **zero hits.** `orthogonal` returns exactly one hit, and it
 is the transcriber's own commentary on p.52 (*"so they are orthogonal to whatever (1.12) already
 explains"*), **not a sentence quoted from the paper**. (The only `first-order` matches are
-"first-order autocorrelation" in the factor tables, an unrelated quantity.)
+"first-order autocorrelation" — a Table 1.2 column and the body text discussing it — an unrelated
+quantity.)
 
 The paper states its regressions (1.1, 1.2, 1.3, 1.4, 1.9, 1.11, 1.12, 1.49), states the weighting
 scheme, and states the imposed restrictions (1.10) — but **never writes the balance conditions and
@@ -735,7 +743,7 @@ what the minimisation forces to be true.
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level2.py     # 206 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level2.py     # 208 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page from the raw `x`, `r`, `w` and residual vectors in

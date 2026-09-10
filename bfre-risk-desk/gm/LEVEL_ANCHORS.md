@@ -15,12 +15,19 @@ required.**
 
 | Convention | Meaning |
 |---|---|
-| `p.24` | PDF page 24. For pages 2–65 the PDF index equals the printed footer number — verified in every chunk header. p.1 (title/contents) carries no printed number. |
-| `(1.8)` | The paper's own numbered equation. Equations run **(1.1)–(1.55)**, continuously, no gaps, no duplicates. |
+| `p.24` | PDF page 24. p.1 (title/contents) carries no printed number; for pages 2–65 the PDF index equals the printed footer number wherever the footer is visible. **Six footers are not visible** — pp.40, 41, 58, 60, 62, 63 are cropped or zoomed photographs — so on those six the number rests on an unbroken sequence, not on a read footer. It has never gone wrong, but do not describe those six as "verified". |
+| `(1.8)` | The paper's own numbered equation. Equations run **(1.1)–(1.55)**, continuously, no gaps, no duplicates: (1.1)–(1.2) p.7, (1.3)–(1.4) p.10, (1.5)–(1.6) p.12, (1.7)–(1.8) p.24, (1.9) p.25, (1.10)–(1.11) p.26, (1.12)–(1.13) p.42, (1.14)–(1.55) pp.43–54. Three descriptors carry **no** equation number because they have no formula (Return on Capital Employed, Return on Assets, p.50; Debt-to-Assets, p.53). |
 | **PAPER** | The paper says this. Quote or close paraphrase from `notes/`. |
 | **INFER** | The GM's inference from things the paper says. Say "this follows from" — never "the paper says". |
 | **GAP** | The paper does not contain this. Say so out loud at the table. |
 | `[UNREADABLE]` / `[APPROX]` | The scan could not resolve it. Carry the uncertainty forward verbatim. Never round it into a confident figure. |
+
+**`notes/` is not all paper.** Each page entry mixes the paper's words with the transcriber's own
+commentary (`### Claims / methodological choices` rows beginning "Note", "NOTE", "my count",
+"analyst observation"). Those sentences are *about* the paper; they are not *in* it. Quoting one as
+**PAPER** is the same failure as inventing a page. Every "(my count)" total — 18 styles / 108
+substyles on p.56, 54 industries on p.57, 27 bibliography entries on p.65 — is derived by the
+transcriber from printed rows; the pages print no totals. Say "counted from the printed rows".
 
 **Two structural facts to keep straight, because levels 4, 8 and 11 all trip on them:**
 
@@ -39,16 +46,16 @@ required.**
 
 | # | Level | Primary pages | Primary anchor | Anchor strength |
 |---|---|---|---|---|
-| 0 | The Miss | p.24, p.8, p.7, p.32 | `u` in (1.7); average squared t-statistic (p.8) | Strong for the *object*; **GAP** on why squares |
+| 0 | The Miss | p.24, p.8, p.7, p.32, p.42, p.35 | `u` in (1.7); average squared t-statistic (p.8); the miss's spread = 50% of a real Active Risk (p.35) | Strong for the *object*; **GAP** on why squares |
 | 1 | The Dial | p.24, p.4, p.25 | `f` in (1.7); market factor return = weighted cross-sectional average (p.4 fn 2); √-cap weights (p.25) | Strong |
 | 2 | The Balance | p.26 | (1.10) — restrictions imposed by hand | **GAP** on `Σx·e = 0`; the paper's balance is a *different* balance |
 | 3 | The Second Dial | p.25, p.5, p.7 | (1.9) four blocks at once; country factors "neutral with respect to market, style and industry" (p.5) | Strong |
-| 4 | The Collision | p.32, p.26, p.11, p.17, p.20 | VIFs + footnote 16 (p.32); three intercepts (p.26); Size–Liquidity 0.74 (p.11) | Strong — **graduate-level** |
+| 4 | The Collision | p.32, p.26, p.11, p.17, p.20, p.13, p.14 | VIFs + footnote 16 (p.32); three intercepts (p.26); Size–Liquidity 0.74 (p.11, printed); AOL (p.13) | Strong — **graduate-level** |
 | 5 | The Intercept | p.26, p.10, p.39, p.42 | "three intercept terms" (p.26); standardisation to weighted mean zero (p.10, p.39); `alpha_i` in (1.12) | Strong for centering; **GAP** on Cov/Var algebra |
-| 6 | The Verdict | p.8, p.32, p.12, p.14, p.15 | \|t\| > 2 (p.8); 10% threshold (p.14, p.32); 10–15% stopping rule (p.12); Figure 1.8 (p.15) | Strong for *use*; **GAP** on where a standard error comes from |
+| 6 | The Verdict | p.8, p.32, p.12, p.14, p.15, p.16, p.10 | \|t\| > 2 (p.8); 10% threshold (p.14, p.16, p.32); 10–15% stopping rule (p.12); Figure 1.8 (p.15); **boss round = Profitability, Table 1.2 p.10** | Strong for *use*; **GAP** on where a standard error comes from |
 | 7 | The Timeline | p.24, p.3, p.14, p.18, p.20, p.10 | "a series of cross-sectional regressions" (p.24); Table 1.2 (p.10); Figures 1.7 / 1.12 / 1.14 | Strong |
-| 8 | The Weather Map | p.24, p.27, p.3, p.36 | `F` in (1.8); WKL 104 weeks / 26-week half-life (p.27) | Medium — **large GAP**, see §L8 |
-| 9 | The Private Drama | p.24, p.27, p.28, p.30, Table 1.3 | `Δ` "a diagonal matrix" (p.24); p.27 says it isn't; p.28 gives the direction of the error | Very strong |
+| 8 | The Weather Map | p.24, p.27, p.3, p.36, p.30, p.57 | `F` in (1.8); WKL 104 weeks / 26-week half-life (p.27) | Medium — **large GAP**, see §L8. The rank argument needs arithmetic, not a slogan |
+| 9 | The Private Drama | p.24, p.27, p.28, p.30, Table 1.3 | `Δ` "a diagonal matrix" in the **generic** model (p.24); p.27 says what BFRE actually builds; p.28 gives the direction of the error | Very strong — but not a "gotcha", see the framing warning in §L9 |
 | 10 | The Assembly | p.24 | (1.7) and (1.8), one line apart | Very strong |
 | 11 | The Desk | p.34, p.35 | Figure 1.18 EDR report; "Contrib. (% of Act. Risk)" | Medium — **GAP** on the formula |
 | 12 | The Critique | p.8, p.27, p.32, p.33, p.36, p.55, p.56, p.5, p.6 | Unstated thresholds; deferred documents; two-day evidence base; 200+ substyles with a Random Substyle | Very strong |
@@ -76,8 +83,8 @@ buys which word. Terms appear in this file freely — the GM must not leak them 
 | z-score, standardisation | L5 | p.10; p.39 ("standardised values are referred to as exposures") |
 | t-statistic | L6 | p.8 |
 | statistically significant | L6 | p.8 (\|t\| > 2) |
-| cross-sectional regression | L7 | p.24; also pp.3, 8, 30, 32 |
-| in-sample / out-of-sample | L7 or L12 | p.30 ("Out-of-sample model back-testing") |
+| cross-sectional regression | L7 | **p.7 first** (the two-step industry procedure); then p.24 ("a series of cross-sectional regressions"), p.14 fn 11 and p.16 fn 12 ("monthly cross-sectional regressions"), p.30. **Not** on p.8 or p.32 — p.3 says "in cross-section", p.32 says "cross-sectional *variation*" |
+| in-sample / out-of-sample | L7 or L12 | p.30 ("Out-of-sample model back-testing"). **"In-sample" never appears**, and p.30's out-of-sample testing is of *portfolios* poorly represented in the estimation universe — it is not an out-of-sample test of the factor-selection procedure |
 | factor covariance matrix, `F` | L8 | (1.8) p.24; p.27 |
 | half-life, exponential decay | L8 | p.27; Table 1.3 p.28 |
 | shrinkage / Bayesian prior | L8 | p.36 (thinness correction); p.8 (LASSO/LARS/Ridge, **not adopted**) |
@@ -90,12 +97,23 @@ buys which word. Terms appear in this file freely — the GM must not leak them 
 | tracking error | never, from this paper | **GAP** — the paper says "Active Risk", not "tracking error" |
 | eigenvalue / eigenvector | never, from this paper | **GAP** — zero occurrences in 65 pages |
 
+**The vocabulary list the rules demand is bigger than the paper.** `RISK_DESK.md` §6F names sixteen
+terms the player must be able to use unprompted. Eight of them have no anchor in this paper at all —
+**orthogonal** (the paper says "neutral", p.5), **design matrix**, **degrees of freedom**, **standard
+error**, **shrinkage** (of `F`), **eigenvalue**, **tracking error**, **marginal contribution**. That
+is not a reason to skip them; it is a reason to say, when handing each one over: *"this is the
+industry word for the thing you just built — the paper never uses it."* Two of the eight have a
+near-synonym in the paper that the player must be able to switch between on demand: **tracking
+error → Active Risk** (p.35 banner) and **orthogonal → neutral** (p.5). Getting that switch wrong in
+either direction is a Victory-Condition-2 failure, so drill it.
+
 ---
 
 ## 3. LEVEL 0 — THE MISS
 
 **(a) Pages.** p.24 (the object itself); p.7–8 and p.10–12 (the residual as a working tool); p.8 (why
-size, not sign, is what gets scored); p.32 (`R²`); p.13 (a residual mattering in money).
+size, not sign, is what gets scored); p.32 (`R²`, in words); p.42 (a residual spread that becomes a
+factor exposure); p.35 (the miss mattering in money — 50% of a real portfolio's Active Risk).
 
 **(b) Point at.**
 
@@ -107,6 +125,7 @@ size, not sign, is what gets scored); p.32 (`R²`); p.13 (a residual mattering i
 | "average squared t-statistic" | p.8 | The paper's own reason for squaring: computed "to distinguish between factors with t-statistics close to +/- 2 and those that are significantly higher". |
 | `R²`, in words | p.32 | "the proportion of cross-sectional variation in asset returns explained by the set of common factors". **No formula is printed.** |
 | Historical Sigma | p.42 | "An equally-weighted standard deviation of the residuals in regression (1.12)" — a residual spread that becomes a *factor exposure*. |
+| The one printed fit statistic | p.4 | Daily S&P 500 excess returns regressed on daily NAMR market factor returns: **beta 0.99, R² 91%**. The only R² *value* printed anywhere in 65 pages, and the only place the paper shows a fit rather than describing one. Use it when the player asks "how good is a good R²?" — and say immediately that this is a **time-series** regression of two return series, not the cross-sectional `R²` of p.32. |
 
 **(c) What breaks.** If the miss is scored by its raw sum instead of its size, nothing downstream
 exists: `Δ` in (1.8) (p.24) is built out of the spread of these misses, and the report on p.35 books
@@ -116,9 +135,16 @@ of the consequence; **PAPER** on the 50% (p.35 pie, read directly, unambiguous).
 
 **(d) Landing sentence.**
 > "The thing you have been calling *the miss* is the letter `u` on page 24, equation (1.7) — and page 8
-> shows the authors reaching for your exact trick on their own diagnostics: they average the **square**
-> of the t-statistic, precisely so a factor scoring 6 counts more than one scoring 2 instead of letting
-> big and small cancel."
+> shows the authors reaching for the same move on their own diagnostics: they average the **square**
+> of the t-statistic. Their stated reason is *'to distinguish between factors with t-statistics close
+> to +/- 2 and those that are significantly higher'* — squaring so that a factor scoring 6 counts far
+> more than one scoring 2."
+
+**Split the credit honestly at this point.** The *amplification* argument is **PAPER** and is quoted
+above. The *anti-cancellation* argument — that squaring is also what stops a +4 and a −4 averaging to
+nothing — is **INFER**: it is true of the paper's statistic, and t-statistics do carry signs, but the
+paper never says it. Say "that second thing follows from what they wrote; they only claim the first."
+Handing the player both under one **PAPER** label is exactly the failure this file exists to prevent.
 
 **GAP — say it out loud.** The paper **never derives or defends squared loss**, never writes "least
 squares", never writes a sum-of-squares. `notes/` contains zero hits for "least squares", "normal
@@ -129,7 +155,8 @@ equation", "sum of squares". Level 0's argument is *ours*; the paper only inheri
 ## 4. LEVEL 1 — THE DIAL
 
 **(a) Pages.** p.24 (what the dial is called); **p.4** (the first dial BFRE ever turns); p.25 (the
-weights on the dial, with the paper's own justification); p.10 Table 1.2 (real dial settings).
+weights on the dial, with the paper's own justification); p.10 Table 1.2 (real dial settings);
+p.26 and p.39 (only for the deferred callback below — do not open them at this level).
 
 **(b) Point at.**
 
@@ -143,10 +170,33 @@ weights on the dial, with the paper's own justification); p.10 Table 1.2 (real d
 
 **Best single use of p.4 at this level (INFER, flag it):** the market column of `X` is all ones
 (p.4, PAPER) and the regression is weighted by √-market-cap (p.25, PAPER). Put those together and
-`b = Σ w·x·r / Σ w·x²` collapses to `Σ w·r / Σ w` — a weighted average return. Footnote 2 on p.4
-says the market factor return **is** exactly that weighted average. So the player's Level-1 formula,
-applied to a column of ones, reproduces the paper's very first factor by hand. Say "this follows
-from two things the paper states" — the paper does not print the collapse.
+`b = Σ w·x·r / Σ w·x²` collapses to `Σ w·r / Σ w` — a weighted average return, because every `x` is 1
+so both the `x` and the `x²` vanish. Footnote 2 on p.4 says the market factor return **is** exactly
+that weighted average. So the player's Level-1 formula, applied to a column of ones, reproduces the
+paper's very first factor by hand. Say "this follows from two things the paper states" — the paper
+does not print the collapse.
+
+**The obvious objection, and the answer — hold this until L5 and use it as the callback.** A sharp
+player will say: *that only works if the market column is the only column, and (1.9) on page 25 has
+four blocks.* They are right, and the paper's own machinery is what rescues it. In the full weighted
+regression the market column's balance condition is `Σ w·(r − Xf) = 0`, which rearranges to
+
+> `Σ w·r  =  f_Mkt · Σ w  +  Σ_styles f_s (Σ w·x_s)  +  Σ_ind f_j (Σ w·x_ind,j)  +  Σ_cty f_k (Σ w·x_cty,k)`
+
+and every one of the three sums after the first is forced to zero by something already printed:
+style exposures are standardised to a **√-cap-weighted mean of zero** (p.10, p.39), and (1.10) on p.26
+forces the **√-cap-weighted average industry and country factor return** to zero. What is left is
+`f_Mkt = Σ w·r / Σ w` — exactly footnote 2. **This is INFER**: the paper states each ingredient and
+never assembles them. But it is why footnote 2 can be true of a four-block regression, and it makes
+L1, L2 and L5 one fact rather than three. Do not spend it early; spend it when L5 lands.
+
+**Arithmetic trap in Table 1.2 — do not derive one column from another at the table.** The printed
+Sharpe ratios are *not* the ratio of the two printed columns, because return and volatility are each
+rounded to one decimal first. Profitability 3.1/2.2 = 1.41 against a printed **1.37**; Mid-cap
+0.9/1.8 = 0.50 against **0.52**; Dividend Yield −0.3/1.9 = −0.16 against **−0.18**. The other ten of
+thirteen rows reproduce to within 0.02. If the player checks and gets a mismatch, the answer is
+rounding, not a transcription error — and it is a good live lesson in `RISK_DESK.md` §8's "no number
+without its origin".
 
 **(c) What breaks.** Get the dial wrong and **every** factor return in Table 1.2 is wrong, therefore
 every entry of `F` in (1.8) is wrong, therefore the whole common-factor half of the risk number is
@@ -174,7 +224,14 @@ securities". So the error has a **known address** — it lands on a size segment
 | Footnote 15 | p.26 | "The average return is a square-root of market capitalisation weighted return." |
 | The consequence sentence | p.26 | "if asset returns across EMEA are mostly positive on a given day and UK assets are also up but by **less than the average** return over the region, then the UK factor return will be **negative**." |
 | Single-country models | p.26 | Japan: no country factors, "In this instance only **one** linear restriction is required". |
-| Source typo | p.26 | Both sums in (1.10) are printed with index `j`; the second summand is subscripted `k`. **This is the paper's error**, re-verified at 6×. Do not silently fix it — it is a free Level-12 exhibit. |
+| Source typo | p.26 | Both sums in (1.10) are printed with index `j`; the second summand is subscripted `k`. **This is the paper's error**, re-verified at 6×. Do not silently fix it — but see the warning below before handing it to the player as ammunition. |
+
+**Warning about that last row — it is a trap, not a gift.** `gm/CRITIQUE.md` §6 CS-5 makes leading
+with a typo an instant credibility loss at Level 12, and H-4 files this exact pair (the (1.10) index
+and the p.26 where-list) as **corroborating** material only. Show it here as evidence that *reading
+the equation beats reading the sentence* — the where-list under (1.10) defines `ω_CCty,k` and
+`f_CCty,k` with the `k` index, so the intent is unmistakable and no implementer is misled. If the
+player banks it as a Level-12 attack, dock the bps at Level 12, not here.
 
 **(c) What breaks.** **PAPER (p.26):** without the restrictions the specification "is not uniquely
 identified as there are an infinite number of possible solutions" — the regression does not return a
@@ -210,11 +267,13 @@ simultaneity is the point); p.11 and p.26 (the "where" glossaries — one of whi
 | Equation (1.1) | p.7 | The three-block ancestor: market + core country + industry-at-level-`n`. |
 | Country neutrality | p.5 | "Country factor returns are estimated in a **multivariate regression together with other common factors**, and are therefore **adjusted to be neutral with respect to market, style and industry effects**." Justification given: a country with a large concentration in a single industry. |
 | Equation (1.11) | p.26 | The second pass: extended industries and extended countries fitted to the first pass's residuals `u`. |
-| Source typo | p.26 | The (1.9) "where"-list has **five** rows and no Style row at all — `X_Mkt f_Mkt` is printed against the description "Style Exposures and Factor Returns". Re-verified at 4×. **Paper's error.** |
+| Source typo | p.26 | The (1.9) "where"-list has **five** rows and no Style row at all — `X_Mkt f_Mkt` is printed against the description "Style Exposures and Factor Returns". Re-verified at 4×. **Paper's error** — and, like (1.10)'s index, corroboration only, never a Level-12 opening (`gm/CRITIQUE.md` H-4, CS-5). Equation (1.9) *itself* is printed correctly with all four blocks, verified at 5×. |
 
 **(c) What breaks.** **PAPER (p.5):** solve one column at a time and the country number stops being
-neutral to industry — a country whose index is 40% banks reports a "country" return that is partly a
-bank return. **PAPER (p.25/p.26):** because the second pass fits Extended Country and Extended
+neutral to industry. The paper's own words are "a country with a large concentration in a single
+industry"; if you want a number to make it concrete, invent one out loud — *"say a country index
+that is forty per cent banks"* — and label it as invented, per `RISK_DESK.md` §8. The paper prints
+no such figure. **PAPER (p.25/p.26):** because the second pass fits Extended Country and Extended
 Industry factors to first-pass residuals, an error in the first pass's joint solve propagates into
 every emerging-market and frontier factor return, which are then never re-estimated.
 
@@ -234,8 +293,9 @@ every emerging-market and frontier factor return, which are then never re-estima
 > will meet later called Frisch–Waugh–Lovell" — do not cite a page for the name.
 
 **(a) Pages.** p.32 (the diagnostic and the failure mode); p.26 (the exact-collision case); p.11
-(a real collision, measured); p.17 and p.44 (a collision the authors designed *out*); p.20 (a
-collision they surrendered to); p.7, p.10, p.12, p.52 (partialling by regressing on residuals).
+(a real collision, printed cell by cell); p.14 (the same collision in words, and stable); p.17 and
+p.44 (a collision the authors designed *out*); p.20 (a collision they surrendered to); p.13 (the
+money version); p.7, p.10, p.12, p.52 (partialling by regressing on residuals).
 
 **(b) Point at.**
 
@@ -244,7 +304,7 @@ collision they surrendered to); p.7, p.10, p.12, p.52 (partialling by regressing
 | Variance inflation factors | p.32 | "If style exposures are too closely correlated then the regression procedure will encounter problems in **apportioning the factor return between them**. This can result in **significant instability in the factor return estimates through time**." |
 | Footnote 16 | p.32 | "In the most extreme case, where factor exposures are **perfectly correlated**, identification issues will exist causing the estimation process to **fail**." — this is the determinant going to zero, in the paper's own words. |
 | Three intercepts | p.26 | Market + industry + country all carry unit exposure for every asset — a built-in exact collinearity, fixed only by (1.10). |
-| Figure 1.3 | p.11 | Measured collisions, NAMR Dec 2013: **Size–Liquidity 0.74** (highest off-diagonal), Earnings Yield–Profitability **0.64**, Volatility–Dividend Yield **−0.46**, Size–Volatility **−0.36**. All 144 cells re-read in audit. |
+| Figure 1.3 | p.11 | Real collisions, NAMR Dec 2013: **Size–Liquidity 0.74** (highest off-diagonal in absolute value), Earnings Yield–Profitability **0.64**, Volatility–Dividend Yield **−0.46**, Size–Volatility **−0.36**. **These are printed digits, not pixel measurements** — Figure 1.3 is one of only four exhibits in the paper that prints its values, and all 144 cells were re-read in audit. Quote them as figures; no `[APPROX]`. |
 | Momentum's one-month lag | p.17, p.44 | Momentum = previous **11 months with a one-month lag**, the lag explicitly "to **exclude the reversal effect**"; Reversal (1.18) is exactly the excluded month. Two columns engineered not to overlap. |
 | EMEA yield merger | p.20 | Earnings Yield and Dividend Yield "were found to be highly correlated over the research history and so were **combined into a single factor**, referred to as yield." The surrender option. |
 | Two-step regressions | p.7, p.10, p.12 | (1.1)/(1.2), (1.3)/(1.4), (1.5)/(1.6): a candidate is judged by regressing it on **the residuals of the model without it** — i.e. on what nothing else already explained. |
@@ -290,6 +350,14 @@ the pivot problem is real and unavoidable in BFRE because three columns of ones 
 equation (1.10) is the fix. **Flag the asymmetry as a Level-12 seed:** mean weighted by √-cap,
 standard deviation equal-weighted (p.10 and p.39, both) — the paper states it and never justifies it.
 
+**Spend the L1 callback here** (`RISK_DESK.md` §8, "CALL BACK"). This is the level where the deferred
+argument in §4 pays off: because style exposures are centred to a √-cap-weighted mean of **zero**
+(p.10, p.39) and (1.10) forces the weighted average industry and country returns to **zero** (p.26),
+every term except the market's drops out of the market column's balance condition — and the market
+factor return in the four-block regression (1.9) collapses back to the plain weighted average return
+of footnote 2 on p.4, which is the number the player computed by hand at Level 1. Three levels, one
+fact. Say **INFER**: the paper prints all three ingredients and never assembles them.
+
 **(d) Landing sentence.**
 > "Your pivot moving to the average is exactly what page 10 does to every characteristic before it ever
 > reaches a regression — the mean is subtracted so that *zero means market-average* — and page 26
@@ -305,8 +373,9 @@ passes through `(x̄, r̄)` is ours.
 ## 9. LEVEL 6 — THE VERDICT
 
 **(a) Pages.** p.8 (the threshold and the squared version); p.32 (the same threshold in the official
-diagnostics); p.12 (a stopping rule built from it); p.14 (the inclusion threshold, stated); p.15
-Figure 1.8 and p.16 Figure 1.10 (the evidence); p.30 (why the tests are monthly).
+diagnostics); p.12 (a stopping rule built from it); p.14 and p.16 (the inclusion threshold, stated
+twice); p.15 Figure 1.8 and p.16 Figure 1.10 (the evidence); p.10 Table 1.2 (the boss round);
+p.30 (why the tests are monthly).
 
 **(b) Point at.**
 
@@ -317,23 +386,55 @@ Figure 1.8 and p.16 Figure 1.10 (the evidence); p.30 (why the tests are monthly)
 | Persistence proxy | p.8, p.32 | The **proportion** of significant t-statistics "serves as a good proxy for the persistence of individual factor effects." |
 | The 10% bar | p.14 | "A value in excess of **10%** indicates a statistically significant style effect, and would be considered for inclusion in the models." |
 | The stopping rule | p.12 | Recursion stops "until the largest proportion of t-statistics from the second step univariate regression is no larger than **10% - 15%**." |
-| Figure 1.8 | p.15 | NAMR styles ranked by proportion of significant t-stats, Mar 1996–Jun 2013. Measured, no printed labels: Volatility ≈63%, Momentum ≈50%, Size ≈42%, Reversal ≈37%, Value ≈34%, Liquidity ≈32%, Dividend Yield ≈23%, MidCap ≈20%, Growth ≈18%, Profitability ≈14%, Sentiment ≈7%, Earnings Yield ≈4–5%. **[APPROX — pixel-measured, not printed. Say so.]** |
-| Figure 1.10 | p.16 | The clean before/after: decile 10 falls from **21.1% → 3.4%** and decile 9 from **10.8% → 2.1%** once a small-cap factor is added. Also **[APPROX]**, ±0.5pp. |
+| Figure 1.8 | p.15 | NAMR styles ranked by proportion of significant t-stats, Mar 1996–Jun 2013. Measured, no printed labels: Volatility ≈63%, Momentum ≈50%, Size ≈42%, Reversal ≈37%, Value ≈34%, Liquidity ≈32%, Dividend Yield ≈23%, MidCap ≈20%, Growth ≈18%, Profitability ≈14%, Sentiment ≈7%, Earnings Yield ≈4–5%. **[APPROX — pixel-measured, not printed. Say so.]** Note also that **Figure 1.8 prints no threshold line**; the 10% bar is a sentence on p.14. Figure 1.10 (p.16) is the one that draws the dashed 10% line. So comparing a Figure 1.8 bar to 10% is *our* comparison of a measured height against a stated number — say that, don't imply the chart did it. |
+| Figure 1.10 | p.16 | The clean before/after: decile 10 falls from **21.1% → 3.4%** and decile 9 from **10.8% → 2.1%** once a small-cap factor is added. Also **[APPROX]**, ±0.5pp. Here the 10% line *is* drawn on the chart. |
 | Footnotes 11, 12 | p.14, p.16 | "t-statistics are based on **monthly cross-sectional regressions**." |
 | Sample | p.8 | Regressions monthly over the **15-year research history**; results summarised over the full sample **and five-year sub-samples**. |
 
-**Boss round ammunition (big coefficient, small t).** Table 1.2 (p.10) has it printed: **Volatility**
-has an annualised return of **−0.6%** with volatility **7.5%** — Sharpe **−0.08**, i.e. no reliable
-return at all — yet Figure 1.8 (p.15) ranks it the **most** significant style in NAMR at ≈63%, and
-p.14 says its significance is "larger than the other style factors, and incidentally **most industry
-and country factors**." A risk model keeps it because it explains *co-movement*, not because it pays.
-That is the argument-against-dropping, straight from two exhibits.
+**Boss round ammunition — read the boss round first.** `RISK_DESK.md` §5 sets L6's boss round as
+*"Given a factor with a **big coefficient and a small t-stat**, argue for dropping it — then argue
+against."* The paper supplies both halves, but they are different factors, and the draft of this
+file previously handed over only the mirror image. Use them in this order.
 
-**(c) What breaks.** **PAPER (p.12, p.14):** the whole style-factor list is *selected* by this
-statistic. Set the bar wrong and the model has the wrong columns — too low and you admit Sentiment
-(≈7%, below the stated 10% bar per Figure 1.8) and Earnings Yield (≈4–5%), inflating `F` with junk
-columns; too high and you drop real common variation into `Δ`, understating factor risk and
+**The boss-round case itself — big payoff, weak significance: Profitability.** Table 1.2 (p.10),
+printed: annualised return **3.1%**, annualised volatility **2.2%**, Sharpe **1.37** — the
+fourth-largest Sharpe magnitude in the table, behind only Reversal (−1.59) and the Momentum/Value tie
+(1.43 each). Yet Figure 1.8 (p.15) puts it **tenth of twelve** at ≈14% `[APPROX]`, barely clear of
+the 10% bar stated on p.14. A big, persistent-looking payoff attached to a factor that is only occasionally
+significant in the cross-section. *Argue for dropping:* the return may be a compensated exposure that
+some other column already carries — Figure 1.3 (p.11) prints Earnings Yield–Profitability at **0.64**
+and Size–Profitability at **0.40**, so a recursive procedure that judges each candidate on the
+residuals of the model so far ((1.3)–(1.6), pp.10–12) will *always* score a heavily overlapping
+factor low; that is what "low marginal significance" means. *Argue against dropping:* a risk model is
+not paid for returns, and dropping the column does not delete the risk — it pushes valuation and
+quality co-movement into the loadings of Earnings Yield and Size and into `Δ`, which is the L9 error.
+Growth is the second exhibit if one is not enough: return **−2.0%**, Sharpe **−1.01**, significance
+≈18% `[APPROX]`.
+
+**The mirror case — big significance, no payoff: Volatility.** Annualised return **−0.6%** on
+volatility **7.5%**, Sharpe **−0.08**, i.e. no reliable return at all — yet Figure 1.8 ranks it the
+**most** significant style in NAMR at ≈63% `[APPROX]`, and p.14 says its significance is "larger than
+the other style factors, and incidentally **most industry and country factors**." Run this one
+*after* the boss round, as the callback that proves the point in the other direction: a risk model
+keeps a factor because it explains **co-movement**, and Table 1.2 also prints Volatility's
+correlation with the market factor at **0.84**, the highest in the column.
+
+**(c) What breaks.** **PAPER (p.12, p.14, p.16):** the whole style-factor list is *selected* by this
+statistic — p.16 calls 10% "the threshold used to determine whether styles are eligible for inclusion
+in the model". Set the bar wrong and the model has the wrong columns: too low and you inflate `F`
+with junk columns; too high and you drop real common variation into `Δ`, understating factor risk and
 overstating specific risk. Direction claim is **INFER**; the thresholds and rankings are **PAPER**.
+
+**And here is the live one — two NAMR styles ship *below* the paper's own bar.** Figure 1.8 (p.15)
+puts **Sentiment** at ≈7% and **Earnings Yield** at ≈4–5% `[APPROX — pixel-measured; cite the
+position relative to the 10% number, never the digits]`, and both are style factors **in** the NAMR
+model: they are rows in Table 1.2 (p.10) and bars in a figure captioned "NAMR style factors". p.32
+concedes it in one word — "**the majority** of factors are significant more than 10% of time … with
+most well in excess of this threshold". So the 10% rule is a screen, not a rule; p.14's verb is
+"would be **considered** for inclusion", and p.12 says qualitative judgement is combined with the
+statistics. *Do not tell the player the model excluded them* — that is backwards and it is the
+mistake this file previously made. The full attack/defence exchange is `gm/CRITIQUE.md` **F-1**; hold
+it until L12 unless the player finds it themselves, in which case pay them for it.
 
 **(d) Landing sentence.**
 > "That ratio you just built — the size of the answer divided by how much it wobbles — is what page 8
@@ -345,9 +446,13 @@ overstating specific risk. Direction claim is **INFER**; the thresholds and rank
 **GAP — a big one, say it clearly.** The paper **never shows where a standard error comes from**,
 never mentions degrees of freedom, never prints a t-statistic formula. `notes/` has zero hits for
 "standard error" and "degrees of freedom" in the paper's own text. The only inference machinery named
-anywhere is **Newey–West [26]** (p.27, p.28, p.38, bibliography p.65) — used to correct for serial
-correlation in the *risk* estimates, not presented as the source of the t-stats. Level 6 is the level
-where the game gives the player something the paper assumes.
+anywhere is **Newey–West [26]** — and it appears in exactly three places: **p.27** (aggregating daily
+specific returns), **p.28** (Table 1.3's lag column, 10 days / 2 weeks, and the sentence "…West
+serial correlation adjustment" carried over from p.27), and the **bibliography, p.65**. It is **not**
+on p.38, which is the surveillance page — an earlier draft of this file cited p.38 and was wrong.
+Newey–West is used to correct for serial correlation in the *specific-risk* estimates; it is never
+presented as the source of the t-statistics. Level 6 is the level where the game gives the player
+something the paper assumes.
 
 ---
 
@@ -375,10 +480,17 @@ place BFRE *does* run a time-series regression); p.2 (the rival design).
 the day a company issues stock or sells a division. Its cost is that the exposure is measured with
 error every single period, and errors in `X` at time `t` push straight into `f` at time `t`, then into
 `F` (L8) and into every risk number thereafter. **PAPER (p.30):** the horizon is **1 month**, and the
-whole selection apparatus is monthly — a factor selected on monthly cross-sections is being asked to
-forecast a monthly risk number, which is self-consistent but circular. **PAPER (p.24, INFER on the
-consequence):** the World model estimates weekly rather than daily, so its factor returns are a
-coarser series feeding the same `F`.
+whole selection apparatus is monthly — styles and industries are "selected by assessing explanatory
+power using monthly cross-sectional regressions", risk is computed at a 1-month horizon, and bias
+statistics use monthly standardised returns. **Do not call that circular.** p.30 states the
+organising principle openly and it is coherent: the selection frequency is chosen to match the
+forecast horizon, and `gm/CRITIQUE.md` CS-8 marks the naive "monthly selection, daily estimation is
+incoherent" line as a cheap shot. The admissible version is narrower and stronger: the selection is
+**in-sample**, and the paper prints **no out-of-sample test of the factor list itself**. p.30's
+"Out-of-sample model back-testing" is of *portfolios* poorly represented in the estimation universe,
+not of the selection procedure — a different thing wearing the same words. **PAPER (p.24, INFER on
+the consequence):** the World model estimates weekly rather than daily, so its factor returns are a
+coarser series feeding the same `F`, and the paper gives no reason for the split.
 
 **(d) Landing sentence.**
 > "Run your one-day calculation again tomorrow, and again the day after, and the row of numbers you
@@ -397,7 +509,16 @@ coarser series feeding the same `F`.
 
 **(a) Pages.** p.24 (`F`'s name and place); **p.27** (everything the paper actually says about how `F`
 is built, and where it stops saying); p.3 (executive summary); p.30 (one concrete pre-treatment);
-p.36 (the paper's only actual shrinkage); p.10 (a real slice of `F`).
+p.36 (the paper's only actual shrinkage); p.10 (a real slice of `F`); p.11 (what is *not* `F`);
+p.57 (the only printed number for how big a model is).
+
+> **Read p.27's two sentences together before you teach either.** The history "starting in **March
+> 1996**" is the *available* series — eighteen years of it. The default recipe uses **104 weeks**.
+> Those are not the same number and the paper never remarks on the gap. A GM who says "`F` is built
+> from eighteen years of data" has said something false about the shipped default, and has thrown
+> away the boss round: the whole point is that they *had* 900+ weeks and chose to use 104 of them,
+> down-weighted, because a covariance matrix must be responsive as well as stable (p.27's own
+> trade-off sentence). Make the player notice the discard before you explain it.
 
 **(b) Point at.**
 
@@ -418,13 +539,46 @@ p.36 (the paper's only actual shrinkage); p.10 (a real slice of `F`).
 short and forecasts are "unduly noisy … unstable and unusable"; too long and they stop responding to
 the regime. **PAPER (p.30, INFER on direction):** untruncated currency outliers would enter the
 covariance estimate; the paper truncates specifically "to remove outliers", which lowers estimated
-currency factor volatility relative to the raw series. **INFER (structural, and the heart of the boss
-round):** with 104 weekly observations (p.27) and a factor count in the dozens-to-hundreds — NAMR's
-industry schema runs to **54 rows** in Table 1.5 (p.57; *count derived by the transcriber — the page
-prints no total*) alongside 12 styles in Table 1.2 (p.10) plus market, country and currency blocks —
-the sample covariance matrix is **rank-deficient**: there exist portfolios the
-matrix scores at exactly zero risk. The paper never states this. Say plainly that this is the game's
-argument, not BlackRock's.
+currency factor volatility relative to the raw series.
+
+**INFER (structural, and the heart of the boss round) — and get the arithmetic right, because the
+easy version of this claim is false.** The boss round asks the player to show that a covariance
+matrix estimated from fewer observations than factors is structurally broken. The paper hands you
+104 weekly observations (p.27) and **never prints a factor count for any model** (GAP 3 below), so
+the count has to be assembled from what *is* printed — and once you assemble it, the naive "fewer
+months than factors, therefore singular" line does not survive for NAMR:
+
+| Quantity | NAMR | Where it comes from |
+|---|---|---|
+| Core industries | 54 | Table 1.5, p.57 — *counted from the printed rows; the page prints no total* |
+| Styles | 12 | Table 1.2, p.10 (Market + 12 styles = 13 rows) |
+| Market | 1 | p.4 |
+| Core countries | ~2 | US + Canada; p.4 says NAMR includes Canadian stocks |
+| Currencies | ~2 | p.6, one-to-one with countries |
+| **Nominal factor count `K`** | **≈ 71** | sum of the above |
+
+71 < 104, so the WKL matrix for NAMR is **not** literally rank-deficient. Two things are true instead,
+and both are stronger arguments than the false one:
+
+1. **The exponential decay throws most of the sample away.** At a 26-week half-life over 104 weeks
+   the weights are `λ^t` with `λ = 0.5^(1/26) ≈ 0.9737`. The effective sample size `(Σw)²/Σw²` is
+   **≈ 66** — fewer than the ≈71 factors. The oldest observation carries `0.5⁴ = 1/16` of the newest
+   one's weight. So the *effective* observation count really is below the factor count, and it is the
+   paper's own half-life that puts it there. (Do the same sum for the daily specific-risk model, Table
+   1.3: 125-day half-life over 375 days gives an effective **≈ 281** of 375 — much gentler.)
+2. **Even at full weight the matrix is nowhere near well determined.** `F` has `K(K+1)/2 = 2,556`
+   distinct entries for NAMR, estimated from `104 × 71 = 7,384` numbers — under **3 observations per
+   estimated parameter**, and under **2** on the effective count. Nothing in the paper reports a
+   condition number, a smallest eigenvalue, or any shrinkage of `F`.
+
+**Where the literal rank claim *does* hold: the World model.** WRLD covers "the superset of all assets
+in the regional and country models" across **87 countries** (p.3), each asset carrying unit exposure
+to one country factor and one currency factor (p.5, p.6), on top of an industry schema and ~18 styles
+— a count that cannot plausibly sit under 104. Its regressions are **weekly** (p.24) and its default
+covariance is the same 104-week WKL (p.27). **But the paper never prints that count**, so this is an
+inference about an unprinted number and must be said as one: *"they never tell us how many factors
+the World model has, and that is itself the finding."* Say plainly, at every step, that this whole
+box is the game's argument, not BlackRock's.
 
 **(d) Landing sentence.**
 > "The grid you just built is the `F` in equation (1.8) on page 24, and page 27 tells you exactly how
@@ -449,23 +603,34 @@ argument, not BlackRock's.
 
 ## 12. LEVEL 9 — THE PRIVATE DRAMA
 
-**(a) Pages.** p.24 (the claim); **p.27** (the claim retracted); **p.28** (the direction of the error,
-in the paper's own words, plus Table 1.3); p.30 (the assumptions, listed as assumptions); p.16 (what
-happens when a common effect is left in `Δ`).
+**(a) Pages.** p.24 (the textbook form); **p.27** (what BFRE actually builds); **p.28** (the direction
+of the error, in the paper's own words, plus Table 1.3); p.30 (the assumptions, listed as
+assumptions); p.16 (what happens when a common effect is left in `Δ`).
+
+> **Framing warning — this is not a "gotcha", and calling it one costs the player Level 12.**
+> Equation (1.8) is introduced on p.24 by the sentence "**In general a multi-factor model** decomposes
+> asset returns as follows" — it is the *generic* form, and "a diagonal matrix" is a description of
+> the generic object. p.27 then says what BFRE's own specific covariance matrix is, and p.28 gives it
+> a full subsection with examples, two methodologies and the direction of the error. That is a
+> textbook model followed by a shipped model, not a claim and a retraction. `gm/CRITIQUE.md` **CS-3**
+> makes "(1.8) says diagonal but p.27 says otherwise" a named cheap shot, and the real attack is the
+> **scope** of the off-diagonals (within one company only; across companies "assumed to be zero
+> in-line with standard modelling practice", p.28). Teach the distinction — *what the arithmetic
+> guarantees versus what the modeller assumes* — which is what this level is actually for.
 
 **(b) Point at.**
 
 | Anchor | Page | What it is |
 |---|---|---|
-| The claim | p.24 | "`Δ` : specific risk matrix (**a diagonal matrix** of asset specific risk forecasts)". |
-| The retraction | p.27 | "The asset specific covariance matrix is made up of **two** components: a vector of asset specific risk forecasts **and a sparsely populated unit diagonal matrix containing non-zero, off-diagonal specific return correlations.**" `Δ` is **not** diagonal. Three pages apart. |
+| The generic form | p.24 | "`Δ` : specific risk matrix (**a diagonal matrix** of asset specific risk forecasts)" — under the lead-in "In general a multi-factor model decomposes asset returns as follows". |
+| What BFRE builds | p.27 | "The asset specific covariance matrix is made up of **two** components: a vector of asset specific risk forecasts **and a sparsely populated unit diagonal matrix containing non-zero, off-diagonal specific return correlations.**" So the shipped `Δ` is **not** diagonal — sparse, but not diagonal. |
 | **The direction** | p.28 | "these specific returns may be positively correlated, and so **ignoring this correlation would lead to under (or over) prediction of specific risk in a long-only (long-short) portfolio context.**" ← the paper hands the GM the boss-round answer. |
 | The assumptions, as assumptions | p.30 | "Factor returns have **zero correlation** with asset specific returns, and specific returns from different issuers are **unrelated and have zero correlation**." Also p.28: correlations "only estimated between assets **in the same company**. Specific return correlations between assets in different companies are **assumed to be zero** in-line with standard modelling practice." — the justification is literally "standard modelling practice". |
 | The override | p.28 | Linkages captured "either **imposed via a constant override of 1**, or where data availability permits, **estimated using asset specific returns**." |
 | Structural vs empirical | p.28, p.29 | Structural: related listings get identical specific risk (cloned from primary listing) and correlation forced to **1**. Empirical: estimated separately. p.29: structural suits **active managers** over "many months"; empirical suits **index trackers**. |
 | Table 1.3 | p.28 | Specific-risk parameters. Daily model: half-life **125 days**, **375** observations, Newey–West lag **10 days**. Weekly (WRLD and EMKT): **26 weeks**, **104 weeks**, **2 weeks**. Verified digit-for-digit at 4×. |
 | The cross-sectional overlay | p.28 | For IPOs and short histories, specific risk is inferred from assets with "similar market capitalisation, in the same industry and country", then blended: "a **weighted sum** of its time-series forecast (if it exists) and its cross-sectional forecast … In the limit this weight is set to **1**." **The functional form of the weighting function is not given.** |
-| The other failure mode | p.16 | Before a small-cap factor existed, deciles 9 and 10 still showed significant residual structure (**10.8%** and **21.1%**, above the 10% line) — common variation sitting inside `u`. |
+| The other failure mode | p.16 | Before a small-cap factor existed, deciles 9 and 10 still showed significant residual structure — measured at ≈**10.8%** and ≈**21.1%**, above the dashed 10% line the chart does draw. `[APPROX — pixel-measured off Figure 1.10, ±0.5pp; the paper prints no data labels.]` Cite them as "the only two bars above the line", not as digits. That is common variation sitting inside `u`. |
 | Named acknowledged failure | p.30 | The model "does **not** adequately capture all relationships between different listings of companies, which have more than one share class with derived securities linked to those share classes, e.g. Chinese MMA securities. This will be addressed in a forthcoming model release." |
 
 **(c) What breaks.** This is the level with the sharpest, best-documented direction of error in the
@@ -475,24 +640,27 @@ whole paper.
 |---|---|---|---|
 | Ignore same-company specific correlation, long-only book | Portfolio specific risk | **Too low** | PAPER, p.28 |
 | Ignore same-company specific correlation, long-short book | Portfolio specific risk | **Too high** | PAPER, p.28 |
-| Leave a real common factor inside `u` (e.g. no small-cap factor) | `Δ` too big, `F` too small; total risk roughly preserved but the **decomposition** lies, and it collapses for a diversified portfolio where the specific part is supposed to net away | INFER, evidenced by p.16 |
+| Leave a real common factor inside `u` (e.g. no small-cap factor), **single stock** | `Δ` too big, `F` too small; the **decomposition** lies | Total roughly **right** | INFER, evidenced by p.16 |
+| Same error, **diversified portfolio** | Portfolio total risk — the model averages away as idiosyncratic a component that does not actually diversify. The sharper half of the claim; run this one in the boss round | **Too low** | INFER, evidenced by p.16 |
 | Assume `Δ` truly diagonal in a portfolio holding an ADR and its root | Specific risk | **Too low** | PAPER, p.28 |
 
 The size of the stake is printed: on the p.35 example report, **Specific is 50%** of Active Risk.
 
 **(d) Landing sentence.**
-> "The list of leftover-sizes you just built is the `Δ` in equation (1.8) on page 24, where the paper
-> calls it *'a diagonal matrix'* — then on page 27 admits it keeps off-diagonal entries after all, and
-> on page 28 states your conclusion in its own words: ignoring the link between two listings of one
-> company *'would lead to under (or over) prediction of specific risk in a long-only (long-short)
-> portfolio context.'*"
+> "The list of leftover-sizes you just built is the `Δ` in equation (1.8) on page 24. The textbook
+> version on that page calls it *'a diagonal matrix'* — every stock's private wobble, nothing shared.
+> BFRE does not ship that version: page 27 says its specific covariance matrix is a vector of specific
+> risks **plus** a sparse set of off-diagonal correlations, and page 28 states your own conclusion in
+> its own words — ignoring the link between two listings of one company *'would lead to under (or
+> over) prediction of specific risk in a long-only (long-short) portfolio context.'* The diagonal is
+> the assumption; the off-diagonals are where they paid to break it."
 
 ---
 
 ## 13. LEVEL 10 — THE ASSEMBLY
 
-**(a) Pages.** p.24, essentially alone. Supporting: p.4 (what a portfolio exposure means), p.34
-(what the assembled number is used for).
+**(a) Pages.** p.24, essentially alone. Supporting: p.4 (what a portfolio exposure means), p.34 and
+p.35 (what the assembled number is used for, and the 50/50 split that checks a rebuild).
 
 **(b) Point at.**
 
@@ -506,13 +674,25 @@ The size of the stake is printed: on the p.35 example report, **Specific is 50%*
 | Lineage | p.24, footnote 13 | Rudd and Clasing [24], Grinold and Kahn [25], Connor et al. [17]. The approach is justified by literature precedent, not by an empirical comparison. |
 
 **(c) What breaks.** Every multiplication in (1.8) has a job, and a slip in any one gives a
-recognisable wrong answer: drop `Δ` and a single-stock portfolio's risk equals its factor risk (which
-is why the p.35 report would show 100% Style/Industry/Country and 0% Specific); drop `F`'s
-off-diagonals and two offsetting factor bets stop cancelling, inflating risk; forget that `X` must be
-the **portfolio's** exposures (p.24: "aggregated from the asset level") and you price the wrong book.
-**PAPER (p.4):** confuse market **exposure** with market **beta** and you will report a fully invested
-portfolio as beta 1.00 when the report on p.35 puts its Portfolio Beta at **1.02** with a separate
-Market factor exposure entirely.
+recognisable wrong answer:
+
+- **Drop `Δ`** and every portfolio's risk collapses to its factor risk. The tell is visible on the
+  p.35 pie: it would read Specific **0%** and the four common blocks 100%, instead of the printed
+  50/50. Half of that report's Active Risk simply disappears.
+- **Drop `F`'s off-diagonals** and two offsetting factor bets stop cancelling, inflating risk.
+- **Forget that `X` must be the *portfolio's* exposures** (p.24: "aggregated from the asset level")
+  and you price the wrong book.
+
+**PAPER (p.4):** confuse market **exposure** with market **beta**. p.4 warns about this in as many
+words — "The market factor exposure of a portfolio should not be confused with its market beta" —
+and defines market factor exposure as "the fraction of portfolio %NAV invested in equities"
+(footnote 3 adds delta-adjusted derivative exposure), while beta to an index is computed from
+exposures and `F` together. **A trap inside the trap, and a GM has to hold both:** the p.35 report
+prints Portfolio Beta **1.02** *and* shows a "Market" dot in the style panel at ≈**0.0**
+`[APPROX, ±10%]`. Those do not contradict each other — the style panel plots **active** exposure,
+portfolio minus benchmark, so ≈0.0 means "as invested as its benchmark", not "no equity exposure".
+If you say "the report shows a market exposure of zero" you have taught the player the exact
+confusion p.4 is warning about.
 
 **(d) Landing sentence.**
 > "What you just assembled is printed on page 24 as equation (1.8), `Σ = X F Xᵀ + Δ`, one line below
@@ -536,40 +716,68 @@ Figure 1.18). Nothing else in the paper is about using the number.
 | The decomposition claim | p.34 | "Active Risk is then **decomposed** along the different factor blocks in the model … The report shows that the Active Risk is **split equally between common factors and stock specific sources**. Style and industry factors account for most of the common factor risks." |
 | The two-axis panels | p.35 | Every block panel plots **"Contrib. (% of Act. Risk)"** as bars against **"Act. Exp."** as dots on a second axis — i.e. contribution and exposure are deliberately shown as different things. |
 | The worked tilt | p.34, p.35 | p.34 prose: tilts towards "high volatility, momentum driven, low-yielding, smaller stocks". p.35 panel confirms it factor by factor: Volatility ≈ **+0.42 sd**, Momentum ≈ **+0.38**, Yield ≈ **−0.30**, Size ≈ **−0.20**. **[APPROX — all bar and dot magnitudes on p.35 are pixel measurements, ±10%. The axis tick labels are read directly and are reliable.]** |
-| Contribution ≠ exposure, demonstrated | p.35 | Style panel: Emerging carries exposure ≈ **−0.10 sd** and contributes ≈ **0%** of active risk; Market carries exposure ≈ **0.0** and contributes ≈ 0. Country panel: **United Kingdom** has the largest active exposure in the block at roughly **−10% of NAV** *and* the largest risk contribution ≈2.4%. |
+| Contribution ≠ exposure, demonstrated | p.35 | The clean case is the **industry panel**, where the panel is sorted by contribution and the exposure dots are not: **Airlines** carries an exposure of only ≈**+2.2% of NAV** — ninth of ten by magnitude — yet ranks **second** by risk contribution (≈1.9%), while **Food Household** carries the second-largest exposure in the panel at ≈**−5.5%** and ranks only **fourth** by contribution. **Trading Companies** carries ≈+3.8% and ranks **last**. The style panel gives the degenerate version: **Emerging** carries ≈**−0.10 sd** of exposure and contributes ≈**0%**. `[APPROX — every bar and dot on p.35 is a pixel measurement, ±10%. The *orderings* quoted here survive that error bar; do not quote the magnitudes as figures.]` |
+| Where the two orderings *agree* — say this too | p.35 | Country panel: **United Kingdom** has both the largest active exposure in its block (≈**−10% of NAV**) and the largest contribution (≈2.4%). Use it to stop the player over-learning: exposure and contribution are different quantities, not opposite ones, and a big bet on a volatile block usually does both. |
 
-**The "diversified" boss round, entirely from p.35.** The PM points at 15 names in the Top Asset
-Contributions panel. The model's own answer: 50% of Active Risk is Specific despite 15 holdings, and
-the FX panel shows a single currency pair contributing ≈+2.55% of active risk on an exposure dot of
-≈+9% of NAV while another pair sits at roughly **−10% of NAV** with a *positive* risk contribution —
-a short position adding risk. Diversification across names does not diversify across a shared factor
-tilt of +0.42 sd Volatility.
+**The "diversified" boss round, entirely from p.35.** The PM points at the Top Asset Contributions
+panel and says "look how many names I hold". **Read the panel correctly before you answer:** it lists
+**exactly 15 bars**, and it is a *top-contributors* panel — "Top Asset Contributions" — so 15 is the
+length of the chart, **not** the size of the portfolio, which the report never states. Do not say
+"despite only 15 holdings"; say "your fifteen largest contributors". The model's answer needs no
+holding count anyway:
+
+- **50% of Active Risk is Specific** (pie, read directly, unambiguous) — in a book the PM is calling
+  diversified, half the active risk is single-name.
+- The **style panel** shows why the other half does not diversify either: one tilt, Volatility at
+  ≈+0.42 sd, carries ≈11% of active risk on its own. Names diversify names; they do not diversify a
+  shared factor tilt.
+- The **FX panel** kills the intuition that a short position must reduce risk: the second pair sits at
+  roughly **−10% of NAV** with a *positive* contribution of ≈+0.55%, while the first contributes
+  ≈+2.55% on ≈+9% of NAV.
 
 **(c) What breaks.** **PAPER (p.34/35, structure):** if contribution is computed as though it were
-exposure, the report ranks positions by size instead of by risk added — and p.35 shows those two
-orderings disagreeing (Emerging has exposure and no contribution; Media's ≈+4.5% of NAV exposure sits
-third in the industry panel while Integrated Oil's ≈−6% sits first). **INFER:** getting the sign
-convention wrong on a short position flips a risk-adding hedge into a risk-reducing one, which is
-exactly the mistake the FX panel's negative-exposure/positive-contribution pair is proof against.
+exposure, the report ranks positions by size instead of by risk added — and the industry panel above
+shows those two orderings disagreeing on the same page. **INFER:** getting the sign convention wrong
+on a short position flips a risk-adding hedge into a risk-reducing one, which is exactly the mistake
+the FX panel's negative-exposure/positive-contribution pair is proof against.
 
 **(d) Landing sentence.**
 > "The numbers you just computed are the bars in Figure 1.18 on page 35, labelled *'Contrib. (% of
 > Act. Risk)'*, plotted deliberately against a second axis of plain exposure so you can see them
-> disagree — and the pie in the same figure is how a PM who says *'I hold fifteen names'* gets
-> answered: half of that portfolio's 2.99% Active Risk is specific, and most of the other half is one
-> style tilt."
+> disagree — Airlines is ninth of ten by exposure and second by risk added. And the pie in the same
+> figure is how a PM who says *'look how many names I hold'* gets answered: half of that portfolio's
+> 2.99% Active Risk is specific, and most of the other half is a single style tilt."
 
-**GAP — say it out loud.** The paper contains **no formula for marginal contribution to risk**, no
-derivation of risk decomposition, and does not use the term "marginal contribution" or "tracking
-error" anywhere. `notes/` has zero hits for both. "Contribution" appears only as a chart axis label on
-p.35 and as prose on p.34. Level 11's mathematics is entirely ours; only its *output format* is
-citable.
+**GAP — say it out loud.** The paper contains **no formula for marginal contribution to risk** and no
+mathematics of risk decomposition anywhere. The terms "marginal contribution" and "tracking error"
+have **zero** hits across all 65 pages. The *phrase* "risk decomposition" does appear — pp.2, 4 and 18
+— but only as a description of what the model is useful for, never with a formula attached;
+"contribution" appears as a chart axis label on p.35 and as prose on p.34, and that is the whole of
+it. Level 11's mathematics is entirely ours; only its *output format* is citable. State that before
+the level starts, not after the player asks for the page.
 
 ---
 
 ## 15. LEVEL 12 — THE CRITIQUE
 
 Every item below is a page the GM can put a finger on. Grouped by the four charges in the level brief.
+
+> **This section is half a level, and running it alone will fail the boss round.** `RISK_DESK.md` §5
+> sets L12's boss round as *"Defend the paper's choices as a BlackRock author, then attack them as a
+> rival. **Both convincingly**."* What follows is the attack side — a page index of what is missing,
+> thin or unfalsifiable. The defence side, the ranking, and the list of **cheap shots that lose the
+> exchange on delivery** live in `gm/CRITIQUE.md`, which is built for this level. Two rules from that
+> file that this one must not undercut:
+>
+> - **Defence first, attack second.** A player who attacks first straw-mans the paper and does not
+>   notice.
+> - **Typos and √-cap weighting are cheap shots** (CS-1, CS-5). Several items below are typos or
+>   printed-table defects. They are **corroboration** — evidence the document was not read carefully
+>   before it shipped — and are worth one sentence *after* a real attack has landed. Leading with one
+>   costs the exchange.
+>
+> A one-line defence is attached to each of the four charges below so that the GM never presents an
+> attack naked. The full exchange for any item is in `gm/CRITIQUE.md`.
 
 ### 15.1 Unstated parameters and thresholds
 
@@ -584,6 +792,13 @@ Every item below is a page the GM can put a finger on. Grouped by the four charg
 | "sufficient market data" | p.31 | Coverage universe "restricted to assets with sufficient market data" — not quantified. |
 | Beta window | p.42 | 52-week half-life, 5 years of weeklies — asserted, unjustified. |
 | Escalation trigger | p.38 | "Signs of **persistently** poor model performance over **many periods**" — neither quantified. |
+| The inclusion bar, applied | p.14, p.15, p.16, p.32 | The 10% rule is stated on p.14 and p.16, and **two NAMR styles ship below it** — Sentiment ≈7%, Earnings Yield ≈4–5% on Figure 1.8 `[APPROX]` — with p.32 conceding it in one word: "**the majority** of factors are significant more than 10% of time". The paper never says which were kept below the bar, or on which criterion. Full exchange: `gm/CRITIQUE.md` **F-1**. |
+
+**The defence, in one line.** p.14's verb is "would be **considered** for inclusion" — a screen, not a
+rule — and p.4 lists **four** selection criteria (Interpretability, Explanatory Power, Consistency,
+Efficacy) of which the t-statistic proportion speaks to two; p.12 says outright that "qualitative
+judgement and statistical analysis are combined". The comeback is that four criteria of which none
+carries a number are jointly unfalsifiable.
 
 ### 15.2 Single-anchor-month / thin evidence
 
@@ -599,6 +814,19 @@ Every item below is a page the GM can put a finger on. Grouped by the four charg
 Extra force: neither Figure 1.1 nor Figure 1.2 prints data labels, so the reader cannot check the
 magnitudes at all. `notes/` records the bar heights as **[APPROX, read off gridlines only]** and
 refuses to firm them up. The GM must do the same.
+
+**The defence, in one line.** These figures are *illustrations of an interpretation*, not the
+evidence base — the evidence base is the 1996–2013 t-statistic history (p.32), and the two August
+2011 dates are chosen to contrast a stressed day with a calm one, which is what an illustration is
+for. The comeback: an illustration chosen after the fact from an eighteen-year sample cannot also be
+offered as support, and the two dates are eight days apart in one region.
+
+**Do not, however, run the general version of the chart complaint.** "I can't read the values" is
+`gm/CRITIQUE.md` CS-10, a cheap shot — that is the scan, not the document. The admissible version is
+that the paper prints **no data labels on any of its fourteen data charts**, while the four exhibits
+where values *are* the message — Figure 1.3 (p.11), 1.13 (p.19), 1.15 (p.20), 1.16 (p.22) — print
+every cell, all 144 of Figure 1.3's included. That is a defensible house style, which is why the
+complaint has to be aimed at the *charts the paper argues from*, not at the document as a whole.
 
 ### 15.3 Unjustified window lengths (a full set, all on one slide)
 
@@ -616,29 +844,79 @@ refuses to firm them up. The GM must do the same.
 | Bias statistic | rolling 12 months, 95% CI | p.38 |
 | VaR back-test | 99%, 252 days | p.38 (this one **is** justified — UCITS + Kupiec 1995) |
 
-**Internal inconsistencies to hand the player as free ammunition:**
+**The defence for the window list, in one line.** Different quantities have different natural
+horizons, and the paper does state the organising principle for the biggest one: p.30 says the
+**1-month forecast horizon** is what drives monthly selection and 1-month risk estimation, and p.27
+says the half-life is "primarily driven by the target horizon". The comeback is that this explains
+the *choice of horizon* and never the *choice of number* — no sensitivity analysis for any window
+appears anywhere, and the World model's weekly estimation (p.24) has no stated reason at all.
+
+**Internal inconsistencies — corroboration, not openings.** Every item here is cheap to verify and
+none of them changes a risk number on its own. Their value is cumulative. Run them *after* an
+attack from §15.1, §15.2 or §15.5 has landed.
+
+*Asymmetries stated and never explained:*
 - **p.10 and p.39:** the standardisation mean is **√-cap-weighted** while the standard deviation is
-  **equal-weighted**. Stated twice, justified never.
+  **equal-weighted**. Stated twice, justified never. (This is `gm/CRITIQUE.md`'s worked example, §5.1.)
 - **p.42:** Historical Sigma is an **equally-weighted** standard deviation of residuals from an
   **exponentially weighted** regression.
 - **p.44:** "one month" is **22 working days** for momentum and reversal (footnotes 20, 21) but a
   **calendar** month for Proportion of Active Trade Days.
 - **p.45 / p.44:** Return-to-Turnover and Amihud use "the last 360 days with non-missing volume" while
   their neighbours use 3/6/12 calendar months.
-- **p.47:** the `s ≤ t` no-look-ahead line is printed under (1.28) and (1.32) only, though (1.29),
-  (1.30) and (1.31) mix the same dated numerator with an undated denominator.
+- **p.44 / p.45:** the same quantity `V/N` enters (1.20) **un-logged** and (1.24) **logged**, as two
+  different substyles.
+
+*Prose that contradicts its own formula:*
 - **p.49:** (1.38) is described as a change "over the previous **two years**" but the formula
   `ln A_t − ln A_{t−1}` is a one-year change.
-- **p.50 and p.53:** Return on Capital Employed, Return on Assets and Debt-to-Assets are **vendor
-  fields from Worldscope with no formula printed at all**, sitting beside descriptors defined to the
-  symbol.
+- **p.45:** (1.22)'s prose divides the slope by "the average **Total Assets** over the last T months";
+  the printed denominator is `(1/T)·Σ V_{i,s}` — average **traded volume**. This is the awkward one:
+  the sentence names a quantity the formula does not contain at all.
+- **p.45:** (1.23)'s regression runs `s = t−T … t` — **T+1** observations — while (1.22) normalises
+  over **T**. An off-by-one between two adjacent printed expressions.
 - **p.54:** `FS` denotes foreign **sales** in (1.54) and foreign **assets** in (1.55), and (1.54)'s
   where-clause calls `S_{i,t}` "the total assets" when it means total sales.
+- **p.21 vs p.41:** p.21 says "**only** equity dilution was found to have significant cross-sectional
+  explanatory power in the **APXJ** model"; the weight table on p.41 loads Quality / Equity Dilution
+  at **1.00 in APXJ *and* in EMKT**. `gm/CRITIQUE.md` H-2 rates this one as the rare case where the
+  defence should simply concede.
+- **p.16 vs p.51:** p.16 says the small-cap factor "represents assets in **deciles 9 and 10**"; p.51
+  says the functional form of (1.47) "is designed to give exposure to smaller companies which reside
+  in capitalisation deciles **8, 9 and 10**". Same factor, two target sets, twenty-five pages apart.
+
+*Conventions stated once and left implicit:*
+- **p.47:** the `s ≤ t` no-look-ahead line is printed under (1.28) and (1.32) only, though **(1.29)
+  and (1.30)** mix the same accounting-dated numerator with a `t`-dated price denominator. ((1.31) is
+  the EPS-on-time regression and has no denominator — do not include it in the count.)
+- **p.53:** the same defect again — `s ≤ t` under (1.50) but not (1.52), which uses the identical
+  `s`-dated `LTD` and `PS` against a `t`-dated `CE`.
+
+*Printed tables that do not add up:*
+- **p.40:** EMEA's EarnYield weights sum to **0.75**, not 1.00, unless the Dividend Yield row's 0.25
+  is meant to sit inside EarnYield — which the table never says.
+- **p.40:** CAND Foreign Sensitivity carries exactly **one** `0.5` glyph, sitting between the Foreign
+  Sales and Foreign Assets rows. `[UNREADABLE: which row.]` **Do not assume 0.5/0.5** — taken
+  literally the column sums to 0.5.
+- **p.41:** WRLD Leverage is **Debt to Assets +0.5 and Balance Sheet Cash −0.5** — the absolute
+  weights sum to 1 and the signed weights sum to 0. Not an error; a construction (debt minus cash)
+  that the surrounding text never mentions.
+- **pp.40–41 vs p.45:** the appendix defines "**Share** Turnover"; the weight tables load "**Stock**
+  Turnover". Never reconciled.
+
+*Typos — `gm/CRITIQUE.md` CS-5. Say nothing unless the player raises them:*
 - **p.26:** the (1.9) where-list pairs `X_Mkt f_Mkt` with the description "Style Exposures and Factor
   Returns" and omits the Style row entirely; both sums in (1.10) are indexed `j` while the second
-  summand is subscripted `k`. Both re-verified as **the source's typos**, not transcription errors.
-- **p.31:** industry classification switched from GICS to TRBC in **February 2018** with no stated
-  reason — meaning the factor history spans two different industry definitions.
+  summand is subscripted `k`. Both re-verified as **the source's typos**, not transcription errors —
+  and neither misleads an implementer, because (1.9) and (1.10)'s own where-list are printed
+  correctly.
+
+*And the one that is not an inconsistency but a dating problem:*
+- **p.31 vs p.32:** industry classification switched from GICS to TRBC in **February 2018** with no
+  stated reason, while p.32 says all models were tested "from **1996 to 2013**". Industry factors are
+  defined *from* that schema (p.7), so the factor history spans two different definitions of what an
+  industry is, and the shipped taxonomy post-dates every test described. The "not the model that was
+  tested" framing is **INFER** built on two printed dates — say so (`gm/CRITIQUE.md` H-1).
 
 ### 15.4 Unfalsifiable behavioural stories
 
@@ -646,30 +924,78 @@ refuses to firm them up. The GM must do the same.
 |---|---|
 | Reversal exists because of "market investors **overreacting** to stock information in the near-term" | p.16 |
 | Momentum exists because of "market investors systematically **underreacting** to newly available company information" | p.17 |
-| Same paper, same section, **opposite** psychology at two adjacent horizons, and the two are deliberately made non-overlapping (11 months with a 1-month lag, p.17/p.44) so that neither story can be tested against the other. |
 | Sentiment: the VIX is used "as a **first approximation** to the 'risk-on/risk-off' paradigm" — the proxy is conceded and never defended | p.23 |
 | Oil: prices move on "wars, or even **the fear of wars**" | p.22 |
 | Industry schema: after statistics, the schema is "**peer reviewed** by other investment and risk professionals at BlackRock … an opportunity to impose **forward-looking views** of industry behaviour into the schema" — the example given is splitting out Alcohol, Tobacco, Casinos & Gaming "due to the increasing investor focus on ESG issues" | p.8 |
 | "Throughout the whole selection process, **qualitative judgement** and statistical analysis are combined" — no criterion for the qualitative half | p.12 |
 
+**The flagship of the class, and it needs handling with care.** Reversal (p.16) and Momentum (p.17)
+are given **opposite** psychologies — overreaction at one month, underreaction over the next eleven —
+in the same section, and the two windows are deliberately made non-overlapping: momentum is "the
+previous **11 months with a one month lag** … to exclude the reversal effect" (p.17), and Reversal
+(1.18) is exactly the excluded month (p.44).
+
+**The attack.** Two opposite accounts of investor behaviour, at adjacent horizons, in the same
+paragraph, with no test that could distinguish them and no prediction that would fail if the
+psychology were reversed. The behavioural story is decoration; if it were deleted the model would be
+unchanged.
+
+**The defence — and it is stronger than the attack, so do not skip it.** (i) Short-horizon reversal
+and medium-horizon continuation are among the best-replicated results in the empirical asset-pricing
+literature, and the paper cites them properly rather than inventing them: Jegadeesh [11], Jacobs and
+Levy [12], Subrahmanyam [13] for reversal (p.16), Jegadeesh and Titman [14] for momentum (p.17).
+(ii) They are not contradictory. Different horizons are different phenomena, and the paper is not
+claiming one mechanism does both. (iii) The non-overlap is a **design virtue, not an evasion** — two
+windows that shared a month would be mechanically correlated and would fight over the same return,
+which is precisely the L4 collision. Making them disjoint is what lets each be estimated cleanly.
+(iv) The model does not rest on the story: Table 1.2 prints Momentum Sharpe **1.43** and Reversal
+**−1.59**, the two largest in the table, and p.17 notes their first-order autocorrelations (0.22 and
+0.17). The factors are kept for measured behaviour.
+
+**The comeback — this is where the attack actually wins.** The empirical case is fine; it is the
+*causal* sentences that are unfalsifiable. Nothing the data could do would refute "investors
+underreact", and the paper does not need those sentences for anything. Attack the **decoration**, not
+the factor — a rival who attacks momentum itself has misread Table 1.2 and will be shown it.
+
+**The defence for the rest of the class, in one line.** A model built on "highly intuitive" factors
+(p.4's Interpretability criterion) *must* narrate; the alternative is the purely statistical approach
+the paper explicitly declines on p.8. Conceding "first approximation" for the VIX is candour, not
+weakness. The comeback: candour about a proxy is not a defence of the proxy, and no alternative is
+ever tested.
+
 ### 15.5 The multiple-testing charge (the strongest single attack)
 
 **PAPER, p.10:** "for i = 1, 2, …, N (where **N ≥ 200** is the number of candidate substyles)".
-**PAPER, p.55:** "a subset of the full list of **200+**", with each horizon variant counted separately.
+**PAPER, p.55:** "a subset of the full list of **200+**", with each horizon variant counted separately
+— relative strength alone counts as five (1, 3, 6, 11-with-a-lag, 12 months).
 **PAPER, p.56, Table 1.4:** the printed inventory runs to 18 styles and 108 substyles (*both counts
 derived by the transcriber from the printed rows — the page prints no totals*) — **and it contains a
 style called "Random", whose single substyle is "Random Substyle".**
 **PAPER, p.8:** significance is judged at |t| > 2.
-**PAPER, p.55:** "**no** information about the selection procedure — no criterion, statistic, or
-threshold by which substyles were kept or discarded, and **no multiple-testing correction is
-mentioned** despite 200+ candidates being tested."
+
+**ABSENCE, not quotation — and this is the correction that matters most in this file.** An earlier
+draft printed the following as a **PAPER** quotation from p.55: *"no information about the selection
+procedure — no criterion, statistic, or threshold by which substyles were kept or discarded, and no
+multiple-testing correction is mentioned despite 200+ candidates being tested."* **The paper does not
+say that.** It is the transcriber's commentary in `notes/`, filed under p.55's "Claims /
+methodological choices". Quoting it as the paper's own words is exactly the failure this file exists
+to prevent — worse than a wrong page number, because it puts a self-indictment in BlackRock's mouth.
+The correct form is a statement about what is *not* there: **p.55 prints no selection criterion, no
+statistic and no threshold for keeping or discarding a substyle, and no multiple-testing correction
+is mentioned anywhere in the paper.** Say it as an absence you have checked, in your own voice.
 
 The authors put a placebo in the candidate set — which shows they understood the problem — and then
 report no correction for having tested 200+ candidates at a fixed 2-sigma bar. **Have the player
-defend that** (the recursive procedure conditions each test on the model built so far; the 10–15%
-stopping rule on p.12 is a persistence requirement, not a one-shot p-value; sub-sample checks on p.8
-guard against period-specific flukes) **and then attack it** (none of that is a multiple-comparison
-correction, and the paper never says what the Random Substyle scored).
+defend that first** (the recursive procedure conditions each test on the model built so far, so tests
+are not independent draws; the 10–15% stopping rule on p.12 is a persistence requirement across a
+15-year history, not a one-shot p-value; the sub-sample checks on p.8 guard against period-specific
+flukes; and p.8 names LASSO, LARS, Group Lasso/LARS, Ridge and Bayesian priors and declines them on
+a stated ground — that they "are purely statistical in nature and rely heavily on historical data")
+**and then attack it** (none of that is a multiple-comparison correction; requiring significance in
+10% of months at |t| > 2 is roughly twice the ~5% you would expect from chance alone, which is a
+weak filter for 200+ candidates and is **INFER**, the rival's arithmetic and not the paper's; and the
+paper never says what the Random Substyle scored — the one number that would settle it). Ranked
+version and full exchange: `gm/CRITIQUE.md` **F-2**.
 
 **(d) Landing sentence for L12.**
 > "You now know enough to notice three things at once: page 32 says the multicollinearity diagnostics
@@ -683,7 +1009,8 @@ correction, and the paper never says what the Random Substyle scored).
 ## 16. ★ THE REBUILD
 
 **(a) Pages.** p.24, p.25, p.26, p.27, p.28. Five pages contain the entire buildable model. Everything
-else is what goes into `X` (pp.4–23, 39–56) or what the output looks like (pp.34–37).
+else is what goes into `X` (pp.4–23, 39–56), how it is produced and checked (pp.30–33, 36–38), or
+what the output looks like (pp.34–35).
 
 **(b) The five-page checklist — hand this to the player only after they have finished.**
 
@@ -693,7 +1020,7 @@ else is what goes into `X` (pp.4–23, 39–56) or what the output looks like (p
 | 2. Estimate `f`, pass 1 | Equation (1.9) | p.25 | Weights = **√ market capitalisation** (p.25); blocks = Market, Style, Core Industry, Core Country |
 | 3. Identify the solution | Equation (1.10) | p.26 | Weighted average Core Industry return = 0; weighted average Core Country return = 0. One restriction only for single-country models |
 | 4. Estimate `f`, pass 2 | Equation (1.11) | p.26 | Extended Industry and Extended Country factors fitted to pass-1 residuals `u` |
-| 5. Build `F` | (1.8); construction on p.27 | p.24, p.27 | Daily factor returns from **March 1996**; default **WKL**: **104 weeks**, **26-week half-life**; serial-correlation correction |
+| 5. Build `F` | (1.8); construction on p.27 | p.24, p.27 | History available from **March 1996**; the default **WKL** recipe uses only the most recent **104 weeks** with a **26-week half-life**, plus a serial-correlation correction. Those are two different numbers — see §L8 |
 | 6. Build `Δ` | p.27–28; Table 1.3 | p.27, p.28 | Daily: half-life **125 days**, **375** obs, NW lag **10 days**. Weekly (WRLD, EMKT): **26 weeks**, **104 weeks**, NW lag **2 weeks**. Plus same-company specific correlations (override **1** or estimated) |
 | 7. Assemble | Equation (1.8) `Σ = X F Xᵀ + Δ` | p.24 | — |
 | 8. Price a portfolio | p.24 ingredient list; Figure 1.18 for the output shape | p.24, p.35 | Holdings + portfolio exposures aggregated from asset level + `F` + specific risk forecasts |
@@ -704,7 +1031,11 @@ paper itself corroborates: compute the split between common-factor risk and spec
 paper's own worked example on p.35 it is **50/50**, with Style **25%** and Industry **14%** of the
 total. A rebuild returning 95% specific has an `X` that explains nothing; one returning 95% common has
 factors that have absorbed idiosyncratic noise. Neither will be flagged by any diagnostic the paper
-prints, because — see §15 — the paper prints no diagnostic values at all.
+prints, because — see §15 — the Model Testing chapter (pp.32–33) reports **no values at all**: no
+`R²`, no VIF, no bias statistic, results deferred to a reference the bibliography lists as
+forthcoming. The single R² value in the document (91%, p.4) is a fit of the NAMR market factor
+against the S&P 500, not a model diagnostic. So the rebuild's own 50/50 comparison against p.35 is
+the best check available, and it is a check the paper never runs on itself.
 
 **(d) Landing sentence.**
 > "Everything you built is on five pages. Page 24 has the model, equations (1.7) and (1.8). Page 25
@@ -717,22 +1048,31 @@ prints, because — see §15 — the paper prints no diagnostic values at all.
 
 ## 17. NEVER CITE — things that are not in this paper
 
-The audit of `notes/` caught a fabricated cross-reference. These are the invitations to repeat that
-mistake. If the GM needs any of them, the honest move is *"the paper assumes this and never builds
-it — so we are going to build it."*
+The audit of `notes/` caught a fabricated cross-reference, and the review of *this file* caught a
+second kind: a sentence of the transcriber's commentary printed as a **PAPER** quotation from p.55
+(now corrected in §15.5). Both are the same failure — putting words on a page that does not carry
+them — and the second is the more dangerous, because the invented quotation was an indictment.
+Everything below is an invitation to repeat one of the two. If the GM needs any of them, the honest
+move is *"the paper assumes this and never builds it — so we are going to build it."*
 
 **Absent from all 65 pages (zero hits in `notes/`):**
 - eigenvalue, eigenvector, principal component, eigen-decomposition
 - "least squares", normal equations, `Σx·e = 0`, any derivation of a regression coefficient
 - standard error (as a formula or a concept the paper explains), degrees of freedom
 - an `R²` **formula** (p.32 defines it in words only)
-- marginal contribution to risk, risk decomposition mathematics
+- marginal contribution to risk; any mathematics of risk decomposition (the *phrase* "risk
+  decomposition" does appear — pp.2, 4, 18 — with no formula ever attached to it)
 - "tracking error" (p.35's banner says **Active Risk**)
 - "orthogonal" (the paper says "**neutral**", p.5)
 - Frisch–Waugh–Lovell (the mechanism is used on pp.7, 10, 12, 52; the name never appears)
 - shrinkage of `F` (the only shrinkage is the p.36 Bayesian prior on thin country/industry **returns**;
   LASSO/LARS/Ridge appear on p.8 only as **rejected alternatives**)
 - any statement of how many factors a model has in total, or of the observation-to-factor ratio
+- "in-sample" (only "**out-of-sample**" appears, p.30, and it describes portfolio back-testing — not
+  a validation of the factor-selection procedure)
+- "design matrix" (the paper writes `X` throughout and never names it)
+- any VIF **value** or threshold, any bias-statistic **value**, any condition number, any smallest
+  eigenvalue — the paper reports diagnostics as adjectives ("well within suitable thresholds", p.32)
 
 **Present but must never be firmed up:**
 
@@ -754,7 +1094,11 @@ it — so we are going to build it."*
 | The `lê_{i,s}` symbol in (1.49) | p.52 | Legible at 14×; **meaning ambiguous** — the paper never defines it, describing it in prose only as "the residuals in regression (1.12)". |
 | The Mid-Cap rank symbol `r_{i,t}` in (1.48) | p.51 | Same glyph the paper uses for returns; the page says it is "defined below" and **no definition appears**. |
 | Small-Cap rank direction | p.51 | The page **never states whether rank 1 is the largest or smallest company.** Reading the flat top as "the smallest ~5%" is an inference from stated purpose. |
-| Table 1.2's NAMR row set | p.10 | 13 rows: Market + **12** styles. Small-Cap, Leverage, Quality, Foreign Sensitivity, Oil, Emerging Market do **not** appear in this table. Do not quote a NAMR number for a factor that is not in it. |
+| Table 1.2's NAMR row set | p.10 | 13 rows: Market + **12** styles. Small-Cap, Leverage, Quality, Foreign Sensitivity, Oil, Emerging Market do **not** appear in this table. Do not quote a NAMR number for a factor that is not in it. Note Table 1.1 (p.9) lists **18** styles across all models — 18 is the catalogue, 12 is what NAMR runs. |
+| Table 1.2's Sharpe column | p.10 | Printed, but **not** reproducible from the two printed columns beside it: return and volatility are each rounded to one decimal first. Profitability 3.1/2.2 = 1.41 vs printed **1.37**; Mid-cap 0.9/1.8 = 0.50 vs **0.52**; Dividend Yield −0.3/1.9 = −0.16 vs **−0.18**. Never derive one column from another at the table. |
+| The p.35 style panel's "Market" dot | p.35 | ≈**0.0** — but this panel plots **active** exposure (portfolio − benchmark). It does **not** mean the portfolio has no market exposure, and it does not contradict Portfolio Beta 1.02 in the same banner. Saying "the report shows zero market exposure" teaches the exact confusion p.4 warns about. |
+| The p.35 asset panel's fifteen bars | p.35 | "Top Asset Contributions" is a **top-N** panel with exactly 15 bars. The report never states how many holdings the portfolio has. Never say "a 15-stock portfolio". |
+| Figure 1.8's threshold | p.15 | Figure 1.8 prints **no** threshold line. The 10% bar is prose on p.14 and a dashed line on Figure 1.10 (p.16) only. Comparing a Figure 1.8 bar to 10% is the GM's comparison, not the chart's. |
 
 ---
 
@@ -775,4 +1119,7 @@ it — so we are going to build it."*
 | The formula for any substyle | pp.42–54, equations (1.12)–(1.55) |
 | Which substyles go into which style, per region | pp.40–41 |
 | The complete candidate inventory (including the placebo) | p.56, Table 1.4 |
+| The one printed fit statistic in the whole paper | p.4 (beta 0.99, R² 91%, S&P 500 vs NAMR market factor) |
+| The closest thing to a count of how big a model is | p.57, Table 1.5 — 54 NAMR industry rows, **counted, not printed**. The paper gives no factor total anywhere |
 | Something to attack | p.8, p.27, p.32, p.33, p.36, p.55 |
+| Whether that attack is a cheap shot | `gm/CRITIQUE.md` §6, before you say it out loud |

@@ -423,6 +423,8 @@ check("  CHECK 2 sum x*e -- passes", dot(x, e_inv), F(0))
 check("  sum e^2 of the sabotaged file", dot(e_inv, e_inv), F(40))
 check("  sum e^2 of the clean file",     dot(e_clean, e_clean), F(16))
 check("  ratio", F(40, 16), F('5/2'))
+check("  increase over clean (the markdown's '150%')",
+      (dot(e_inv, e_inv) - dot(e_clean, e_clean)) / dot(e_clean, e_clean), F('3/2'))
 print("   -> 2.5x worse (a 150% increase) and BOTH checks report perfect health.")
 
 # brute force: how many small-integer invisible corruptions exist?
@@ -431,6 +433,7 @@ invisible = [d for d in product(rng, repeat=5)
              if any(t != 0 for t in d) and sum(d) == 0 and dot(x, d) == 0]
 print(f"   brute force over D_i in {{-2..2}}^5: "
       f"{len(invisible)} non-zero invisible corruption vectors exist")
+check("  count of invisible vectors (the markdown's '30')", F(len(invisible)), F(30))
 check("  D=[1,-2,1,0,0] is among them", F(tuple(D) in invisible), F(1))
 check("  none of them is supported on 1 cell",
       F(any(sum(1 for t in d if t != 0) == 1 for d in invisible)), F(0))

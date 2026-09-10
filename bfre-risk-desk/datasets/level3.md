@@ -1,7 +1,7 @@
 # Level 3 — The Second Dial
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level3.py`
-(306 exact checks, standard library only, exits 0). Nothing here is rounded by hand. Where a
+(340 exact checks, standard library only, exits 0). Nothing here is rounded by hand. Where a
 decimal is not exact it is printed with the fraction beside it and labelled **rounded**.
 
 Entering this level the player already holds, from Levels 0–2:
@@ -398,10 +398,11 @@ SS(b₁* + δ₁,  b₂* + δ₂)  −  SS*  =  Q(δ₁, δ₂)  >  0  for any n
 **Every other pair scores strictly worse. The answer is unique.** Verified exactly on 49
 `(δ₁, δ₂)` pairs.
 
-*Hold on to `D`.* When `D` is large the bowl is steep in every direction and the answer is firmly
-pinned. When `D` is small the bowl has a long shallow trough and the answer wobbles. When `D = 0`
-the second term vanishes entirely, `Q` is zero along a whole line of nudges, and **there is no
-single answer at all.**
+*Hold on to `D`.* When `D` is large **next to `Σx²Σs²`** the bowl is steep in every direction and
+the answer is firmly pinned. When `D` is small next to `Σx²Σs²` the bowl has a long shallow trough
+and the answer wobbles. (Always next to `Σx²Σs²` — `D` on its own has no scale, and Section 8a
+shows why.) When `D = 0` the second term vanishes entirely, `Q` is zero along a whole line of
+nudges, and **there is no single answer at all.**
 
 ### 8a. One inch through Level 4's door — watch `D` collapse
 
@@ -409,7 +410,7 @@ Keep the cheapness column exactly as it is. Slide the size column, a fraction `t
 a multiple of the cheapness column — `s(t) = (1−t)·s + t·(3/2)·x` — until at `t = 1` the two columns
 are literally the same column scaled. Recompute the three sums at each stop:
 
-| `t` | `Σx·s(t)` | `D` | `D` rounded | `k` rounded |
+| `t` | `Σx·s(t)` | `D` | `D` rounded | `(Σxs)²/(Σx²Σs²)` rounded |
 |---:|---:|---:|---:|---:|
 | 0 (this level's data) | −5 | 50 | 50.0000 | 0.333333 |
 | 1/4 | −15/16 | 225/8 | 28.1250 | 0.030303 |
@@ -420,14 +421,31 @@ are literally the same column scaled. Recompute the three sums at each stop:
 | 99/100 | 887/80 | 1/200 | 0.0050 | 0.999959 |
 | **1** | 45/4 | **0** | 0.0000 | **1.000000** |
 
+The last column has no name yet. It is just the ratio `(Σxs)²/(Σx²Σs²)` — the interference term,
+squared, measured against the two diagonal sums. Compute it and nothing more; Section 10b derives
+what it does and Section 13 names it.
+
 Two things to read off it, and only two:
 
-- **`D → 0` as the second column slides onto the first.** At `D = 0` the lines `L₁` and `L₂` are
-  parallel, `Q` costs nothing along a whole direction, and the system stops having one answer. The
-  chase never converges. That is Level 4.
-- **At `t = 4/13` the interference vanishes by accident** — `Σx·s(t) = 0`, `k = 0`, `D` is at its
-  largest possible value `Σx²Σs²`, and one pass of the chase would be exact. That a *different*
-  version of the size column can be free of interference is the seed of Level 4's real machinery.
+- **`D → 0` as the second column slides onto the first.** At `D = 0`, `Q` costs nothing along a
+  whole direction and the system stops having one answer: `L₁` and `L₂` are no longer two lines
+  crossing at a point, they are the **same line**, every point on which fits equally well. (Not two
+  parallel lines that miss each other — these two equations can never contradict each other, only
+  collapse into one. That is why the paper's phrase at Level 4 will be *"an infinite number of
+  possible solutions"* and not *"no solution"*.) That is Level 4.
+- **At `t = 4/13` the interference vanishes by accident** — `Σx·s(t) = 0`, the last column reads 0,
+  and one pass of the chase would be exact. That a *different* version of the size column can be
+  free of interference is the seed of Level 4's real machinery.
+
+**A warning about `D` that this table makes unavoidable.** Read the `D` column downwards: it falls
+from 50 to 23.96 between `t = 0` and `t = 4/13`, yet `t = 4/13` is the *easier* problem — its
+interference is exactly zero. Both things are true because `D` is not a scale-free number. Double
+the size column and every `Σs²` quadruples, `Σxs` doubles, and `D` comes out **four times bigger**
+with nothing about the problem changed; the last column does not move at all. So `D = Σx²Σs²` at
+`t = 4/13` means only "`D` has hit its ceiling *for these two columns*" — and that ceiling has
+itself fallen, because `s(4/13)` is a shorter column than `s(0)`. **`D = 0` is the fact worth
+carrying; the size of a non-zero `D` is only meaningful next to `Σx²Σs²`,** which is exactly the
+comparison the last column is making.
 
 **Do not walk through that door yet.** Both facts are Level 4's material; this level's job was to
 show that the system exists, not to take it apart.
@@ -569,13 +587,19 @@ and, because `D = Σx²Σs² − (Σxs)²`, that same number is
 k = 1 − D/(Σx²·Σs²)         here:  1 − 50/75 = 1/3      ✓
 ```
 
-**One number controls everything in this level.** `k = 0` means the columns do not interfere, `D` is
-as big as it can be, and one pass is exact. `k` near 1 means `D` is near zero, the chase crawls, and
-the answer is barely pinned down at all. On this data `k = 1/3`, so five full passes bring `b₂`
-within 1% of the truth (`(1/3)⁵ = 1/243 ≈ 0.0041`).
+**One number controls everything in this level.** `k = 0` means the columns do not interfere, `D`
+has hit its ceiling `Σx²Σs²`, and one pass is exact. `k` near 1 means `D` is near zero *next to that
+ceiling*, the chase crawls, and the answer is barely pinned down at all. Note that `k` is the
+scale-free one of the pair: rescale either column and `D` moves, `k` does not. On this data
+`k = 1/3`, so five full passes bring `b₂` within 1% of the truth (`(1/3)⁵ = 1/243 ≈ 0.0041`).
 
-`√k = √(1/3) = 0.5774` (rounded) is the correlation between the two columns — **but that name is not
-unlocked until Section 13.** For now it is just `k`, "the overlap".
+`√k = √(1/3) = 0.5774` (rounded) is the **size** of the correlation between the two columns — **but
+that name is not unlocked until Section 13.** Note "size": a square root is never negative, so `√k`
+throws the sign away. The correlation here is `−0.5774`, negative, because `Σxs = −5` is negative;
+`k` alone cannot tell you that. Flip the sign of every entry in the size column and `Σxs` becomes
+`+5`, `b₂` becomes `−3/5`, and the chase's error sequence becomes `+1/5, +1/15, +1/45, …` — the same
+magnitudes at the same `1/3` per pass. **The rate of the chase depends on `(Σxs)²`, so it cannot
+see which way the columns lean, only how hard.** For now it is just `k`, "the overlap".
 
 ### 10c. Why it never lands, in one sentence
 
@@ -666,7 +690,7 @@ Four things they are owed:
 | the cross-multiplication formula in Section 6 | **Cramer's rule** (equivalently, inverting `XᵀX`) |
 | fitting several columns in one solve | **multivariate** (or multiple) **regression** |
 | `Σxs = 0` | the two columns are **orthogonal** — Level 2's word, now between two columns |
-| `k = (Σxs)²/(Σx²Σs²)` | the **squared correlation** between the columns; `√k` is their correlation |
+| `k = (Σxs)²/(Σx²Σs²)` | the **squared correlation** between the columns; `√k` is the *size* of that correlation, and `Σxs` supplies the sign it dropped (here `ρ = −√k = −0.5774`) |
 | the one-at-a-time chase | **Gauss–Seidel** / **backfitting** (graduate vocabulary — flag it as such) |
 
 A sentence the player should now be able to produce unprompted, in a quant's register:
@@ -679,9 +703,20 @@ A sentence the player should now be able to produce unprompted, in a quant's reg
 *Frisch–Waugh–Lovell*, *partialling out*, *standard error*, *degrees of freedom*, *R²*. The first
 four are Level 4; *standard error* and *degrees of freedom* are Level 6.
 
-*Frisch–Waugh–Lovell* is spoken aloud once, in Section 12, and only as a difficulty warning — the
-same way Level 2 let the player hear "orthogonal" before earning it. Naming a theorem the player
-will meet is honest; using it to explain anything before Level 4 builds it is not.
+Three of those locked terms are nevertheless **heard** on this page, and the game master should know
+where, so the player is not accidentally handed vocabulary they have not earned:
+
+- *Frisch–Waugh–Lovell*, once, in Section 12, purely as a difficulty warning.
+- *multicollinearity* and *variance inflation factors*, in Section 16, **only inside the quoted
+  p.32 paragraph and its footnote** — the paper's words, reproduced because the tie-back needs
+  them. The surrounding prose deliberately explains that footnote using `D = 0`, which the player
+  built, and never uses either term to do explanatory work.
+
+The rule in both cases is Level 2's: let the player *hear* a name they will meet, never *lean* on
+it. Naming a theorem or a diagnostic the player will meet is honest; using it to explain anything
+before Level 4 builds it is not. If the player picks up "multicollinearity" from the quote and
+starts deploying it, that is the Victory-Condition-2 mimicry failure — dock bps and send them back
+to `D`.
 
 ---
 
@@ -957,9 +992,10 @@ player just solved, only with as many equations as there are factors.
 
 The page also names the two-pass architecture and the weighting, so the conditions BFRE's `u`
 actually satisfies are the **weighted** ones — `Σ w_i X_ij u_i = 0` per column `j`, with
-`w_i = √(market cap)` (the weighting scheme is quoted in full at Level 1 and Level 2 from p.25; the
-balance conditions themselves are **not** in the paper, as Level 2 established and the closing
-section below re-confirms). Nothing in this level changes under weights; every sum grows one `w`.
+`w_i = √(market cap)` (p.25's weighting paragraph is quoted in full at Level 1, and Level 2 put it
+to work in its weighted balance check; the balance conditions themselves are **not** in the paper,
+as Level 2 established and the closing section below re-confirms). Nothing in this level changes
+under weights; every sum grows one `w`.
 
 ### p.5 is the paper saying this level's point in its own words
 
@@ -1029,11 +1065,14 @@ computes neither:
 Two honest notes the game master must make:
 
 - **This level's boss round is calibrated to the paper's hardest real pair.** The boss columns have
-  `√k = √(18/35) = 0.7171` (rounded), sitting just under Size–Liquidity's 0.74. The seven passes
-  the boss round needs and the eight the real worst pair would need are the same problem.
+  `Σxs = +6 > 0`, so their correlation is `+√(18/35) = +0.7171` (rounded), sitting just under
+  Size–Liquidity's `+0.74`. The seven passes the boss round needs and the eight the real worst pair
+  would need are the same problem.
 - **The two columns this level actually teaches with are, in the real NAMR model, the easy case.**
-  Figure 1.3 reports Size–Value at **0.00**. Our teaching data makes them interfere strongly
-  (`√k = 0.5774`, rounded) because the mechanism needs to be visible; the real pair happens not to.
+  Figure 1.3 reports Size–Value at **0.00**. Our teaching data makes them interfere strongly —
+  `Σxs = −5`, so `ρ = −√(1/3) = −0.5774` (rounded) — because the mechanism needs to be visible; the
+  real pair happens not to. (Compare signed numbers with signed numbers here: `√k` is only the
+  size, and two of the five pairs listed above, `−0.46` and `−0.36`, are negative too.)
   Say this out loud rather than letting the player walk away believing value and size collide in
   BFRE. They do not. Size and *liquidity* do.
 
@@ -1060,8 +1099,16 @@ and **footnote 16** on the same page:
 
 That footnote is `D = 0`, in the paper's own words. Sections 8 and 8a are what it means: when `D`
 hits zero the tax term `Q` stops being strictly positive, a whole line of nudges costs nothing, and
-there is no unique best pair to find. **"Identification issues" is a polite way of saying the two lines `L₁` and
-`L₂` have become parallel.**
+there is no unique best pair to find. **"Identification issues" is a polite way of saying the two
+lines `L₁` and `L₂` have stopped crossing at a point and become one and the same line.**
+
+Note which failure the paper is describing. The direct solve divides by `D`, so at `D = 0` it
+divides by zero and *fails loudly* — which is what footnote 16 says. The chase does not fail loudly.
+Run it on two exactly-proportional columns and it stops moving after a single step and hands back a
+confident-looking pair of numbers; it is just that *which* pair depends entirely on the guess it
+started from, and every one of them fits the data equally well. **The one-at-a-time method's real
+danger is not that it is slow. It is that at the cliff edge it stops warning you.** That contrast —
+loud failure versus silent arbitrariness — is Level 4's, and worth the player hearing once here.
 
 The paper reports that VIFs *"were found to be well within suitable thresholds"* — and, as
 `notes/chunk_28-36.md` records explicitly, **no numeric VIF values and no thresholds are printed
@@ -1124,7 +1171,7 @@ found, now one level deeper, and a standing entry for Level 12 (The Critique).
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level3.py     # 306 exact-rational checks, exits 0
+python3 bfre-risk-desk/tools/verify_level3.py     # 340 exact-rational checks, exits 0
 ```
 
 The script recomputes every figure on this page from the raw `x`, `s` and `r` columns in

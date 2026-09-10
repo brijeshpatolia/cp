@@ -197,6 +197,11 @@ for hh in [F(1, 1000), F(1, 100), F(1, 10), F(1), F(2), F(3)]:
           f"{d(SS(F(1)+hh,x0,r0),7):>10}   |h-term| / |h^2-term| = {d(ratio,1)}")
 check("cold breakeven from 1", 2 * pull(F(1), x0, r0) / Sxx0, F(2))
 check("SS(1)==SS(3) via nudge h=2", SS(F(3), x0, r0), SS(F(1), x0, r0))
+# The markdown's "reward / tax" column is exact at every row; the h = 3 entry is 2/3,
+# not the 0.7 a one-decimal display would suggest.
+_h3 = F(3)
+check("cold reward/tax at h=3 is exactly 2/3",
+      abs(-2 * _h3 * pull(F(1), x0, r0)) / (_h3 * _h3 * Sxx0), F(2, 3))
 
 print()
 print("  --- NUDGING FROM b = 2 :  P(2) = 0, so SS(2+h) - SS(2) = 7.5h^2 ---")
@@ -288,10 +293,12 @@ print()
 print("  markdown-quoted ratios derived from the rows above:")
 _w1 = SS(naive_avg0, x0, r0) / SS(b0, x0, r0)
 print(f"     mean(r/x) scorecard vs minimum: {SS(naive_avg0,x0,r0)}/{SS(b0,x0,r0)} = {_w1} "
-      f"-> {d((_w1-1)*100,2)}% worse (markdown rounds to 69%)")
-check("cold mean-ratio SS ratio", _w1, F(1369, 812) if False else SS(naive_avg0, x0, r0) / SS(b0, x0, r0))
-assert F(68, 100) < _w1 - 1 < F(69, 100), "69% claim"
-CHECKS.append("cold mean-ratio is ~69% worse")
+      f"-> {d((_w1-1)*100,2)}% worse (markdown says 68.56%)")
+# The literal 16829/9984 is what the markdown prints; assert against it, not against
+# a re-evaluation of the same expression (that would check nothing at all).
+check("cold mean-ratio SS ratio == 16829/9984", _w1, F(16829, 9984))
+assert d((_w1 - 1) * 100, 2) == "68.56", "markdown's 68.56% claim"
+CHECKS.append("cold mean-ratio is 68.56% worse")
 _w2 = SS(naive_tot0, x0, r0) / SS(F(0), x0, r0)
 print(f"     sum r/sum x scores {SS(naive_tot0,x0,r0)} = SS(0) = {SS(F(0),x0,r0)} exactly "
       f"(ratio {_w2}) -- as bad as predicting zero for everyone")
@@ -407,6 +414,25 @@ check("boss sum e", Se1, F(247, 90))
 check("boss sum x*e", Sxe1, F(0))
 check("boss sum e^2", See1, F(19, 12))
 check("boss sum e == sum r - b*sum x", Se1, Sr1 - b1 * Sx1)
+
+# The markdown warns that sum(e) is the FINGERPRINT of the missing second dial, not its
+# size.  Fit the two-dial model here once, purely to keep that warning honest: adding an
+# intercept re-estimates the slope too, so the intercept it lands on is close to, but not
+# equal to, the mean residual of the one-dial fit.
+_n = len(x1)
+_xbar, _rbar = Sx1 / _n, Sr1 / _n
+_b_two = (Sxr1 - _n * _xbar * _rbar) / (Sxx1 - _n * _xbar * _xbar)
+_a_two = _rbar - _b_two * _xbar
+print()
+print(f"  two-dial fit (Level 5's model, computed here only to bound a claim):")
+print(f"     slope     = {_b_two} = {d(_b_two,4)}   (one-dial slope was {b1} = {d(b1,4)})")
+print(f"     intercept = {_a_two} = {d(_a_two,4)}")
+print(f"     mean residual of the ONE-dial fit = {Se1/_n} = {d(Se1/_n,4)}  -- close, NOT equal")
+check("boss two-dial slope", _b_two, F(53, 35))
+check("boss two-dial intercept", _a_two, F(39, 70))
+check("boss one-dial mean residual", Se1 / _n, F(247, 450))
+assert _a_two != Se1 / _n, "the markdown's 'fingerprint, not size' warning"
+CHECKS.append("two-dial intercept != mean one-dial residual")
 assert all(ei > 0 for ei in e1), "expected every boss residual to be positive"
 CHECKS.append("every boss residual positive")
 
@@ -487,6 +513,18 @@ check("boss total/total", Sr1 / Sx1, F(43, 10))
 check("boss EMK-only slope", r1[4] / x1[4], F(42, 25))
 check("boss shape error r/x^2", Sr1 / Sxx1, F(43, 135))
 check("boss shape error xr/x", Sxr1 / Sx1, F(21))
+
+# The build-the-shape check in Part 1 kills exactly the two rows whose units are wrong.
+# sum(r)/sum(x) has the RIGHT units (percent per unit of cheapness) and survives it -- and
+# among the survivors it is the worst.  The markdown says both; assert both.
+_right_units = [("least squares", b1), ("sum r / sum x", Sr1 / Sx1),
+                ("mean(r/x)", mean_ratio), ("median(r/x)", median_ratio),
+                ("two extremes", guess), ("EMK only", r1[4] / x1[4])]
+_worst = max(_right_units, key=lambda kv: SS(kv[1], x1, r1))
+assert _worst[0] == "sum r / sum x", _worst
+print(f"  worst method the units check CANNOT kill: {_worst[0]}, b = {_worst[1]}, "
+      f"SS = {d(SS(_worst[1],x1,r1),4)}")
+CHECKS.append("sum r/sum x survives the units check and is the worst that does")
 check("boss SS at 43/10", SS(F(43, 10), x1, r1), F(20653, 200))
 check("boss ratio worse at 43/10", SS(F(43, 10), x1, r1) / See1, F(61959, 950))
 

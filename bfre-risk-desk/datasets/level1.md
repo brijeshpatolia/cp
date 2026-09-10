@@ -1,8 +1,8 @@
 # Level 1 — The Dial
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level1.py`
-(167 exact checks, standard library only). Nothing here is rounded by hand; every decimal shown
-is a rounded display of a fraction that is also printed.
+(173 exact checks, standard library only). Nothing here is rounded by hand; every decimal shown
+is the rounded display of an exact fraction that the verifier computes and checks.
 
 **What the player must walk out able to do:** derive `b = Σxr / Σx²` from nothing, with no
 calculus and no derivatives — only *"what happens to the total squared miss if I nudge b by a
@@ -147,7 +147,7 @@ SS(1 + h) − SS(1)  =  −15h + 7.5h²
 | 0.1 | −1.5000000 | +0.0750000 | −1.4250000 | 12.5750000 | **20** |
 | 1 | −15.0000000 | +7.5000000 | −7.5000000 | 6.5000000 | 2 |
 | 2 | −30.0000000 | +30.0000000 | **0.0000000** | 14.0000000 | 1 |
-| 3 | −45.0000000 | +67.5000000 | +22.5000000 | 36.5000000 | 0.7 |
+| 3 | −45.0000000 | +67.5000000 | +22.5000000 | 36.5000000 | 2/3 |
 
 **This is the load-bearing column.** Halve `h` and the reward halves but the tax quarters. Divide
 `h` by ten and the reward drops 10× while the tax drops 100×. The ratio 2 → 20 → 200 → 2000 has no
@@ -266,20 +266,30 @@ Two of those rows are Level 0's wrong methods, priced by the same formula:
   minimum — **68.56% worse** (rounded).
 
 Bank the penalty formula. `Σx²` in the denominator of `b` and `Σx²` as the multiplier on your
-error are the same `Σx²`, and at Level 6 that single fact turns into the standard error.
+error are the same `Σx²`, and at Level 6 that single fact turns into the number that says how far
+`b` is to be trusted.
 
 ### Build-the-shape check (do this *before* revealing the formula)
 
-Give the player only the units and the job:
+Give the player only the units and the job. The whole check turns on giving `x` a **unit** and
+refusing to drop it: write `C` for one unit of cheapness score and `%` for one percentage point of
+return. Then:
 
-- `x` is a pure number (a score). `r` is in percent.
-- So `Σxr` is in **percent**. `Σx²` is a **pure number**.
-- The answer must be *percent per unit of cheapness*.
-- Therefore the formula must be `(something in percent) / (something dimensionless)`, and the only
-  two such sums available are `Σxr` and `Σx²`.
+- `x` is measured in `C`. `r` is measured in `%`.
+- So the five sums the player has are: `Σx` in `C`, `Σx²` in `C²`, `Σxr` in `%·C`, `Σr` in `%`,
+  `Σr²` in `%²`.
+- The answer multiplies a cheapness score to give a return, so `b` must be in `%/C` —
+  *percent per unit of cheapness*.
+- `%/C = (%·C)/C²`. The only sum in `%·C` is `Σxr`; the only sum in `C²` is `Σx²`.
 
-`Σxr/Σx²` is the only shape that survives. This kills two wrong answers before any arithmetic
-happens — see the shape-error rows in the boss table.
+`Σxr/Σx²` is the only ratio of two sums with that shape. This kills two wrong answers before any
+arithmetic happens: `Σr/Σx²` is `%/C²` and `Σxr/Σx` is plain `%` — see the shape-error rows in the
+boss table.
+
+Be honest with the player about what the check does **not** do. `Σr/Σx` is also `%/C`, so units
+alone cannot kill it; it dies on the arithmetic instead (it is the worst non-shape method in the
+boss table). And if `x` is treated as a bare pure number, `C` disappears, every candidate collapses
+to `%`, and the check kills nothing at all. The unit on `x` is doing all the work — say so.
 
 ---
 
@@ -368,8 +378,7 @@ gap = 14/9 − 67/45 = 1/15 = 0.0667      the eyeball was low by 3/70 = 4.286%  
 table by a 12th-standard student in ten seconds. The exact value is `14/9` — a repeating decimal
 that no amount of squinting produces. Five stocks all had to vote, and the vote was weighted by
 `x²`. If the player's guess landed within a few percent, say so and give the bps; if they claim
-they "basically had it", show them `1/15` and make them say what the missing sixty-seventh came
-from.
+they "basically had it", show them the missing `3/45` and make them say which stocks it came from.
 
 ### Step 3 — the checks the player runs before submitting
 
@@ -397,15 +406,23 @@ P(b) = Σxr − b·Σx² = 21 − (14/9)(27/2) = 21 − 21 = 0     ✓
 ```
 
 **Every stock beat the model.** Not one is below the line. That looks broken and it is not: the
-rule `r = b·x` is forced through the origin, so a month in which *everything* went up cannot be
-represented at all — there is no knob for "the whole market rose". The model has one dial and the
-month needed two.
+rule `r = b·x` is forced through the origin, so a shift that lifts *every* stock by the same amount
+cannot be represented at all — there is no knob for "the whole market moved". The model has one
+dial and the month needed two.
+
+(Note for the game master, so this is not overstated at the table: it is **not** the case that
+every stock went up this month — AXL returned `−2.5%` and BRN `−1.0%`. What is true is that every
+stock came in *above what cheapness alone predicts for it*, which is the thing a second dial would
+absorb.)
 
 Do not fix this here. Two locked doors are visible through it:
 
 - Level 5 adds a second dial that *can* say "everything rose", and the day it appears `Σe` is
-  forced to zero as well. `Σe ≠ 0` here is not a bug; it is the exact measure of what the missing
-  dial would have caught.
+  forced to zero as well. `Σe ≠ 0` here is not a bug; it is the **fingerprint** of the missing
+  dial. Do not call it the missing dial's *size*: fitting a second dial re-fits the first one too,
+  and the two-dial answer on this data is `a = 39/70 = 0.5571` with `b = 53/35 = 1.5143`, whereas
+  `Σe/5 = 247/450 = 0.5489`. Close, deliberately not equal — and the gap is Level 5's opening
+  question, so do not spend it here.
 - BFRE's answer is a **market factor** to which every equity has unit exposure, p.4 — see the
   tie-back.
 
@@ -444,8 +461,8 @@ Penalty column is `Σx²·(b − 14/9)² = 13.5(b − 14/9)²`; the last column 
 
 | Method | `b` exact | `b` (rounded) | `SS(b)` | penalty | × worse |
 |---|---:|---:|---:|---:|---:|
-| **least squares `Σxr/Σx²`** | **14/9** | **1.5556** | **1.5833** | **0** | **1.000** |
-| "total return ÷ total exposure" `Σr/Σx` | 43/10 | 4.3000 | 103.2650 | 101.6817 | 65.220 |
+| **the nudge answer `Σxr/Σx²`** | **14/9** | **1.5556** | **1.5833** | **0** | **1.000** |
+| "total return ÷ total score" `Σr/Σx` | 43/10 | 4.3000 | 103.2650 | 101.6817 | 65.220 |
 | average the per-stock slopes `mean(r/x)` | 593/400 | 1.4825 | 1.6554 | 0.0721 | 1.046 |
 | median of the per-stock slopes | 293/200 | 1.4650 | 1.6940 | 0.1107 | 1.070 |
 | line through the two extreme stocks | 67/45 | 1.4889 | 1.6433 | 0.0600 | 1.038 |
@@ -462,13 +479,16 @@ Notes the game master must actually make:
 - **`mean(r/x) = 1.4825` is the dangerous one.** It lands 4.696% from the truth and only 4.55% worse
   on the scorecard (both rounded). It is *nearly right, by luck*. The per-stock slopes are
   `1.2500, 1.0000, 2.0000, 1.6800` — they disagree by a factor of two, so averaging them is a
-  choice, not a reading. And the choice is a bad one: it gives BRN, whose exposure is `−1.0`, the
-  same vote as EMK, whose exposure is `+2.5`. Least squares gives EMK `6.25/1 = 6.25` times the
+  choice, not a reading. And the choice is a bad one: it gives BRN, whose score is `−1.0`, the
+  same vote as EMK, whose score is `+2.5`. The nudge answer gives EMK `6.25/1 = 6.25` times the
   vote, because vote weight is `x²`. Ask the player to explain *why* `x²` and not `|x|`; if they
   cannot, the right answer is worth zero bps under the house rule.
-- **The two shape errors are already dead before arithmetic.** `Σr/Σx²` is percent divided by a
-  pure number squared — wrong units, and it returns `0.3185`, on the wrong rung. `Σxr/Σx` returns
-  `21`, two rungs out. The build-the-shape check in Part 1 catches both without computing anything.
+- **The two shape errors are already dead before arithmetic.** `Σr/Σx²` is percent over cheapness
+  *squared* — one power of cheapness too many — and it returns `0.3185`, on the wrong rung.
+  `Σxr/Σx` is plain percent, with no "per unit of cheapness" left in it at all, and returns `21`,
+  two rungs out. The build-the-shape check in Part 1 catches both without computing anything. It
+  does **not** catch `Σr/Σx`: that one has the right units and survives, and it is the worst
+  of the six methods that do survive.
 - **The median row is a Level 0 over-learn.** A player who took "squares are sensitive to
   outliers" as "so use the robust thing" reaches for the median of the slopes and scores 7% worse.
   Level 0's point was that a risk model *wants* that sensitivity. Charge bps for the inversion.
@@ -487,9 +507,10 @@ Make them predict first. Then show both halves:
 | `Σr²` | 137/4 = 34.2500 | 3389/100 = 33.8900 |
 | `Σe²` | 19/12 = 1.5833 | 367/300 = 1.2233 |
 
-The factor return **does not move by a hair**, because CHR contributed `0 × 0.6 = 0` to `Σxr` and
+The dial **does not move by a hair**, because CHR contributed `0 × 0.6 = 0` to `Σxr` and
 `0² = 0` to `Σx²`. It was never voting. But the reported fit quality moves a lot: `Σe²` falls by
-exactly `0.6² = 0.36`, which is CHR's whole return.
+exactly `0.36`, which is `0.6²` — CHR's entire return was also its entire miss, so its entire
+return leaves the scorecard with it.
 
 So dropping it changes nothing about the answer and flatters the diagnostic. That is the shape of
 a real research fraud, and it is worth naming as such. It is also the cleanest possible statement
@@ -562,10 +583,13 @@ Four honest caveats the player is owed:
 1. **The identity is exact, and that is a gift specific to squares.** `SS(b)` is a polynomial of
    degree exactly 2 in `b`, so the split into an `h` piece and an `h²` piece is complete — there is
    no `h³`, no remainder, nothing swept under a rug. This is precisely why Level 1 needs no
-   calculus. For any other loss (the absolute-value loss of Level 0; the outlier-down-weighting
-   "robust methods" BFRE mentions on p.27 for cleansing specific returns) the same split is only
-   an *approximation* valid for small `h`, and making that rigorous requires limits. Say this
-   plainly rather than letting the player think calculus is never needed.
+   calculus. For a smooth loss that is not a square (the outlier-down-weighting "robust methods"
+   BFRE mentions on p.27 for cleansing specific returns) the same split is only an *approximation*
+   valid for small `h`, and making that rigorous requires limits. For the absolute-value loss of
+   Level 0 it is worse than that: at a kink there is no single `h`-coefficient at all — the reward
+   term has one value for `h > 0` and another for `h < 0`, which is exactly why the argument on
+   this page dies there. Say both of these plainly rather than letting the player think calculus
+   is never needed.
 2. **The player has just built a derivative and has not been told.** "For small enough `h`, the
    sign of the change is the sign of the `h`-coefficient" is the definition. The name gets unlocked
    only if they ask. Do not volunteer it as if it explained something.
@@ -575,8 +599,10 @@ Four honest caveats the player is owed:
    *that* — multicollinearity, and the Frisch–Waugh reading of a coefficient — is genuinely
    graduate-level material. Warn the player at the start of Level 3 so they calibrate.
 4. **Production scale changes nothing conceptual and everything practical.** BFRE's first-pass
-   regression (p.25, eq. 1.9) runs on thousands of assets against market, style, core-industry and
-   core-country columns simultaneously, with weights, plus two linear restrictions to make the
+   regression (p.25, eq. 1.9) runs on the whole estimation universe against market, style,
+   core-industry and core-country columns simultaneously — thousands of assets: the NAMR industry
+   schema on p.57 lists `# Assets` industry by industry, and those printed rows total **2,193**
+   (counted from the rows; the page prints no total) — with weights, plus two linear restrictions to make the
    answer unique at all (p.26, eq. 1.10). The idea in that machine is the one on this page. The
    bookkeeping is not.
 
@@ -670,7 +696,10 @@ rose and there was no column to say so. BFRE puts that column in first.
 **The cheapness score is BFRE's value factor.** p.19 defines value by standard valuation ratios —
 **book-to-price, sales-to-price and cash-flow-to-price** — and reports the NAMR value factor with a
 Sharpe ratio of 1.43 and a correlation of 0.45 with Fama–French HML. When Level 7 strings the
-player's monthly `b` values into a series, that series is the thing Figure 1.14 plots (referenced on p.19, printed on p.20).
+player's monthly `b` values into a series, that series *accumulated* is what Figure 1.14 plots —
+the caption is "cumulative performance of value in the NAMR model, Mar 1996 – Dec 2013" (figure
+referenced on p.19, printed on p.20). The `b` values themselves are the increments of that curve,
+not the curve.
 
 **Where the `f` goes next.** p.24, equation **(1.8)**: `Σ = X F Xᵀ + Δ`. The `b` estimated here,
 repeated across days, becomes a row of the factor covariance matrix `F` (Level 8); the `e` column
@@ -698,5 +727,5 @@ being minimised.
 ## Verify
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level1.py     # 167 exact-rational checks, exits 0
+python3 bfre-risk-desk/tools/verify_level1.py     # 173 exact-rational checks, exits 0
 ```

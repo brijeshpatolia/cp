@@ -834,8 +834,11 @@ for t in frac('0', '1/4', '4/13', '1/2', '3/4', '9/10', '99/100', '1'):
     if t == F(4, 13):
         check("t = 4/13: the interference term hits exactly zero", Dt["Sxs"], F(0))
         check("t = 4/13: rho^2", rt, F(0))
-        check("t = 4/13: det = Sxx*Sss, its largest possible value",
+        check("t = 4/13: det = Sxx*Sss, its ceiling FOR THESE COLUMNS (not the biggest"
+              " det in the table -- see the scale-free note below)",
               dt, Dt["Sxx"] * Dt["Sss"])
+        check("t = 4/13: Sum s^2 has itself shrunk (10 at t = 0), which is why that"
+              " ceiling is only 23.96", Dt["Sss"], F(540, 169))
     if t == F(1, 2):
         check("t = 1/2: Sum x*s", Dt["Sxs"], F(25, 8))
         check("t = 1/2: det", dt, F(25, 2))
@@ -864,12 +867,91 @@ check("rho^2 = 1/3  (this level's derivation data): passes", passes_to_1pc(F(1, 
 check("rho^2 = 18/35 (this level's boss data): passes", passes_to_1pc(F(18, 35)), 7)
 check("rho^2 = 0.74^2 (BFRE's worst measured pair): passes",
       passes_to_1pc(F(74, 100) ** 2), 8)
-print("   rho^2 = 1    (exact collision): never -- the chase does not converge at all")
+print("   rho^2 = 1    (exact collision): the error never shrinks -- see below for what")
+print("                 the chase actually does there, which is worse than being slow.")
+
+print()
+print("   WHAT ACTUALLY HAPPENS AT det = 0 (t = 1, s = (3/2)x exactly):")
+s_col = [F(3, 2) * xi for xi in x]
+Dc = sums(x, s_col, r)
+detc = Dc["Sxx"] * Dc["Sss"] - Dc["Sxs"] ** 2
+check("collapse: det", detc, F(0))
+check("collapse: rho^2", Dc["Sxs"] ** 2 / (Dc["Sxx"] * Dc["Sss"]), F(1))
+
+# (a) the two normal-equation lines COINCIDE -- they are not parallel-and-distinct.
+#     L1 = (Sxx, Sxs | Sxr);  L2 = (Sxs, Sss | Ssr).  Scale L1 by Sxs/Sxx and compare
+#     all three entries: if the constants match too, it is literally the same line.
+mlt = Dc["Sxs"] / Dc["Sxx"]
+check("collapse: L1 scaled by Sxs/Sxx has L2's b1 coefficient", Dc["Sxx"] * mlt, Dc["Sxs"])
+check("collapse: ...its b2 coefficient", Dc["Sxs"] * mlt, Dc["Sss"])
+check("collapse: ...AND its right-hand side -> the lines COINCIDE",
+      Dc["Sxr"] * mlt, Dc["Ssr"])
+print("        so the failure is 'one line, infinitely many solutions', NOT 'parallel,")
+print("        no solution'. The normal equations can never contradict each other.")
+
+# (b) the chase does not diverge and does not wander: it FREEZES after one step, at a
+#     point that is a genuine minimiser but is chosen entirely by the starting guess.
+print("   the chase from four different starting guesses for b2:")
+landings = []
+for start in frac('0', '1', '-3', '7/2'):
+    b2z = start
+    for _ in range(4):
+        b1z = (Dc["Sxr"] - b2z * Dc["Sxs"]) / Dc["Sxx"]
+        b2z = (Dc["Ssr"] - b1z * Dc["Sxs"]) / Dc["Sss"]
+    ez = resid(x, s_col, r, b1z, b2z)
+    check(f"   start b2={S(start)}: b2 never moves off its starting value", b2z, start)
+    check(f"   start b2={S(start)}: both planks level anyway", (dot(x, ez), dot(s_col, ez)),
+          (F(0), F(0)))
+    check(f"   start b2={S(start)}: and SS is the SAME minimum", SS(x, s_col, r, b1z, b2z),
+          F(13, 2))
+    landings.append((b1z, b2z))
+    print(f"        start b2 = {S(start):>4}  ->  frozen at ({S(b1z)}, {S(b2z)})")
+CHECKS[0] += 1
+if len(set(landings)) != 4:
+    sys.exit("collapse: expected four DIFFERENT landing points")
+print("   [OK ] four different starting guesses -> four different 'answers', all equally")
+print("         good. The chase converges in one step and tells you nothing is wrong.")
+
+print()
+print("   det is NOT scale-free; rho^2 is. Rescale the size column and watch:")
+for c in frac('1', '2', '10'):
+    sc_ = [c * si for si in s]
+    Dk = sums(x, sc_, r)
+    dk = Dk["Sxx"] * Dk["Sss"] - Dk["Sxs"] ** 2
+    check(f"   s x {S(c)}: det scales by {S(c)}^2", dk, F(50) * c ** 2)
+    check(f"   s x {S(c)}: rho^2 unchanged",
+          Dk["Sxs"] ** 2 / (Dk["Sxx"] * Dk["Sss"]), F(1, 3))
+check("t = 4/13 det (23.96) really is BELOW the t = 0 det (50)", F(4050, 169) < F(50), True)
+check("...yet its rho^2 (0) is below t = 0's rho^2 (1/3): det alone does not rank difficulty",
+      F(0) < F(1, 3), True)
+
+print()
+print("   rho^2 keeps (Sxs)^2, so it drops the SIGN of the correlation:")
+check("derivation Sxs is NEGATIVE", D["Sxs"] < 0, True)
+check("so the correlation is -sqrt(rho^2), not +sqrt(rho^2)", D["Sxs"] < 0, True)
+check("boss Sxs is POSITIVE", B["Sxs"] > 0, True)
+s_flip = [-si for si in s]
+Df = sums(x, s_flip, r)
+check("flip the size column: Sxs flips sign", Df["Sxs"], F(5))
+check("...rho^2 does not move", Df["Sxs"] ** 2 / (Df["Sxx"] * Df["Sss"]), F(1, 3))
+bf1, bf2, _ = solve2(Df)
+check("...b2 flips sign, b1 does not", (bf1, bf2), (F(12, 5), F(-3, 5)))
+b2f = F(0)
+errs_f = []
+for _ in range(4):
+    b1f = (Df["Sxr"] - b2f * Df["Sxs"]) / Df["Sxx"]
+    b2f = (Df["Ssr"] - b1f * Df["Sxs"]) / Df["Sss"]
+    errs_f.append(b2f - bf2)
+check("...and the chase errors are the same size, opposite sign",
+      errs_f, frac('1/5', '1/15', '1/45', '1/135'))
 print()
 print("   Two things to read off that table, and only two:")
 print("     * det -> 0 as the second column slides onto the first. At det = 0 the two")
-print("       normal-equation lines are parallel and the system stops having one answer.")
+print("       normal-equation lines stop crossing at a point and become the SAME line,")
+print("       so the system has infinitely many answers rather than none.")
 print("     * at t = 4/13 the interference vanishes by accident and one pass is exact.")
+print("       (det there is 4050/169 = 23.96, BELOW the 50 at t = 0: det is not scale-free,")
+print("       so read det only against Sxx*Sss -- that ratio is what the last column shows.)")
 print("       Both of those are Level 4's material. Do not walk through that door yet.")
 
 # ============================================================================

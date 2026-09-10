@@ -38,6 +38,16 @@ statement is marked **[GM INFERENCE]**. Do not upgrade those at the table.
 5. **Score on the ladder** (§7 of the rules). Correct translation + correct new sentence = tier 2.
    Surviving the follow-up = tier 4. Nothing below tier 4 closes a level.
 
+**What Round F can and cannot score — read this before you write a tier down.** A vocabulary round
+can establish tier 1 (Recognise), tier 2 (Compute — the new sentence puts the term to work), tier 4
+(Defend — the follow-up *is* an expert attacking them) and occasionally tier 5. It **cannot**
+establish **tier 3 (Derive)**: nothing here asks the player to rebuild a formula from nothing. So
+never record tier 3 off a Round F. And if a player survives the follow-up on a term whose mechanism
+they have not yet derived, you are looking at a tier-4 defence standing on a tier-2 foundation —
+which is exactly the mimicry Victory Condition 2 is designed to catch. Say so out loud, do not close
+the level, and send them back to the level that owns the derivation. Rules §7 tells you to show the
+player their ladder position; show them the gap too.
+
 **Docking rules specific to Round F:** a right answer with a wrong reason scores zero (§8 —
 this is the rule that Victory Condition 2 lives or dies on). Using a term correctly *by accident*
 in the new sentence, without being able to say why, is also zero.
@@ -50,9 +60,9 @@ Do not use the word before the level in column 2. Column 3 is what the paper doe
 
 | # | Term | Unlocks at | Status in the BFRE paper |
 |---|---|---|---|
-| 1 | cross-sectional regression | **L7** (name); machinery from L1 | **Used, repeatedly, as the paper's core method** (pp. 7, 24, 30, 32) |
+| 1 | cross-sectional regression | **L7** (name); machinery from L1 | **The paper's core method.** The exact phrase is printed on pp. **14** (fn 11), **16** (fn 12), **24** and **30**; p. 7's eqs (1.1)–(1.2) are cross-sectional regressions but `notes/` records that description as its own paraphrase, and p. 32 says "cross-sectional **variation**", not regression |
 | 2 | orthogonal | **L2** (one column); deepens **L4** | **Word never appears** in the 65 pages. Mechanism is everywhere |
-| 3 | residual | **L0** | **Used constantly** — `u`, `ū`, `ε`, `ε̃` (pp. 7, 8, 11, 24, 26, 27, 42, 52) |
+| 3 | residual | **L0** | **Used constantly** — `u`, `ū`, `ε`, `ε̃`, `η`, `η̃` (pp. 7, 8, 10, 11, 12, 24, 25, 26, 27, 42, 52; full symbol table in §3.3) |
 | 4 | specific risk | **L9** (the forecast); *specific return* from **L0** | **Used constantly** — it is a named section (pp. 24, 27, 28, 30, 35) |
 | 5 | exposure | **L1** (name); BFRE's meaning needs **L5** | **The paper's house word.** Defined outright on p. 39 |
 | 6 | loading | **L1**, alongside exposure | **Word never appears.** Synonym the house does not use |
@@ -64,12 +74,23 @@ Do not use the word before the level in column 2. Column 3 is what the paper doe
 | 12 | eigenvalue | **L8** | **Word never appears. No eigen-decomposition, no PCA anywhere in the paper** |
 | 13 | tracking error | **L10** (once `V` exists); used at **L11** | **Phrase never appears.** The paper's word is **Active Risk** (pp. 34, 35) |
 | 14 | marginal contribution | **L11** | **Phrase never appears.** The paper reports "contribution to active risk" (pp. 34, 35) |
-| 15 | multicollinearity | **L4** | **Used twice, both on p. 32**, precisely (plus footnote 16) |
+| 15 | multicollinearity | **L4** | **Used exactly twice, both in body text on p. 32**, and used precisely. Footnote 16 is about the same problem but does **not** contain the word — do not count it as a third occurrence |
 | 16 | in-sample vs out-of-sample | **L12** | "Out-of-sample" appears **once** (p. 30). "In-sample" **never** |
 
-**Read that column 4 carefully before every round.** Six of the sixteen terms are words the player
-will hear from real quants but will never find in the paper. If you cite a page for one of those,
-you have broken rule §8 (NO NUMBER WITHOUT ITS ORIGIN) in its most damaging form.
+**Read that column 4 carefully before every round.** **Eight** of the sixteen rows are terms whose
+word appears **nowhere in the paper's own text**: row 2 *orthogonal*, 6 *loading*, 7 *design matrix*,
+8 *degrees of freedom*, 9 *standard error*, 12 *eigenvalue*, 13 *tracking error*, 14 *marginal
+contribution*. **On those eight rows there is no legitimate page citation for the word, full stop** —
+cite one and you have broken rule §8 (NO NUMBER WITHOUT ITS ORIGIN) in its most damaging form. Two
+further rows are *half*-cases, and the halves are the trap:
+- **Row 16** — you may cite **p. 30** for *out-of-sample* (it occurs exactly once, there). You may
+  never cite any page for *in-sample*, which occurs nowhere.
+- **Row 11** — you may cite **p. 64** for the word *shrinkage* **inside a reference title**, and
+  **p. 36** for the mechanism BFRE actually uses (a Bayesian prior on thin factors). You may never
+  cite a page for shrinkage as something the paper says it does.
+
+Counts re-derived by grep over all seven files in `notes/`; §6.1 carries the same list and the two
+must agree — if you ever find them disagreeing, trust neither until you have re-grepped.
 
 ---
 
@@ -124,6 +145,9 @@ what it would have given instead. That contrast is L7's boss round.
   (no justification given for the weekly choice — good L12 ammunition).
 - p. 7 — eqs (1.1)–(1.2): the industry-selection two-step cross-sectional regression, "run for
   n = 1, 2, …". p. 8 confirms these use **monthly** returns over the 15-year research history.
+  *Citation precision:* the equations are unambiguously cross-sectional, but the words "cross-sectional
+  regression" on p. 7 are `notes/`'s paraphrase of the procedure, not a quoted sentence. If you want
+  the phrase in the paper's own ink, use p. 24 or p. 30, or footnote 11 on p. 14.
 - p. 30 — "Style and industry factors are selected by assessing explanatory power using **monthly
   cross-sectional regressions**."
 - p. 32 — R² is "the proportion of **cross-sectional** variation in asset returns explained by the
@@ -220,6 +244,24 @@ example of the L9 distinction between *what least squares guarantees* and *what 
 paper never writes the normal equations, so the "forced by arithmetic" half is standard algebra the
 player builds at L2, not a paper claim.
 
+**Why that assumption is load-bearing — the algebra to hand them at L9/L10.** `Σ = X F Xᵀ + Δ` is not
+a definition. It is a *consequence*, and the p. 30 bullet is what buys it. Take variances of eq. (1.7),
+`r = X f + u`:
+
+```
+Var(r) = X·Var(f)·Xᵀ  +  X·Cov(f, u)  +  Cov(f, u)ᵀ·Xᵀ  +  Var(u)
+```
+
+Eq. (1.8) is that expression with the two middle terms deleted, and they are deleted **because** p. 30
+assumes `Cov(f, u) = 0`. So the assumption is not a caveat parked at the back of the paper: it is the
+step that makes the paper's central equation true. If factor returns and specific returns covary, then
+`X F Xᵀ + Δ` is not the asset covariance matrix — it is missing a cross-term whose sign you cannot know
+in advance, so you cannot even say whether the model runs rich or cheap. A player who produces that
+four-term expansion and points at which two terms p. 30 kills has done the whole of L9's brief
+("separate what least squares *guarantees* from what BFRE *assumes*") in a single move. The expansion
+is standard algebra a player can do at L10; the paper never writes it, and **[GM INFERENCE]** applies
+to the *connection* — the paper never links its p. 30 bullet to eq. (1.8).
+
 **THE TELL**
 1. **Boardroom usage.** "That's orthogonal to what we're discussing" — meaning irrelevant, a
    tangent. Extremely common, and instantly fatal in a quant conversation because it reveals the
@@ -265,6 +307,19 @@ column of ones is not in this one. Not a bug; it is the whole content of L5.
 
 Answers: factor returns — no, nothing forces that, and the paper doesn't claim it. Residuals —
 yes, to both, always, by construction.
+
+**Third follow-up — the sharpest attack a good player will find, and you should be ready for it**
+> "You said the fit forces the residuals orthogonal to every column of `X`. But p. 26 says BFRE can't
+> even solve the thing without imposing two restrictions on the factor returns. Doesn't a *constrained*
+> fit break the orthogonality?"
+
+Pass: no — and the paper tells you why without saying it. The restrictions do not shrink the column
+space of `X`; they pick one point out of a set of solutions that all produce **identical fitted
+values**. That is precisely what p. 26 means by "a **rotation** of the factor returns" which "does not
+impact the efficacy of the risk model". Identical fitted values ⇒ identical residuals ⇒ the same
+weighted orthogonality, unchanged. What the restrictions change is the *labelling* of the split
+between market, industry and country, not the geometry of the fit. A player who gets here has
+understood identification properly — tell them so, and give them tier 5 on this term.
 
 **Difficulty:** L2 sense is easy. The L4 sense ("what this column explains that no other column
 already explained") is where **Frisch–Waugh** lives and is **honestly graduate-level** — say so.
@@ -365,9 +420,12 @@ Two different objects, and the player must keep them apart:
   inferred from assets of "similar market capitalisation, in the same industry and country", blended
   with the time-series forecast by a weighting function whose **functional form the paper never
   gives**. In the limit the weight goes to 1.
-- p. 28, p. 30 — specific return correlations are estimated **only between assets in the same
-  company**; across companies they are "**assumed to be zero** in-line with standard modelling
-  practice". That phrase is the whole justification offered.
+- p. 28 — specific return correlations are estimated **only between assets in the same company**:
+  "Specific return correlations between assets in different companies are **assumed to be zero**
+  in-line with standard modelling practice." That sentence is the whole justification offered, and
+  those are **p. 28's** words. p. 30 restates the same thing as a listed *assumption*, in different
+  words — "specific returns from different issuers are unrelated and have **zero correlation**". Cite
+  p. 28 for the justification and p. 30 for the assumption; do not cite one for the other.
 - p. 35 — the EDR pie: **Specific 50%**, Style 25%, Industry 14%, Country 6%, FX 4%, Act Sec 1%
   `[INFERRED — the glyph reads 1 or 2; only the sum-to-100 argument selects 1]`. Corroborates p. 34's
   "Active Risk is split equally between common factors and stock specific sources."
@@ -376,9 +434,20 @@ Two different objects, and the player must keep them apart:
 1. **"Specific risk is the risk of that specific stock."** No — that is the stock's *total*
    volatility. Specific risk is what is left after the factors have taken their share. A very
    volatile stock can have modest specific risk if its volatility is all factor-driven.
-2. **"Specific risk diversifies away, so it doesn't matter."** True in a textbook 500-name equal
-   weight book; false in the report on p. 35, where it is 50% of active risk. The player must be able
-   to say *what has to be true about a portfolio* for that to happen (few names, big active weights).
+2. **"Specific risk diversifies away, so it doesn't matter."** True of the **total** risk of a broad,
+   near-equal-weighted long-only book. False of **active** risk, which is what p. 35 reports at 50%.
+   The player must be able to say what has to be true for that, and the answer is concentration in
+   **active space**, not in the holdings: a 200-name portfolio can hold 200 stocks and still be a
+   handful of real bets. Specific risk contribution scales with the **sum of squared active weights**,
+   so fifteen positions running 2–3% of NAV active (p. 35's Top Asset Contributions panel — `notes/`
+   pixel readings, ±10%) will dominate a long tail of near-benchmark holdings contributing nothing.
+   **Give the counter-argument its due before you dock anyone.** A working quant would not find 50%
+   surprising at all — for a benchmark-relative equity book it is ordinary, and p. 34 states it flatly
+   as a fact about the example ("Active Risk is split equally between common factors and stock specific
+   sources") with no suggestion that it is a defect. So the tell is **not** "they think 50% is normal";
+   50% *is* normal. The tell is a player who cannot explain **why** the diversification argument they
+   learned for total risk does not transfer to active risk. Dock the missing mechanism, never the
+   number.
 3. **Confusing the return with the risk.** Saying "the stock had 2% of specific risk yesterday" —
    yesterday it had a specific *return*. Risk is forward-looking.
 4. **Assuming independence across all stocks.** BFRE explicitly does not (pp. 27, 28: cross-listings,
@@ -449,10 +518,21 @@ money.
 2. **Exposure = beta.** The paper pre-empts this on p. 4 because everyone does it. Market factor
    exposure is how much of the book is in equities; beta is a covariance ratio computed *from* `X`
    and `F`.
-3. **Thinking exposures are estimated.** They are *measured* — off balance sheets, analyst
-   estimates and price history — then standardised. Nothing is fitted to get them. (Historical Beta,
-   p. 42, is a partial exception: a fitted number that then *becomes* a raw substyle before
-   standardisation. That nuance is tier-5.)
+3. **Thinking exposures are estimated.** Mostly they are *measured* — off balance sheets, analyst
+   estimates and price history — then standardised. But **"nothing is fitted" is too strong and you
+   must not say it**, because the paper prints two counter-examples:
+   - **Historical Beta** (p. 42, eq. 1.12) is a fitted slope that becomes a raw Volatility substyle
+     before standardisation. So is **Historical Alpha** — the intercept of that same regression,
+     listed as a Momentum substyle on p. 44 — and so are the **macro-economic betas** of eq. (1.49),
+     p. 52.
+   - **Fill-Miss** (p. 39) imputes a *missing* substyle by "cross-sectionally interpolat[ing] the
+     substyle value by regressing it on a size factor (log market capitalisation), the market, country
+     and industry factors" — a fitted value sitting in an exposure column.
+
+   The defensible version, and the one to hold the player to: BFRE's exposures are **known before the
+   cross-sectional regression that produces `f` is run**. They are that regression's inputs, never its
+   outputs. Whether a given column was itself fitted earlier in the pipeline is a separate question,
+   and for several Volatility and Momentum substyles the answer is yes. Tier-5.
 4. **Forgetting they are re-standardised twice.** p. 39: substyles are Huberised, aggregated to
    styles, then "passed through the Huberisation procedure **once more**".
 
@@ -579,6 +659,15 @@ The **structure** of `X` is described in detail and is unusually interesting:
    and see that the industry columns sum to the market column, and so do the country columns, has not
    internalised L4 either. Two exact linear dependencies ⇒ infinitely many solutions ⇒ the paper's
    two restrictions.
+   **One honest wrinkle, tier-5, and it is yours not the paper's.** The sum-to-the-ones-column
+   argument needs *every* asset in the fit to carry exactly one industry dummy and one country dummy.
+   p. 26 asserts exactly that ("Every asset has unit exposure to these three factors"). But p. 25 says
+   Core Industry factors "include all industries **except the Multi-Sector Holding industry** (if
+   applicable)", and Core Countries exclude the Extended Countries — and the paper never says whether
+   the assets so excluded are dropped from the first pass. If they are not, the dependency is
+   near-exact rather than exact, which is a different (and milder) disease. **[GM INFERENCE]** — the
+   paper does not raise this, so do not present it as the paper's point. Hand it to a player who is
+   sailing.
 4. **Calling the fix "dropping a factor".** It isn't. p. 26: it is a **rotation** and it "does not
    impact the efficacy of the risk model" — the fitted values are identical, only the *labels on the
    split* change.
@@ -655,10 +744,39 @@ figure from the paper. Say that out loud at the table.
 > covariance matrix, one hundred and four weekly observations, seventy factors. Which one is in
 > trouble, and why is it not the other one?"
 
-Pass: the second. 3000 − 70 leaves plenty; 104 observations to pin down a 70×70 object does not.
-Tier-4 extra: they notice that a covariance matrix needs `70×71/2 = 2,485` distinct numbers, and that
-104 observations cannot possibly determine 2,485 quantities — so the matrix is **structurally**
-rank-deficient or nearly so, which is L8's boss round and §3.12's follow-up.
+Pass: the second. 3,000 − 70 leaves plenty; 104 weekly observations to pin down a 70×70 object does
+not. Tier-4 extra: they notice that a covariance matrix carries `70 × 71 / 2 = 2,485` distinct numbers.
+
+**Now get the next step right, because the tempting version of it is false and you must not teach it.**
+"104 observations cannot determine 2,485 quantities, therefore the matrix is rank-deficient" is
+**wrong**, and a player who says it has to be corrected rather than rewarded — that is §8, NEVER ACCEPT
+A RIGHT ANSWER WITH WRONG REASONING, applied to you as much as to them. With `T = 104` observations and
+`K ≈ 70` factors, `T > K`, so the sample covariance matrix generically has **full rank 70 and not one
+zero eigenvalue**. You are not estimating 2,485 numbers out of 104 numbers; you are estimating them out
+of `104 × 70 = 7,280` data points. The comparison that decides singularity is `T` against `K`, never
+`T` against `K(K+1)/2`.
+
+What *is* wrong with it is **conditioning**, and that is quantifiable from the paper's own parameters.
+The 104-week window is exponentially weighted with a **26-week half-life** (p. 27), so the observations
+do not count equally. The standard effective-sample-size measure `N_eff = (Σw)² / Σw²`, with
+`w_k = 0.5^(k/26)` for `k = 0 … 103`, comes to **N_eff ≈ 66** — *fewer effective observations than
+there are factors*. Arithmetic verified computationally. The ratio to worry about is
+`K / N_eff ≈ 70 / 66 ≈ 1.06`.
+
+**Say precisely what that does and does not mean, or you will teach a new error in place of the old
+one.** It does **not** make `F` singular: 104 distinct observations still give rank 70, and `N_eff`
+governs *precision*, not rank. It means the estimator carries about the precision of 66 observations
+while trying to resolve 70 directions — so the **smallest** eigenvalues, which are exactly the
+directions the model will report back as cheap, low-risk portfolios, are dominated by estimation noise
+and biased far too low. **[GM INFERENCE]:** the ≈70 factor count, the `N_eff ≈ 66` and the ratio are
+all mine. The 104 weeks and the 26-week half-life are the paper's (p. 27); the paper prints no factor
+count, no effective sample size and no eigenvalue of anything.
+
+**And keep the rules' hypothetical separate from the paper.** L8's boss round asks you to show why a
+covariance matrix estimated from *fewer months than factors* is structurally broken. That is a case you
+**construct for teaching**, and it is the right way to teach it. **BFRE's own default is not that
+case.** Do not let a player leave the table believing the paper ships a singular `F` — it does not, and
+a real quant would catch that inside a sentence. See §3.12.
 
 **Difficulty:** the count is easy; *why the subtraction* is the L6 origin question and is where most
 textbooks skip a step. Victory Condition 3 names this one explicitly.
@@ -693,7 +811,13 @@ What the paper does instead:
 - p. 8 — the threshold `|t| > 2`; and, tellingly, the **average squared t-statistic**, computed
   specifically "to distinguish between factors with t-statistics close to +/− 2 and those that are
   significantly higher."
-- p. 14 — inclusion threshold: a style needs its **proportion of significant t-stats above 10%**.
+- p. 14 — the screening bar, in the paper's own hedged words: "A value in excess of **10%**
+  [proportion of significant t-statistics] indicates a statistically significant style effect, and
+  **would be considered for inclusion** in the models." *Considered for* — not admitted. The paper
+  never prints a decision rule, and p. 12 states the recursion's **stopping** rule as a band, not a
+  point: the process repeats "until the largest proportion of t-statistics from the second step
+  univariate regression is no larger than **10% – 15%**". Three pages, three different shapes of the
+  same 10%. Do not let the player — or yourself — compress them into one crisp threshold.
 - p. 25 — the weighting choice is *about* the standard error without ever saying so: assets are
   weighted by **square-root of market capitalisation** because "square-root of market capitalisation
   **adjusts for heteroskedasticity** based on the observation that higher residual (specific) risk is
@@ -710,26 +834,49 @@ What the paper does instead:
   artefact in 65 pages for what a t-statistic is actually protecting you against.
   **Do the arithmetic honestly here, because BFRE's rule is better than the lazy criticism of it.** The
   lazy version — "a 5% bar over a hundred-odd candidates throws up five winners by luck" — is *not*
-  BFRE's rule. BFRE does not use a single test. It uses a **persistence** rule: the proportion of
-  monthly cross-sectional regressions in which `|t| > 2` must exceed **10%** (pp. 14, 32). Under a
-  pure-noise substyle each month clears `|t| > 2` with probability **0.0455**, so over the paper's
-  15-year, **~180-month** history (p. 8) that proportion has a standard deviation of
-  `√(0.0455 × 0.9545 / 180) ≈ 0.0155` — putting the 10% bar **3.5 standard deviations** above the null,
-  a per-candidate false-positive rate of about **0.0002**, i.e. **0.02 expected false positives across
-  108 candidates**. Arithmetic verified computationally. The 0.0455, the 180 and the 10% are the
-  paper's; the independence model is mine — **[GM INFERENCE]**, and say so at the table.
-  **Now the attack that actually lands.** That calculation assumes the ~180 monthly t-statistics are
-  *independent*. They are not, and the paper knows it: exposures are highly persistent, and the paper
-  applies **Newey–West** specifically because the return series are serially correlated (pp. 27, 28).
-  Redo the same sum with an effective **20** independent months instead of 180 and the bar sits only
-  **1.2** standard deviations up — about **13 of 108** candidates clear it by luck. The paper never
-  estimates its effective independent sample, so the strength of its own selection rule is unquantified,
-  and the Random Substyle is the one instrument in the document that could have settled it empirically.
-  Its result is never reported. That is the L12 finding, not "five by luck".
-  (Counts: **18 styles, 108 substyles** — `notes/`'s count from the printed rows; **no totals are
-  printed**. Carry the paper's own unreconciled inconsistency too: **p. 10 states the candidate set is
-  `N ≥ 200` substyles**, while Table 1.4, captioned "all substyles **investigated**", prints 108. Both
-  numbers are the paper's. The conclusion above is unchanged under either.)
+  BFRE's rule. BFRE does not run a single test per candidate. It screens on **persistence**: the
+  proportion of monthly cross-sectional regressions in which `|t| > 2`, judged against a bar quoted as
+  10% (p. 14, "considered for inclusion") and as a 10–15% stopping band (p. 12), with p. 32 reporting
+  the outcome ("the majority of factors are significant more than 10% of time"). Take 10% as the bar,
+  which is the most generous reading to the critic since it is the lowest number the paper names.
+  Under a pure-noise substyle each month clears `|t| > 2` with probability **0.0455** (two-sided
+  normal; the cross-sections have thousands of assets, so the normal approximation is the right one).
+  Over the paper's **15-year** research history (p. 8), i.e. **~180 months**, that proportion has a
+  standard deviation of `√(0.0455 × 0.9545 / 180) ≈ 0.0155` — putting the 10% bar **3.5 standard
+  deviations** above the null, a per-candidate false-positive rate of about **0.0002**, i.e. **0.02
+  expected false positives across 108 candidates**. Arithmetic verified computationally.
+  *Robustness, so the number has an origin and not just a source:* the paper also dates its samples
+  **Mar 1996 – Dec 2013** (pp. 10, 14, 32), which is ~214 months, not 180 — an unreconciled
+  inconsistency of the paper's own. At 214 months the expected false positives fall to **0.01**; at
+  the p. 10 candidate count of `N ≥ 200` instead of 108 they rise to **0.05**. The conclusion survives
+  every combination. The 0.0455, the 180, the 214, the 108, the 200 and the 10% are the paper's or
+  `notes/`'s counts; the **independence model is mine — [GM INFERENCE]**, and say so at the table.
+
+  **Now the two attacks that actually land. Both are about the 0.0455, from opposite directions.**
+  1. **Across months — the t-statistics are not independent.** The 180 monthly t-stats are treated
+     above as 180 independent draws. They are not: exposures are highly persistent from month to month,
+     and the paper itself applies **Newey–West** precisely because its return series are serially
+     correlated (pp. 27, 28). Run the calculation backwards instead of guessing a number: the bar
+     stops protecting you when one false positive is *expected*, i.e. when the per-candidate rate hits
+     `1/108`. That happens at an **effective sample of about 81 independent months out of 180** —
+     roughly one month in 2.2 carrying independent information. Below that it degrades fast: at 40
+     effective months you expect **5** false positives among the 108, at 20 you expect **13**. All of
+     these figures verified computationally. **The finding is not that BFRE's rule fails — it is that the
+     paper never estimates its own effective independent sample, so nobody, including BlackRock, knows
+     which side of 81 it is on.**
+  2. **Within a month — the 0.0455 assumes the t-statistics are correctly sized.** They may not be.
+     A cross-sectional regression's residuals are correlated across assets (that is the entire premise
+     of a factor model), and BFRE runs it with square-root-cap weights (p. 25) without ever stating how
+     the standard errors behind those t-statistics are computed — the phrase "standard error" never
+     appears. If the t-stats are over-sized, the true per-month exceedance rate is above 0.0455 and
+     every number above moves the wrong way. This attack needs no assumption about persistence at all,
+     which makes it the cleaner of the two.
+
+  And the Random Substyle is the one instrument in the document that could have settled either question
+  empirically — feed pure noise through the whole selection machine and report what proportion of months
+  it clears. **Its result is never reported.** *That* is the L12 finding, not "five by luck".
+  (Counts: **18 styles, 108 substyles** — `notes/`'s count from the printed rows; Table 1.4 **prints no
+  totals**, so never quote 18 or 108 as the paper's figures.)
 - **The best line in the paper for this term is on p. 6, footnote 8.** Currency factor returns are
   "**calculated**" from exchange rates and risk-free rates rather than "estimated", and the footnote
   says why: "Note the use of the term 'calculated' here, as opposed to 'estimated' — **no uncertainty
@@ -808,6 +955,15 @@ number, because risk does not add — it adds with the cross-terms.
   Default for all BFRE models is **WKL (weekly long-term): 104 weeks of factor returns, 26-week
   half-life**. Technical details are **deferred to an external document** ("BRS Covariance Matrix
   Estimation documentation") that is not in this paper — a real gap for L12.
+  **Carry the tension between those two sentences; do not resolve it for the player.** They sit on the
+  same page and the paper never reconciles them. One says the covariance matrices "use a history of
+  daily factor return series starting in March 1996" — roughly 4,500 daily observations by end-2013.
+  The other says the default calculation "uses 104 weeks of factor returns". The natural reading is
+  that daily returns are aggregated to weekly and the most recent 104 weeks are used, but **the paper
+  does not say that**. Teach **104**, because it is the number attached to the named default — and if a
+  player quotes the March-1996 sentence and asks which it is, they have read the page correctly and
+  must **not** be docked. Flag it whenever you use it: the whole degrees-of-freedom argument in §3.8
+  rests on the 104 reading, and it would collapse under the other one.
 - p. 27, p. 28 — Newey–West [26] serial-correlation adjustment; Table 1.3 gives the specific-risk
   parameters.
 - p. 11 — Figure 1.3 is a **correlation** matrix (12×12, unit diagonal), not a covariance matrix.
@@ -989,6 +1145,16 @@ claims has zero variance. Lever it up and the model reports no risk at all. That
 it is a hole. Tier-4 extra: and this is why a covariance matrix estimated from fewer periods than
 factors is *structurally* broken rather than merely imprecise — no amount of care in the estimation
 fixes a rank deficiency; only structure (shrinkage, a factor model, a target) does.
+Tier-5 sharpening, and it is the same fact as degrees of freedom wearing new clothes (§8 CALL BACK):
+if you subtract an estimated mean first, the rank drops one further, so it is at least `K − T + 1`
+zeros. The mean cost you a dimension in L6 and it costs you one here too.
+
+**The caveat you owe the player at the end of this round.** `T < K` is a case *you constructed* to make
+the mechanism visible. **BFRE's default is the other way round** — about 70 factors against 104 weekly
+observations (p. 27), so `F` is generically full rank with no zero eigenvalues at all. What is actually
+wrong with it is conditioning, not rank; §3.8 does that arithmetic. Say this explicitly, or you will
+have taught the player a confident, checkable falsehood about the paper — which is Victory Condition 2
+failing in the exact way it is designed to catch.
 
 **Difficulty:** **graduate-level.** Announce it. The 2×2-by-hand construction is doable at 12th
 standard with strong algebra; the general theory is not, and does not need to be.
@@ -1085,8 +1251,13 @@ nudge `w_i` and watch `σ_P` move. Same tool, new clothes.
 > by grep. The bare word "marginal" turns up three times in `notes/`, but **only one of those three is
 > the paper's own text**: p. 7, where residuals of a coarse industry fit are regressed on a finer schema
 > level "to compute the **marginal benefit** of increasing granularity" — a different idea entirely. The
-> other two ("marginally finer", "marginally the taller") are the transcriber's prose describing tables
-> on pp. 21 and 58. Grep hits are not citations; check whose sentence you landed in.
+> other two are the transcriber's own prose, not the paper's: **"marginally the taller"** describes two
+> bars in **Figure 1.17 on p. 23**, and **"marginally finer"** is a `notes/` aside on **p. 57** comparing
+> NAMR's 54-industry schema with the unlabelled Table 1.6 printed on p. 58. Grep hits are not citations;
+> check whose sentence you landed in. *(An earlier draft of this page cited those two as "pp. 21 and 58".
+> Both were wrong — p. 21 has nothing to do with it, and the p. 58 hit is a p. 57 sentence about a p. 58
+> table. It is precisely the failure this section exists to prevent, so it is recorded here rather than
+> quietly corrected.)*
 
 What the paper reports is **contribution**, which is the closely related object marginal contribution
 is used to build:
@@ -1179,9 +1350,22 @@ The player must have *seen* the swing before they get the word.
 - p. 32, **footnote 16** — the extreme case: "In the most extreme case, where factor exposures are
   perfectly correlated, **identification issues will exist causing the estimation process to fail**."
   That is the determinant going to zero, in the paper's own words.
-- p. 11, **Figure 1.3** (NAMR, Dec 2013) — the live evidence, and the numbers are verified:
-  **Size–Liquidity 0.74** (highest off-diagonal), Earnings Yield–Profitability **0.64**,
-  Volatility–Dividend Yield **−0.46**, Size–Volatility **−0.36**.
+- p. 11, **Figure 1.3** (NAMR, Dec 2013) — the live evidence, and the numbers are verified: all 144
+  cells are **printed** in the figure and were read directly, not measured off pixels. **Size–Liquidity
+  0.74** (highest off-diagonal), Earnings Yield–Profitability **0.64**, Volatility–Dividend Yield
+  **−0.46**, Size–Volatility **−0.36**.
+  **Put the fair counter to any player who leans on 0.74, because it is a good one.** Figure 1.3 is a
+  **single month** — NAMR, **Dec 2013** — and one snapshot cannot establish that Size and Liquidity are
+  *persistently* collinear. Persistence is the property that would actually threaten the stability of
+  the factor-return split, and the paper prints no time series of exposure correlations anywhere. So
+  0.74 is the strongest number the paper hands you and it is still one observation; a defender at L12
+  can say exactly that and be right. Note the asymmetry, though, and make the player notice it: for
+  **Size–Volatility** the paper *does* claim persistence in prose — "This negative relationship is
+  fairly stable over time" (p. 14) — and offers no such sentence for Size–Liquidity. The honest
+  position is that the paper reports one collinear-looking month, asserts that VIFs were "well within
+  suitable thresholds" over the whole history, and prints neither the VIFs nor the history. Both halves
+  of that are findings, and this is BFRE's **single-anchor-month evidence** problem — the one the rules
+  name at L12 — in its cleanest form.
 - p. 14 — the paper discusses the Size/Volatility relationship in prose: "Large volatility exposures
   tend to be associated with small-cap stocks through time … Consequently, portfolios which are
   positively exposed to size are commonly negatively exposed to volatility, and vice versa."
@@ -1281,6 +1465,24 @@ being consumed) and L8 (they must have felt an estimate be unstable).
   genuine portfolios") and then **prints not one bias statistic, not one pass/fail criterion, and not
   one summary result.** "More details of the testing are provided by **[27] available on request**."
   `notes/` records this explicitly as a methodological gap.
+  **And the sharper half of it is on p. 65, which almost nobody turns to.** Reference [27] is listed in
+  the bibliography as: "FMG, *BFRE Model Testing white paper*, Aladdin Model Documentation,
+  **forthcoming**." So the body says the evidence is *available on request* while the reference list
+  says the document was **not yet written**. Those two statements cannot both be comfortable. This is
+  the strongest single L12 attack in the paper and it costs one page-turn to make: the entire empirical
+  case for the model is deferred to a document the paper's own bibliography says does not exist.
+- **p. 16 — the unfalsifiable behavioural story, which the rules name at L12 and you should have ready.**
+  Reversal is justified as "a near-term reversal in strong stock price performance measured over a
+  **one month** period" driven by "market investors overreacting to stock information in the near-term"
+  (references Jegadeesh [11], Jacobs and Levy [12], Subrahmanyam [13]). Ask the player: **what
+  observation would have falsified that story?** If reversal had failed the 10% t-stat screen it would
+  simply have been dropped and no behavioural claim would have been made; the story is attached to the
+  factor *after* the statistics select it, and does no predictive work of its own. Contrast it with the
+  Random Substyle, which is the one descriptor in Table 1.4 that carries no story at all and could
+  therefore have measured how much of the selection is luck. Note carefully what this attack is **not**:
+  it is not "reversal isn't real" — the paper's own evidence for reversal's persistence is the same
+  t-statistic evidence as for every other style. It is that the *explanation* is decoration, and a
+  player who conflates those two has overshot.
 
 **THE TELL**
 1. **"High R², so it forecasts well."** The deepest confusion available here. R² is a statement about
@@ -1350,14 +1552,16 @@ mid-round without re-reading the whole file.
 | p. 9 | Table 1.1, 18 style factors; styles "**typically**" equal-weighted substyle combinations | exposure |
 | p. 10 | Table 1.2 NAMR summary stats; standardisation "similar to forming a z-score", sqrt-cap mean / equal-weight sd; eqs (1.3)–(1.4); N ≥ 200 substyles | exposure, multicollinearity |
 | p. 11 | **Figure 1.3**, 12×12 style exposure correlations: Size–Liquidity **0.74**, EY–Profitability **0.64**, Vol–DivYield **−0.46**, Size–Vol **−0.36** | multicollinearity, orthogonal |
-| p. 12 | eqs (1.5)–(1.6), recursive re-run with size folded in | orthogonal, residual |
+| p. 12 | eqs (1.5)–(1.6), recursive re-run with size folded in; **the recursion's stopping rule, quoted as a band: "no larger than 10% – 15%"** | orthogonal, residual, standard error |
 | p. 14 | 10% significant-t threshold; fn 11 (t-stats from monthly cross-sectional regressions); Size/Volatility prose | standard error, multicollinearity |
 | p. 16 | reversal = one month, behavioural overreaction; decile **0/1 dummies**; small/mid-cap as **smoothed** dummies; Figure 1.10 | exposure, design matrix |
+| p. 23 | Figure 1.17, average oil exposure by sector, Dec 2013 — **all ten bar values are `notes/` pixel readings**. The `notes/` phrase "marginally the taller" lives here and is **the transcriber's, not the paper's** | marginal contribution (as a trap) |
 | p. 24 | **eq. (1.7) `r = Xf + u`; eq. (1.8) `Σ = XFXᵀ + Δ`**; daily/weekly estimation; `X` = "set of factor exposures" | all of them |
 | p. 25 | eq. (1.9); **sqrt-market-cap weights** + heteroskedasticity justification; fn 14; two-pass; Core Country/Industry | standard error, cross-sectional regression |
 | p. 26 | **eq. (1.10) two identifying restrictions; "three intercept terms"; "a rotation … does not impact the efficacy"**; eq. (1.11); UK/EMEA interpretation example; **two printed source typos, both re-verified** | design matrix, multicollinearity, orthogonal |
 | p. 27 | `F` from daily factor returns since **March 1996**; **WKL = 104 weeks, 26-week half-life**; specific covariance = risk vector **+ non-zero off-diagonal correlations**; Newey–West [26] | covariance matrix, specific risk |
 | p. 28 | **Table 1.3** (Daily: 125d / 375 obs / NW 10d; Weekly WRLD-EMKT: 26w / 104 obs / NW 2w); **cross-sectional overlay** for IPOs; structural vs empirical | specific risk, shrinkage, degrees of freedom |
+| p. 29 | one paragraph only: structural approach suits **active portfolio managers**, empirical approach suits **index tracking portfolios**. The paper's only use of the word "tracking" — and it has nothing to do with tracking error | tracking error |
 | p. 30 | Assumptions: **dummy variables for industry/country/currency (not styles)**; "factor returns have **zero correlation** with asset specific returns"; 1-month horizon; **the only "out-of-sample" in the paper** | orthogonal, design matrix, in/out-of-sample |
 | p. 32 | R² defined **in words only**; 10% t-stat threshold; **VIFs / multicollinearity, fn 16**; bias statistic introduced. **No numeric values anywhere** | multicollinearity, in/out-of-sample, standard error |
 | p. 33 | test-portfolio list completed; **no results printed**; "[27] available on request" | in/out-of-sample |
@@ -1369,7 +1573,7 @@ mid-round without re-reading the whole file.
 | p. 42 | **eq. (1.12) historical beta** (weekly, 52-week half-life, 5 years); Historical Sigma = **equally**-weighted sd of exponentially-weighted residuals | residual, loading, cross-sectional regression |
 | p. 52 | eq. (1.49): macro betas fitted **to the residuals of (1.12)**. The word "orthogonal" here is **`notes/`'s gloss, not the paper's** | orthogonal |
 | p. 56 | **Table 1.4, "Inventory of all substyles investigated"** — 18 candidate styles / **108** substyles (`notes/`'s count, **not printed**), including a style **Random** whose one substyle is **"Random Substyle"**. No prose on the page at all | standard error, in/out-of-sample |
-| p. 57 | Table 1.5, NAMR industry schema — **54** industries (`notes/`'s count, **not printed**) | degrees of freedom |
+| p. 57 | Table 1.5, NAMR industry schema — **54** industries (`notes/`'s count, **not printed**). `notes/`'s aside "marginally finer" (about Table 1.6 on p. 58) sits on this page and is **the transcriber's, not the paper's** | degrees of freedom, marginal contribution (as a trap) |
 | p. 61 | Table 1.11, WRLD industry schema — **49** industries (`notes/`'s count, **not printed**) | degrees of freedom |
 | p. 64 | ref **[7] Tibshirani**, "Regression **shrinkage** and selection via the lasso" — the only occurrence of the word in printed text. **`notes/`'s commentary on this page claims BFRE *uses* lasso/LARS shrinkage; p. 8 says the opposite. Trust p. 8** | shrinkage |
 | p. 65 | ref **[26] Newey–West**, "A Simple, **Positive Semi-Definite**, Heteroskedasticity and Autocorrelation Consistent Covariance Matrix" | covariance matrix, eigenvalue |
@@ -1381,19 +1585,38 @@ mid-round without re-reading the whole file.
 Failure modes for the GM, not the player. `notes/`'s own audit caught a fabricated cross-reference;
 this is the list that stops the next one.
 
-1. **Do not cite a page for a word the paper does not use.** Six terms here have no paper occurrence:
-   loading, design matrix, degrees of freedom, standard error, eigenvalue, tracking error. Plus
-   "orthogonal" and "in-sample". Cite the *mechanism's* page and name the word as outside vocabulary.
-2. **Do not quote `notes/`'s commentary as the paper's text.** The traps, all four checked:
-   "orthogonal" (p. 52) and "HAC standard errors" (p. 65) are the transcriber's words; so is
-   "coefficient of determination" (p. 32), the "placebo/control" reading of the Random Substyle
-   (p. 56), and every "(my count)" total — 54 and 49 industries, 18 styles, 108 substyles. And one
+1. **Do not cite a page for a word the paper does not use.** **Eight** terms here have no occurrence
+   anywhere in the paper's own text: **orthogonal, loading, design matrix, degrees of freedom, standard
+   error, eigenvalue, tracking error, marginal contribution.** Add **"in-sample"** (the missing half of
+   term 16, whose other half *out-of-sample* is legitimately p. 30) and **shrinkage** (legitimate only
+   as the word inside ref [7]'s title on p. 64, never as something the paper says it does). Cite the
+   *mechanism's* page and name the word as outside vocabulary. This list must match §1's; if it ever
+   does not, re-grep before you open your mouth at the table.
+2. **Do not quote `notes/`'s commentary as the paper's text.** **Six traps, each re-checked against
+   `notes/` for this edition:** "orthogonal" (p. 52) and "HAC standard errors" (p. 65) are the
+   transcriber's words; so is "coefficient of determination" (p. 32); so is the "placebo/control"
+   reading of the Random Substyle (p. 56); so are "marginally the taller" (p. 23) and "marginally
+   finer" (p. 57), which is how the earlier draft of §3.14 came to cite two pages that do not support
+   it; and so is every "(my count)" total — 54 and 49 industries, 18 styles, 108 substyles. Plus one
    outright internal contradiction: the p. 64 commentary says BFRE's selection machinery includes
    lasso/LARS/group-lasso **shrinkage**; **p. 8 body text says those methods were the alternatives
    BFRE did not take.** Trust the body text.
-3. **Do not launder a pixel measurement into a printed figure.** Every bar height, dot position and
-   axis reading on p. 35 (and Figures 1.1, 1.2, 1.6, 1.7, 1.9, 1.10, 1.12) is a measurement off a
-   photograph with a stated tolerance. Say "measured off the chart, roughly" every single time.
+3. **Do not launder a pixel measurement into a printed figure.** **Not one bar, line or scatter chart
+   in this paper prints data labels.** Every bar height, line level, dot position and series value
+   recorded in `notes/` for **pp. 5, 6, 12, 13, 14, 15, 16, 17, 18, 20, 23 and 35** is a measurement off
+   a photograph with a stated tolerance. Say "measured off the chart, roughly" every single time. Three
+   boundaries you must keep straight, because getting them wrong means docking a correct answer, which
+   is §8 running backwards:
+   - **Axis tick *labels* are printed and reliable** — the ±3 style-exposure range, the "Exposure
+     (% of NAV)" and "Exposure (Std. Devs)" axis titles on p. 35, the dashed 10% threshold line on
+     p. 16. It is the *bars and dots* that are measured, never the axes.
+   - **The p. 35 pie's slice percentages are printed and were read directly**: Specific 50, Style 25,
+     Industry 14, Country 6, FX 4 are real numbers, not measurements. Only *Act Sec 1%* is inferred
+     (the glyph reads 1 or 2 and only the sum-to-100 argument selects 1). The **banner** figures
+     (2.99 / 1.02 / 15.62 / 14.98) are printed too, with soft digits noted in §3.13.
+   - **Figure 1.3 (p. 11) is the exception among the charts**: all 144 correlation cells are **printed
+     numbers**, read cell by cell at 2.7×. 0.74, 0.64, −0.46 and −0.36 are real figures and a player may
+     quote them as such. Tables (1.1, 1.2, 1.3, 1.4, 1.5, 1.11) are printed text throughout.
 4. **Do not resolve `[INFERRED]` or `[TENTATIVE]` markers.** The p. 35 pie's "Act Sec 1%" is inferred
    from the sum-to-100 argument only; the FX currency codes are tentative; "2.99" and "15.62" have soft
    digits. Carry all four.
@@ -1410,3 +1633,78 @@ this is the list that stops the next one.
    no R² for the model's *own* cross-sectional fit is printed. The same discipline applies to every
    "never appears" row in §1 — they were established by grep and they hold, but they are claims about
    *the word*, not about the idea, and never about every number on the topic.
+8. **Do not assert a property of `F` that BFRE does not have.** The most tempting one, and the one an
+   earlier draft of §3.8 got wrong: BFRE's default factor covariance matrix is **not rank-deficient**.
+   104 weekly observations against roughly 70 factors is `T > K`, so `F` is generically full rank with
+   no zero eigenvalues. The rank-deficiency story is a *teaching case you construct* for L8's boss
+   round; the paper's own defect is conditioning, not rank. Teaching the wrong version is worse than
+   teaching nothing, because the player will then defend it confidently to a quant.
+
+---
+
+## 7. FEEDING THE SAVE FILE
+
+Rules §9 requires a SAVE FILE at the end of every session and §3 requires visible tracking against all
+four victory conditions. Round F is the **primary instrument for Victory Condition 2**, so its results
+have to reach the save file or the tracking is fiction. After each Round F, record:
+
+- **Ladder position for the term** — and remember the constraint from §0: a Round F can produce tiers
+  1, 2, 4 and 5, never tier 3. Write the tier and, if it came off a follow-up rather than a derivation,
+  write `(defended, not derived)` beside it. That flag is what stops a player accumulating a page of
+  tier-4s on mechanisms they have never built.
+- **Which sentence you fired**, in one line. Never reuse a fired sentence — a player who has heard it
+  once is being tested on recall, not usage, and Victory Condition 2 dies there.
+- **The tell they actually produced**, by number from the relevant §3 entry. Repeat tells across
+  different terms are diagnostic: a player who trips tell 1 on *standard error* (confusing it with a
+  standard deviation) and tell 1 on *marginal contribution* (confusing it with standalone risk) has one
+  underlying gap — they do not distinguish a property of the data from a property of an estimate — and
+  the fix is one conversation, not two.
+- **Register failures separately from knowledge failures.** "Said *tracking error* and could not map it
+  to Active Risk" is a Victory Condition 2 problem. "Could not say what is on the diagonal of `F`" is a
+  Victory Condition 1 problem. They look identical at the table and need different repairs.
+- **Anything you promised to fill in later.** §8 forbids "I'll spare the details"; if you skipped a
+  step and offered to come back to it, it belongs in *Open questions the player raised and I have not
+  yet answered*.
+
+Round F produces no analogies, so it feeds nothing to the LANDED / REJECTED lists — do not pad them
+with vocabulary rounds.
+
+---
+
+## 8. WHAT THIS DOCUMENT WOULD LOOK LIKE IF IT WERE WRONG
+
+A short self-check, because this page is used live and nobody will be auditing it mid-round.
+
+- Every page reference in §§1–6 was opened in `notes/` and read for this edition. **One citation did
+  not hold**: §3.14's "pp. 21 and 58" for the two non-paper uses of *marginal* pointed at pages that do
+  not contain them (they are on pp. 23 and 57). It is corrected in place and the error recorded rather
+  than hidden (§6.2). Six further citations were *true but imprecise* and have been tightened, because
+  imprecision here becomes fabrication at the table: the "never appears" count in §1 (it was six, it is
+  eight plus two half-cases); the trap count in §6.2 (four, in fact six); the pixel-measurement list in
+  §6.3 (which wrongly swept in axis labels, the p. 35 pie and Figure 1.3, all of which are printed);
+  the attribution of "assumed to be zero" to pp. 28 *and* 30 when the words are p. 28's alone; the
+  claim that "cross-sectional regression" is printed on pp. 7 and 32 (p. 7 is `notes/`'s paraphrase,
+  p. 32 says "cross-sectional *variation*"); and p. 14's 10%, which the paper hedges as "would be
+  **considered** for inclusion" and p. 12 states as a 10–15% band.
+- **One substantive claim was wrong and is replaced, not flagged:** §3.8 asserted that 104 observations
+  against 2,485 covariance parameters made `F` "structurally rank-deficient or nearly so". With `T` =
+  104 > `K` ≈ 70 that is false — the matrix is generically full rank. The corrected passage teaches
+  conditioning instead, with `N_eff ≈ 66`, and §3.12 now carries the matching caveat. Anyone using an
+  older copy of this page should treat that paragraph as the one thing in it that would have failed in
+  front of a quant.
+- Every quoted sentence attributed to the paper was matched word-for-word against the `notes/`
+  transcription. Where `notes/` marks a value `[UNREADABLE]`, `[APPROX]`, `[INFERRED]` or
+  `[TENTATIVE]`, that marker is carried here: the p. 35 pie's *Act Sec 1%*, the soft digits in *2.99*
+  and *15.62*, the FX currency codes, and every bar and dot magnitude on pp. 5, 6, 12–18, 20, 23 and 35.
+- Every arithmetic claim was recomputed: the cold-open residuals and `Σe = 2` (`tools/verify_coldopen.py`,
+  exact rationals); `70 × 71 / 2 = 2,485`; the implied portfolio–benchmark correlation `ρ ≈ 0.982–0.983`
+  across all four soft-digit combinations; the Random Substyle false-positive rates at 180, 214, 108, 81,
+  40 and 20 effective months; and `N_eff ≈ 66` for a 26-week half-life over 104 weeks.
+- Everything that is a reading rather than a statement of the paper's is marked **[GM INFERENCE]**.
+  There are **nine** substantive ones — two in §3.2 (the forced-vs-assumed orthogonality, and the
+  four-term variance expansion behind eq. 1.8), one in §3.6 (errors-in-variables), one in §3.7 (the
+  Multi-Sector Holding wrinkle), two in §3.8 (the ≈70 factor count and `N_eff ≈ 66`), one in §3.9 (the
+  independence model behind the Random Substyle arithmetic), one in §3.13 (ρ ≈ 0.982) and one in §3.14
+  (the Euler decomposition). If you find yourself repeating one at the table without the label, stop and
+  add it — an unlabelled inference is how a GM manufactures a source, and `notes/`'s own audit exists
+  because that already happened once.
