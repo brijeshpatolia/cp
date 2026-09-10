@@ -64,7 +64,7 @@ Do not use the word before the level in column 2. Column 3 is what the paper doe
 | 12 | eigenvalue | **L8** | **Word never appears. No eigen-decomposition, no PCA anywhere in the paper** |
 | 13 | tracking error | **L10** (once `V` exists); used at **L11** | **Phrase never appears.** The paper's word is **Active Risk** (pp. 34, 35) |
 | 14 | marginal contribution | **L11** | **Phrase never appears.** The paper reports "contribution to active risk" (pp. 34, 35) |
-| 15 | multicollinearity | **L4** | **Used, once, precisely** (p. 32, with footnote 16) |
+| 15 | multicollinearity | **L4** | **Used twice, both on p. 32**, precisely (plus footnote 16) |
 | 16 | in-sample vs out-of-sample | **L12** | "Out-of-sample" appears **once** (p. 30). "In-sample" **never** |
 
 **Read that column 4 carefully before every round.** Six of the sixteen terms are words the player
@@ -135,9 +135,14 @@ what it would have given instead. That contrast is L7's boss round.
 **THE TELL**
 Three, in order of how badly they give the game away.
 1. **They describe a time-series regression and call it cross-sectional.** "We take the stock's
-   returns over the last five years and regress them on its Value score." That is not this. It is,
-   however, exactly what the paper does for *Historical Beta* on p. 42, eq. (1.12) — so the confusion
-   is live in this very document and the player must be able to separate the two.
+   returns over the last five years and regress them on its Value score." That is not this. It is the
+   *shape* of what the paper does for **Historical Beta** on p. 42, eq. (1.12) — one stock, five years
+   of weekly excess returns, exponentially weighted with a 52-week half-life — with one difference you
+   must not blur: **in (1.12) the regressor is the market index return** (the cap-weighted Estimation
+   Universe), not a characteristic like Value. So the confusion is live in this very document, and the
+   player has to separate three things, not two: cross-sectional regression on characteristics;
+   time-series regression on a *return* (1.12, which manufactures an exposure); and the thing BFRE
+   never does, a time-series regression of a return on a *characteristic*.
 2. **They put it backwards.** "We regress the exposures on the returns." Returns are the left-hand
    side. Nothing marks a non-quant faster.
 3. **They think `f` is one fixed number.** They speak of "the Value factor return" as a constant,
@@ -149,10 +154,13 @@ Three, in order of how badly they give the game away.
 > regressions. What have I got at the end of each, how many numbers is it, and which one is BFRE?"
 
 Pass looks like: (a) one number per factor for that month, a *factor return*, and BFRE repeats it —
-daily for regionals, weekly for World (p. 24); (b) one number for that stock, a *beta* / sensitivity,
-which is what p. 42 eq. (1.12) does to *build an exposure*, not to estimate a factor return. Bonus
-tier-4 answer: BFRE uses the time-series form **inside** the cross-sectional form — historical beta
-is a time-series output that becomes a column of `X`.
+**daily for country and regional models, weekly for the World model** (p. 24, verbatim; do not shorten
+this to "daily for regionals", the country models are daily too); (b) one number for that stock, a
+*beta* / sensitivity — the same **shape** as p. 42 eq. (1.12), which is how BFRE *builds an exposure*
+rather than how it estimates a factor return. **Say the difference out loud:** in (1.12) the regressor
+is the **market index return**, not a Value exposure, so (b) as I posed it is a shape-match to (1.12),
+not the same regression. Bonus tier-4 answer: BFRE uses the time-series form **inside** the
+cross-sectional form — historical beta is a time-series output that becomes a column of `X`.
 
 **Difficulty:** moderate. The idea is easy; the *contrast* is where players slip.
 
@@ -166,8 +174,16 @@ is a time-series output that becomes a column of `X`.
 
 **Plain English**
 Two lists of numbers are orthogonal when you multiply them pairwise and the total comes to zero.
-That is all it means. It says the two carry no overlapping information *in the linear sense*: one
-cannot be used to predict any part of the other by a straight-line rule.
+That is all it means.
+
+**And here is the trap in the usual gloss, which you must not repeat.** People say orthogonal means
+"carrying no overlapping information", i.e. **uncorrelated**. That is only true if at least one of the
+two lists has already had its mean taken out. `Σxe = 0` is *no through-the-origin predictability*;
+zero correlation is *no predictability after centering*. They coincide exactly when a column of ones
+is in `X` — which is the whole content of L5, and which is why the cold-open fit has `Σx·e = 0` and
+`Σe = 2` at the same time. Say "orthogonal" for the dot product and "uncorrelated" for the centred
+version, and make the player say which one they mean. This distinction is not pedantry: it is the
+difference between what the fit **forces** and what p. 30 **assumes** — see the [GM INFERENCE] below.
 
 **Mechanism required before the word**
 - **L2** — `Σ x·e = 0` derived as a turning-force condition and proved by the nudge/contradiction
@@ -208,13 +224,31 @@ player builds at L2, not a paper claim.
 1. **Boardroom usage.** "That's orthogonal to what we're discussing" — meaning irrelevant, a
    tangent. Extremely common, and instantly fatal in a quant conversation because it reveals the
    word arrived from management-speak rather than from a dot product.
-2. **Claiming BFRE's factors are orthogonal.** They are conspicuously not. p. 11, Figure 1.3
-   (NAMR, Dec 2013): **Size–Liquidity exposure correlation = 0.74**, Earnings Yield–Profitability
-   **0.64**, Volatility–Dividend Yield **−0.46**, Size–Volatility **−0.36**. A player who says "the
-   factors are orthogonal by construction" has just contradicted the paper's own figure.
+2. **Claiming BFRE's factor *exposures* are orthogonal.** They are conspicuously not. p. 11,
+   Figure 1.3 (NAMR, Dec 2013): **Size–Liquidity exposure correlation = 0.74**, Earnings
+   Yield–Profitability **0.64**, Volatility–Dividend Yield **−0.46**, Size–Volatility **−0.36**. A
+   player who says "the exposures are orthogonal by construction" has contradicted the paper's own
+   figure.
+   **Give this one its fair hearing before you dock it, because there is a sense in which "orthogonal
+   by construction" is right.** A multivariate cross-sectional regression coefficient *is* the return
+   to a portfolio with unit exposure to its own factor and **zero exposure to every other factor in
+   the fit** — that is what "holding the others constant" means, and it is why the paper can speak of
+   **"pure factor portfolios"** (p. 32, in the list of test portfolios). So: the *columns* are
+   correlated; the *implied factor-mimicking portfolios* are exposure-orthogonal by construction; the
+   *factor returns* they generate are not orthogonal at all, which is precisely why `F` has
+   off-diagonal entries worth estimating. Three objects, three different answers. A player who reaches
+   for the pure-factor-portfolio sense has earned bps — make them name which object they meant, then
+   make them give all three.
 3. **Collapsing two different orthogonalities.** Residuals ⟂ columns of `X` is *forced*. Column ⟂
    column is *not*, and in BFRE is false. Different statements. A player who cannot keep them apart
    will fail the L4 boss round.
+4. **Forgetting the weights (tier-5, and a genuine quant marker).** BFRE does not run an unweighted
+   regression. Assets are weighted by **square-root of market capitalisation** (p. 25). So what the fit
+   forces is `Σ w·x·u = 0` — orthogonality **in the weighted inner product**, not the plain one. `Σ x·u`
+   is generally *not* zero in BFRE. A player who says "sum of exposure times specific return is zero"
+   is 90% right and can be pushed the last 10%; a player who *volunteers* the weights without being
+   asked has arrived. Do not dock the unweighted answer at tier 2 or 3 — dock it only when they claim
+   it as a property of BFRE specifically at tier 4.
 
 **Follow-up**
 > "In the cold-open five stocks, `Σe = 2` but `Σx·e = 0`. One of those is orthogonality. Which, and
@@ -673,10 +707,29 @@ What the paper does instead:
   at all**, so the paper never says what it is for. `notes/` glosses it as "the classic placebo/control
   descriptor for a factor-selection procedure" — **that reading is the transcriber's, not the paper's**,
   and you must say so. But the object itself is real and printed, and it is the single best teaching
-  artefact in 65 pages for what a t-statistic is actually protecting you against: run a selection
-  procedure over 108 candidate substyles at a 5%-ish significance bar and roughly five of them will clear
-  it by luck. A deliberately meaningless column tells you whether yours is one of them.
-  (Counts: **18 styles, 108 substyles** — `notes/`'s count from the printed rows; **no totals are printed**.)
+  artefact in 65 pages for what a t-statistic is actually protecting you against.
+  **Do the arithmetic honestly here, because BFRE's rule is better than the lazy criticism of it.** The
+  lazy version — "a 5% bar over a hundred-odd candidates throws up five winners by luck" — is *not*
+  BFRE's rule. BFRE does not use a single test. It uses a **persistence** rule: the proportion of
+  monthly cross-sectional regressions in which `|t| > 2` must exceed **10%** (pp. 14, 32). Under a
+  pure-noise substyle each month clears `|t| > 2` with probability **0.0455**, so over the paper's
+  15-year, **~180-month** history (p. 8) that proportion has a standard deviation of
+  `√(0.0455 × 0.9545 / 180) ≈ 0.0155` — putting the 10% bar **3.5 standard deviations** above the null,
+  a per-candidate false-positive rate of about **0.0002**, i.e. **0.02 expected false positives across
+  108 candidates**. Arithmetic verified computationally. The 0.0455, the 180 and the 10% are the
+  paper's; the independence model is mine — **[GM INFERENCE]**, and say so at the table.
+  **Now the attack that actually lands.** That calculation assumes the ~180 monthly t-statistics are
+  *independent*. They are not, and the paper knows it: exposures are highly persistent, and the paper
+  applies **Newey–West** specifically because the return series are serially correlated (pp. 27, 28).
+  Redo the same sum with an effective **20** independent months instead of 180 and the bar sits only
+  **1.2** standard deviations up — about **13 of 108** candidates clear it by luck. The paper never
+  estimates its effective independent sample, so the strength of its own selection rule is unquantified,
+  and the Random Substyle is the one instrument in the document that could have settled it empirically.
+  Its result is never reported. That is the L12 finding, not "five by luck".
+  (Counts: **18 styles, 108 substyles** — `notes/`'s count from the printed rows; **no totals are
+  printed**. Carry the paper's own unreconciled inconsistency too: **p. 10 states the candidate set is
+  `N ≥ 200` substyles**, while Table 1.4, captioned "all substyles **investigated**", prints 108. Both
+  numbers are the paper's. The conclusion above is unchanged under either.)
 - **The best line in the paper for this term is on p. 6, footnote 8.** Currency factor returns are
   "**calculated**" from exchange rates and risk-free rates rather than "estimated", and the footnote
   says why: "Note the use of the term 'calculated' here, as opposed to 'estimated' — **no uncertainty
@@ -692,8 +745,14 @@ What the paper does instead:
 3. **"t > 2 means the factor is important."** It means the estimate is large relative to *its own*
    noise. A microscopic effect measured very precisely clears `t = 2` easily. The paper's own
    average-squared-t metric (p. 8) exists because "significant" is too blunt.
-4. **Quoting a standard error from the paper.** There isn't one. Not a single standard error, VIF
-   value, bias statistic or R² *number* is printed anywhere in the document. Only thresholds.
+4. **Quoting a standard error from the paper.** There isn't one. No standard error, no VIF value and
+   no bias statistic is printed anywhere in the document — only thresholds.
+   **Do not over-reach this into "no numbers at all."** The paper *does* print one goodness-of-fit
+   figure: p. 4, the regression of daily S&P 500 excess returns on daily NAMR market factor returns,
+   **β = 0.99, R² = 91%**. That is a printed R², and a player who cites it is right. What is missing is
+   an R² for *the model's own cross-sectional fit* — the R² defined in words on p. 32 has no number
+   anywhere. Keep those two apart, or you will dock a correct answer, which is the §8 rule running
+   backwards.
 
 **Follow-up**
 > "BFRE calls currency factor returns *calculated*, not *estimated*, and the footnote says no
@@ -709,8 +768,9 @@ factor returns are extremely variable and have no standard error at all.
 > differs in the exposures. Which number in the arithmetic carries the difference, and where does it
 > come from?"
 
-**Difficulty:** deriving it from scratch is genuinely the hardest thing at L6 and one of the four
-things Victory Condition 3 singles out. Say so.
+**Difficulty:** deriving it from scratch is genuinely the hardest thing at L6 and the first of the
+**three** things Victory Condition 3 singles out as the parts textbooks skip ("where a standard error
+comes from, where a denominator comes from, why the loss is squared"). Say so.
 
 ---
 
@@ -1022,9 +1082,11 @@ nudge `w_i` and watch `σ_P` move. Same tool, new clothes.
 
 **In the paper**
 > **The phrase "marginal contribution" does not appear anywhere in the 65 transcribed pages.** Checked
-> by grep. The word "marginal" occurs three times, and only one is relevant: p. 7, where residuals of a
-> coarse industry fit are regressed on a finer schema level "to compute the **marginal benefit** of
-> increasing granularity" — a different idea entirely.
+> by grep. The bare word "marginal" turns up three times in `notes/`, but **only one of those three is
+> the paper's own text**: p. 7, where residuals of a coarse industry fit are regressed on a finer schema
+> level "to compute the **marginal benefit** of increasing granularity" — a different idea entirely. The
+> other two ("marginally finer", "marginally the taller") are the transcriber's prose describing tables
+> on pp. 21 and 58. Grep hits are not citations; check whose sentence you landed in.
 
 What the paper reports is **contribution**, which is the closely related object marginal contribution
 is used to build:
@@ -1055,8 +1117,15 @@ at L11.
 2. **Not knowing contributions sum to the total.** If they think it is just a ranking, they will not
    understand why the EDR pie is a pie.
 3. **Thinking contributions must be positive.** A genuine hedge has a negative marginal contribution
-   — adding more of it *reduces* total risk. Note the paper's own FX panel on p. 35 shows a bar at
-   ≈ **−0.05%** of active risk, i.e. a small negative contribution (`notes/` pixel reading, ±10%).
+   — adding more of it *reduces* total risk. The paper's own FX panel on p. 35 shows a bar at
+   ≈ **−0.05%** of active risk (`notes/` pixel reading, ±10%), so negative *contributions* are real and
+   printed. **Do not misuse that bar as evidence of a negative marginal contribution** — it is not.
+   Its exposure dot is also negative, ≈ **−0.7% of NAV**, and contribution = exposure × marginal
+   contribution, so two negatives there imply a *positive* marginal contribution on a short position.
+   That is a better teaching point than the one it replaces: to read a sign off an EDR bar you need
+   **both** series, and the panel plots both on purpose. A negative marginal contribution needs a
+   position that is genuinely *anti-correlated with the rest of the book*, which no single bar on
+   p. 35 establishes.
 4. **Confusing it with exposure.** The EDR panels deliberately plot both on the same chart with two
    different axes precisely because they are different (p. 35). A large exposure with a small
    contribution is normal and interesting.
@@ -1198,10 +1267,14 @@ being consumed) and L8 (they must have felt an estimate be unstable).
   with UCITS guidelines, following Kupiec (1995)), and benchmarking against **STORM**.
 - p. 56 — **Table 1.4** is titled "Inventory of all substyles **investigated**", not "used": it is the
   candidate pool that was screened, and `notes/` records that the page gives **no indication of which
-  survived**. It lists **108 substyles** across 18 candidate styles (`notes/`'s count; no totals printed),
-  one of which is literally called **"Random Substyle"**. Search that many candidates and some will look
-  significant purely in-sample. This is the multiple-testing half of the in-sample problem, and the paper
-  hands you the evidence without ever naming the issue.
+  survived**. It lists **108 substyles** across 18 candidate styles (`notes/`'s count; no totals
+  printed), one of which is literally called **"Random Substyle"**. Note the paper's own unreconciled
+  discrepancy: **p. 10 says the candidate set is `N ≥ 200`**, Table 1.4 prints 108, and nothing
+  connects the two. Search a pool that size and some candidates will look significant purely in-sample.
+  This is the multiple-testing half of the in-sample problem, and the paper hands you the evidence
+  without ever naming the issue. **Do not overstate it** — see §3.9: BFRE's 10%-persistence rule is a
+  real defence against exactly this, and it holds up if the monthly t-statistics are near-independent.
+  The finding is that the paper never checks whether they are.
 - **pp. 32–33, and this is the L12 kill shot:** the Model Testing chapter lists an "exhaustive set" of
   test portfolios (pure factor portfolios, cap-weighted estimation universes and carve-outs, cap
   terciles, individual stocks, minimum variance portfolios, active portfolios, "a significant number of
@@ -1235,8 +1308,9 @@ exactly why the paper uses *t-statistic persistence over time* (pp. 8, 32) rathe
 factors.
 
 **Second follow-up (the L12 attack)**
-> "The Model Testing chapter is two pages, lists nine kinds of test portfolio, and reports zero
-> numbers. Defend that as a BlackRock author. Now attack it as a rival."
+> "The Model Testing chapter is two pages, lists six kinds of test portfolio plus 'a significant
+> number of genuine portfolios', and reports zero numbers. Defend that as a BlackRock author. Now
+> attack it as a rival."
 
 **Difficulty:** conceptually the easiest term on this list; it is placed at L12 because its *use* is
 critical, not because it is hard.
@@ -1326,7 +1400,13 @@ this is the list that stops the next one.
 5. **Do not silently correct the paper's typos.** Eq. (1.10)'s doubled `j` index and the p. 26
    where-list pairing `X_Mkt` with "Style Exposures" are **source errors**, re-verified at high zoom.
    Showing the player a real published document containing real errors is worth more than a clean one.
-6. **Do not invent a number the paper withholds.** There is no VIF value, no bias statistic, no R²
-   figure, no total factor count, no specific-risk weighting function, and no Bayesian prior parameter
-   anywhere in the document. When the player asks — and they should — the correct answer is "the paper
-   does not say, and that is a finding."
+6. **Do not invent a number the paper withholds.** There is no VIF value, no bias statistic, no
+   *cross-sectional* R² figure, no total factor count, no specific-risk weighting function, and no
+   Bayesian prior parameter anywhere in the document. When the player asks — and they should — the
+   correct answer is "the paper does not say, and that is a finding."
+7. **Do not over-claim the absences either.** The paper prints **β = 0.99 and R² = 91%** on p. 4 (daily
+   S&P 500 excess returns regressed on the daily NAMR market factor return). "The paper contains no R²
+   number" is therefore false, and a player who quotes p. 4 is right. The true, narrower statement is:
+   no R² for the model's *own* cross-sectional fit is printed. The same discipline applies to every
+   "never appears" row in §1 — they were established by grep and they hold, but they are claims about
+   *the word*, not about the idea, and never about every number on the topic.
