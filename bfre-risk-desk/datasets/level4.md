@@ -1202,9 +1202,15 @@ What does not survive is the **decomposition**. The report hands the desk a sens
 built out of two vast offsetting factor contributions, and every sentence anyone then says
 about *which* factor is driving the book is noise. That is the specific mechanism by which
 this level's abstraction reaches a risk number, and it is why p.32's word is **apportioning**
-and not *forecasting*. The one book whose *total* is genuinely fragile is the one built long
-one colliding factor and short the other — the only kind whose `δ` is not small — and `δ` is
-assembled from nothing but the names where the two columns disagree.
+and not *forecasting*.
+
+One caveat to hand the player with it, because it is the honest limit of the good news: the
+total is invariant, but *how big* it is depends on `δ`, the book's net loading on the
+disagreement direction — and `δ = w·d` is assembled from nothing but the names where the two
+columns disagree. Here that is two stocks. A book with a large `δ` is betting on precisely
+the thinnest evidence in the file, and while its forecast is not *rotation*-dependent, it
+rests on the least-supported term in the estimate. Invariance is not the same thing as
+reliability, and a CRO will ask about the difference.
 
 ### 14g. What the notes do NOT support
 
