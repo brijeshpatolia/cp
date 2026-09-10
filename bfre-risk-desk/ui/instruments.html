@@ -1,0 +1,702 @@
+<title>The Risk Desk Instruments</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+  :root{
+    --ground:#E8EDF2; --plate:#F7F9FB; --ink:#0E2637; --ink-soft:#4A6376; --ink-faint:#7C93A4;
+    --rule:#BACAD7; --rule-soft:#D6E0E8; --grid:#CFDCE6;
+    --signal:#C2571A; --signal-soft:#F0DACB;
+    --level:#0E7C63; --alarm:#A8322F; --locked:#9DAFBC;
+    --shadow:0 1px 0 rgba(14,38,55,.06);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#08161F; --plate:#0D2231; --ink:#DCE9F1; --ink-soft:#93AEC0; --ink-faint:#5E7C90;
+      --rule:#1D3D52; --rule-soft:#16303F; --grid:#183446;
+      --signal:#F0913F; --signal-soft:#3A2415;
+      --level:#3FBE9C; --alarm:#E4695F; --locked:#3C5568;
+      --shadow:0 1px 0 rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#08161F; --plate:#0D2231; --ink:#DCE9F1; --ink-soft:#93AEC0; --ink-faint:#5E7C90;
+    --rule:#1D3D52; --rule-soft:#16303F; --grid:#183446;
+    --signal:#F0913F; --signal-soft:#3A2415;
+    --level:#3FBE9C; --alarm:#E4695F; --locked:#3C5568;
+    --shadow:0 1px 0 rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+    font-size:15px; line-height:1.5;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding-inline:20px; padding-block:28px 64px;}
+
+  .eyebrow{
+    font-family:"IBM Plex Sans Condensed",Arial Narrow,sans-serif;
+    text-transform:uppercase; letter-spacing:.14em; font-weight:600;
+    font-size:11px; color:var(--ink-faint);
+  }
+  h1{
+    font-family:"IBM Plex Sans Condensed",Arial Narrow,sans-serif;
+    font-weight:700; letter-spacing:.02em; font-size:clamp(30px,5vw,44px);
+    margin:.15em 0 .1em; text-wrap:balance; text-transform:uppercase;
+  }
+  h2{
+    font-family:"IBM Plex Sans Condensed",Arial Narrow,sans-serif;
+    font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+    font-size:19px; margin:0;
+  }
+  .num{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums;}
+
+  /* ---- title block, like the corner of an engineering drawing ---- */
+  header{border-bottom:2px solid var(--ink); padding-bottom:14px; margin-bottom:26px;}
+  .headrow{display:flex; flex-wrap:wrap; gap:18px 28px; align-items:flex-end; justify-content:space-between;}
+  .subtitle{color:var(--ink-soft); max-width:60ch; margin:6px 0 0;}
+  .stamp{
+    border:1px solid var(--rule); background:var(--plate); box-shadow:var(--shadow);
+    display:grid; grid-template-columns:auto auto; gap:0;
+  }
+  .stamp div{padding:6px 12px; border-bottom:1px solid var(--rule-soft);}
+  .stamp div:nth-child(2n){border-left:1px solid var(--rule-soft); text-align:right;}
+  .stamp div:nth-last-child(-n+2){border-bottom:0;}
+  .stamp .k{font-family:"IBM Plex Sans Condensed",sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:10px; color:var(--ink-faint);}
+  .stamp .v{font-family:"IBM Plex Mono",monospace; font-size:13px; font-weight:500;}
+
+  /* ---- layout ---- */
+  .cols{display:grid; grid-template-columns:1fr; gap:24px;}
+  @media (min-width:980px){ .cols{grid-template-columns:1fr 290px; align-items:start;} }
+
+  .plates{display:flex; flex-direction:column; gap:24px; min-width:0;}
+
+  .plate{
+    background:var(--plate); border:1px solid var(--rule); box-shadow:var(--shadow);
+    padding:18px 18px 20px;
+  }
+  .plate-head{display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:4px;}
+  .plate-no{
+    font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em;
+    color:var(--signal); font-weight:600;
+  }
+  .caption{color:var(--ink-soft); font-size:13.5px; margin:6px 0 16px; max-width:68ch;}
+  .caption b{color:var(--ink); font-weight:500;}
+
+  /* ---- controls ---- */
+  .ctl{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin:14px 0 10px;}
+  .ctl label{font-family:"IBM Plex Sans Condensed",sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:11px; color:var(--ink-faint);}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; background:transparent;
+    flex:1 1 220px; min-width:160px; height:28px; cursor:grab;
+  }
+  input[type=range]:active{cursor:grabbing;}
+  input[type=range]::-webkit-slider-runnable-track{height:2px; background:var(--rule);}
+  input[type=range]::-moz-range-track{height:2px; background:var(--rule);}
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:16px; height:16px; margin-top:-7px;
+    background:var(--signal); border:0; border-radius:50%;
+  }
+  input[type=range]::-moz-range-thumb{width:16px; height:16px; background:var(--signal); border:0; border-radius:50%;}
+  input[type=range]:focus-visible{outline:2px solid var(--signal); outline-offset:3px;}
+
+  .readout{
+    display:flex; gap:0; flex-wrap:wrap; border:1px solid var(--rule-soft);
+    margin-top:12px;
+  }
+  .readout > div{
+    flex:1 1 120px; padding:9px 12px; border-right:1px solid var(--rule-soft); min-width:0;
+  }
+  .readout > div:last-child{border-right:0;}
+  .readout .k{font-family:"IBM Plex Sans Condensed",sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:10px; color:var(--ink-faint); display:block;}
+  .readout .v{font-family:"IBM Plex Mono",monospace; font-size:17px; font-weight:500; display:block; margin-top:2px;}
+  .v.ok{color:var(--level);} .v.bad{color:var(--alarm);}
+
+  figure{margin:0;}
+  svg{display:block; width:100%; height:auto; max-width:100%;}
+  .figcap{font-size:12px; color:var(--ink-faint); margin-top:6px; font-family:"IBM Plex Sans Condensed",sans-serif; letter-spacing:.04em; text-transform:uppercase;}
+
+  /* ---- ledger table ---- */
+  .scroll{overflow-x:auto;}
+  table{border-collapse:collapse; width:100%; font-family:"IBM Plex Mono",monospace; font-size:13.5px; font-variant-numeric:tabular-nums;}
+  th,td{padding:7px 10px; text-align:right; border-bottom:1px solid var(--rule-soft); white-space:nowrap;}
+  th:first-child,td:first-child{text-align:left;}
+  thead th{
+    font-family:"IBM Plex Sans Condensed",sans-serif; text-transform:uppercase;
+    letter-spacing:.1em; font-size:10px; color:var(--ink-faint); font-weight:600;
+    border-bottom:1px solid var(--rule);
+  }
+  tbody tr:last-child td{border-bottom:0;}
+  .stepcell{white-space:nowrap;}
+  .cell-btn{
+    font-family:"IBM Plex Mono",monospace; font-size:13.5px; font-variant-numeric:tabular-nums;
+    color:var(--ink); border:1px dashed var(--rule); border-inline:0;
+    padding:4px 10px; min-width:46px; text-align:center; display:inline-block;
+  }
+  .cell-btn.solved{border-color:var(--level); color:var(--level); border-style:solid; font-weight:600;}
+  button.step{
+    font-family:"IBM Plex Mono",monospace; font-size:14px; line-height:1;
+    background:transparent; color:var(--ink-faint); border:1px solid var(--rule);
+    padding:4px 8px; cursor:pointer; vertical-align:middle;
+  }
+  button.step:hover{border-color:var(--signal); color:var(--signal); background:var(--signal-soft);}
+  button.step:focus-visible{outline:2px solid var(--signal); outline-offset:2px;}
+
+  /* ---- spirit levels ---- */
+  .levels{display:grid; gap:10px; margin-top:14px;}
+  @media (min-width:560px){ .levels{grid-template-columns:1fr 1fr;} }
+  .vial{border:1px solid var(--rule-soft); padding:10px 12px;}
+  .vial .k{font-family:"IBM Plex Sans Condensed",sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:10px; color:var(--ink-faint);}
+  .tube{position:relative; height:14px; background:var(--ground); border:1px solid var(--rule-soft); margin-top:8px; overflow:hidden;}
+  .tube .mid{position:absolute; left:50%; top:0; bottom:0; width:1px; background:var(--rule);}
+  .bubble{position:absolute; top:1px; bottom:1px; width:12px; background:var(--alarm); transition:left .18s ease, background .18s ease;}
+  .bubble.ok{background:var(--level);}
+  .vial .val{font-family:"IBM Plex Mono",monospace; font-size:15px; margin-top:7px; display:block;}
+
+  /* ---- progress rail ---- */
+  .rail{display:flex; flex-direction:column; gap:16px; min-width:0;}
+  @media (min-width:980px){ .rail{position:sticky; top:20px;} }
+  .panel{background:var(--plate); border:1px solid var(--rule); box-shadow:var(--shadow); padding:14px 16px 16px;}
+  .bps{font-family:"IBM Plex Mono",monospace; font-size:34px; font-weight:600; letter-spacing:-.02em; line-height:1.05;}
+  .bps small{font-size:13px; color:var(--ink-faint); font-weight:400; letter-spacing:.08em;}
+  .rank{font-family:"IBM Plex Sans Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; font-size:13px; font-weight:600; margin-top:2px;}
+  .ranktrack{display:flex; gap:3px; margin-top:9px;}
+  .ranktrack i{flex:1; height:4px; background:var(--rule); }
+  .ranktrack i.on{background:var(--signal);}
+
+  .terms{display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;}
+  .term{
+    font-family:"IBM Plex Sans Condensed",sans-serif; font-size:11px; letter-spacing:.05em;
+    text-transform:uppercase; padding:3px 7px; border:1px solid var(--rule-soft); color:var(--locked);
+  }
+  .term.on{color:var(--signal); border-color:var(--signal); background:var(--signal-soft); font-weight:600;}
+  .term.just{animation:pop .5s ease;}
+  @keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){ .term.just{animation:none} .bubble{transition:none} }
+
+  .task{display:flex; gap:9px; align-items:flex-start; padding:7px 0; border-bottom:1px solid var(--rule-soft); font-size:13.5px;}
+  .task:last-child{border-bottom:0;}
+  .box{width:13px; height:13px; border:1px solid var(--rule); flex:none; margin-top:3px;}
+  .task.done .box{background:var(--level); border-color:var(--level);}
+  .task.done span{color:var(--ink-faint); text-decoration:line-through;}
+
+  .savebox{
+    font-family:"IBM Plex Mono",monospace; font-size:11.5px; white-space:pre; overflow-x:auto;
+    background:var(--ground); border:1px solid var(--rule-soft); padding:11px; margin-top:10px; color:var(--ink-soft);
+  }
+  button.act{
+    font-family:"IBM Plex Sans Condensed",sans-serif; text-transform:uppercase; letter-spacing:.1em;
+    font-size:11px; font-weight:600; padding:8px 13px; margin-top:10px;
+    background:var(--ink); color:var(--plate); border:1px solid var(--ink); cursor:pointer;
+  }
+  button.act:hover{background:var(--signal); border-color:var(--signal); color:#fff;}
+  button.act:focus-visible{outline:2px solid var(--signal); outline-offset:2px;}
+  .muted{color:var(--ink-faint); font-size:12.5px;}
+  .note{border-left:2px solid var(--signal); padding-left:11px; margin-top:14px; font-size:13.5px; color:var(--ink-soft);}
+  .win{color:var(--level); font-weight:600;}
+  footer{margin-top:40px; padding-top:14px; border-top:1px solid var(--rule); color:var(--ink-faint); font-size:12.5px;}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="headrow">
+    <div>
+      <div class="eyebrow">Instrument panel &middot; plates 1&ndash;3</div>
+      <h1>The Risk Desk</h1>
+      <p class="subtitle">The three machines behind <span class="num">V = XFX&#8288;<sup>T</sup> + D</span>, with the covers off. Drag them. The conversation is where you get interrogated; this is where you get to feel the thing move.</p>
+    </div>
+    <div class="stamp">
+      <div class="k">Model</div><div class="v">BFRE</div>
+      <div class="k">Levels</div><div class="v">1, 2, 4</div>
+      <div class="k">Arithmetic</div><div class="v">exact</div>
+      <div class="k">Player</div><div class="v" id="rankStamp">Intern</div>
+    </div>
+  </div>
+</header>
+
+<div class="cols">
+<main class="plates">
+
+  <!-- ================= PLATE 1 ================= -->
+  <section class="plate">
+    <div class="plate-head">
+      <h2>The Dial</h2>
+      <span class="plate-no">PLATE 1 &middot; LEVEL 1</span>
+    </div>
+    <p class="caption">Five stocks. One number <b>b</b> turns cheapness into return. There is no right answer sitting in the data waiting to be read off &mdash; you have to <b>choose</b> b, and the only honest way to choose is to make the total squared miss as small as possible. Drag the dial and watch the misses fight each other.</p>
+
+    <figure>
+      <svg id="fit" viewBox="0 0 620 300" role="img" aria-label="Scatter of five stocks with the fitted line and the vertical miss for each stock"></svg>
+      <figcaption class="figcap">Vertical bars are the misses. Squared and summed, they are the score you are minimising.</figcaption>
+    </figure>
+
+    <div class="ctl">
+      <label for="bslider">Dial b</label>
+      <input id="bslider" type="range" min="-1" max="5" step="0.05" value="0.4">
+      <span class="num" id="bval" style="font-size:19px;font-weight:600;min-width:5ch">0.40</span>
+    </div>
+
+    <div class="readout">
+      <div><span class="k">Total squared miss</span><span class="v num" id="ssv">&mdash;</span></div>
+      <div><span class="k">Turning force &Sigma;x&middot;e</span><span class="v num" id="pullv">&mdash;</span></div>
+      <div><span class="k">Best so far</span><span class="v num" id="bestv">&mdash;</span></div>
+      <div><span class="k">Bps banked</span><span class="v num" id="p1bps">0</span></div>
+    </div>
+
+    <figure style="margin-top:16px">
+      <svg id="para" viewBox="0 0 620 170" role="img" aria-label="The total squared miss as b varies, a parabola with its minimum marked"></svg>
+      <figcaption class="figcap">SS(b) = 36.5 &minus; 30b + 7.5b&sup2; &mdash; every point on this curve is a dial setting you could have chosen.</figcaption>
+    </figure>
+
+    <div class="note" id="p1note">Two things are happening at once. Watch the <b>turning force</b> readout as you drag: it falls to exactly zero at the same instant the miss bottoms out. That is not a coincidence, it is the whole of Level 2.</div>
+  </section>
+
+  <!-- ================= PLATE 2 ================= -->
+  <section class="plate">
+    <div class="plate-head">
+      <h2>The Balance</h2>
+      <span class="plate-no">PLATE 2 &middot; LEVEL 2</span>
+    </div>
+    <p class="caption">A new month, and you are the desk downstream. You do not get returns &mdash; you get the exposure file and the residual file, which is what BFRE's specific-risk model actually consumes. <b>Exactly one residual has been overwritten.</b> Two things in this file are supposed to be zero. Make them zero.</p>
+
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Stock</th><th>market m</th><th>cheapness x</th><th>residual e</th><th>x&middot;e</th></tr></thead>
+        <tbody id="sabBody"></tbody>
+      </table>
+    </div>
+
+    <div class="levels">
+      <div class="vial">
+        <span class="k">Check 1 &nbsp;&Sigma;e &nbsp;(the market plank)</span>
+        <div class="tube"><span class="mid"></span><span class="bubble" id="bub1"></span></div>
+        <span class="val num" id="sum1">&mdash;</span>
+      </div>
+      <div class="vial">
+        <span class="k">Check 2 &nbsp;&Sigma;x&middot;e &nbsp;(the cheapness plank)</span>
+        <div class="tube"><span class="mid"></span><span class="bubble" id="bub2"></span></div>
+        <span class="val num" id="sum2">&mdash;</span>
+      </div>
+    </div>
+
+    <div class="note" id="sabNote">Do not hunt by trial and error &mdash; that earns nothing, and in a real file of 4,000 stocks it is not available to you. Deduce it. One cell was moved by an unknown amount <span class="num">&delta;</span>. <b>Check 1 hands you <span class="num">&delta;</span> directly.</b> <b>Check 2 divided by Check 1 hands you the <em>exposure</em> of the stock it happened to</b> &mdash; and only one stock has that exposure. Then use the steppers once.</div>
+  </section>
+
+  <!-- ================= PLATE 3 ================= -->
+  <section class="plate">
+    <div class="plate-head">
+      <h2>The Collision</h2>
+      <span class="plate-no">PLATE 3 &middot; LEVEL 4</span>
+    </div>
+    <p class="caption">Two columns now. A coefficient no longer means &ldquo;what this column explains&rdquo; &mdash; it means <b>what this column explains that the other one hasn't already explained</b>. Slide the two columns together and watch that leftover shrink to nothing. This is graduate-level material and it is the single most expensive mistake in applied factor modelling.</p>
+
+    <div class="ctl">
+      <label for="tslider">Pull the columns apart</label>
+      <input id="tslider" type="range" min="0.06" max="1.4" step="0.02" value="1.0">
+      <span class="num" id="tval" style="font-size:17px;font-weight:600;min-width:6ch">1.00</span>
+    </div>
+
+    <div class="readout">
+      <div><span class="k">Correlation of columns</span><span class="v num" id="corrv">&mdash;</span></div>
+      <div><span class="k">Determinant</span><span class="v num" id="detv">&mdash;</span></div>
+      <div><span class="k">Coefficient b&#8321;</span><span class="v num" id="b1v">&mdash;</span></div>
+      <div><span class="k">Coefficient b&#8322;</span><span class="v num" id="b2v">&mdash;</span></div>
+    </div>
+
+    <figure style="margin-top:16px">
+      <svg id="coef" viewBox="0 0 620 190" role="img" aria-label="The two coefficients as the columns are brought together, diverging as the determinant collapses"></svg>
+      <figcaption class="figcap">Same data, same returns, every setting. Only the overlap between the two columns changes.</figcaption>
+    </figure>
+
+    <div class="note" id="p3note">The returns never changed. The fit is just as good at every setting &mdash; the <em>total miss barely moves</em>. What collapses is your ability to say which column did the work.</div>
+  </section>
+
+</main>
+
+<!-- ================= RAIL ================= -->
+<aside class="rail">
+  <div class="panel">
+    <div class="eyebrow">Balance</div>
+    <div class="bps num"><span id="bpsN">0</span> <small>BPS</small></div>
+    <div class="rank" id="rankN">Intern</div>
+    <div class="ranktrack" id="ranktrack"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="muted" style="margin:9px 0 0">Earned for reasoning, never for a lucky number.</p>
+  </div>
+
+  <div class="panel">
+    <div class="eyebrow">Words you have earned</div>
+    <p class="muted" style="margin:7px 0 0">Locked until you have built the thing. No name before the mechanism.</p>
+    <div class="terms" id="terms"></div>
+  </div>
+
+  <div class="panel">
+    <div class="eyebrow">On the bench</div>
+    <div id="tasks" style="margin-top:8px"></div>
+  </div>
+
+  <div class="panel">
+    <div class="eyebrow">Save file</div>
+    <p class="muted" style="margin:7px 0 0">Paste into the next session. It writes itself.</p>
+    <div class="savebox" id="save">&mdash;</div>
+    <button class="act" id="copyBtn" type="button">Copy save file</button>
+    <button class="act" id="resetBtn" type="button" style="background:transparent;color:var(--ink-faint);border-color:var(--rule)">Reset</button>
+  </div>
+</aside>
+</div>
+
+<footer>
+  Every figure on this page is computed from the raw data in the browser, from the same datasets the repo verifies in exact rational arithmetic. Nothing here is a stored constant.
+  <span id="dbstate"></span>
+</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================= state ================= */
+  var S = { bps:0, feats:{}, sab:[1,-3,2,1,0], bestSS:null };
+  var RANKS = ["Intern","Analyst","Researcher","Model Owner","Author"];
+  var TERMS = [
+    {t:"residual",         f:"dial"},
+    {t:"least squares",    f:"dial"},
+    {t:"exposure",         f:"dial"},
+    {t:"orthogonal",       f:"balance"},
+    {t:"design matrix",    f:"balance"},
+    {t:"specific return",  f:"blindspot"},
+    {t:"multicollinearity",f:"collide"},
+    {t:"loading",          f:"collide"},
+    {t:"cross-sectional",  f:null},
+    {t:"degrees of freedom",f:null},
+    {t:"standard error",   f:null},
+    {t:"covariance matrix",f:null},
+    {t:"eigenvalue",       f:null},
+    {t:"shrinkage",        f:null},
+    {t:"tracking error",   f:null},
+    {t:"marginal contribution",f:null}
+  ];
+  var TASKS = [
+    {f:"dial",      s:"Find the dial setting that minimises the miss"},
+    {f:"zero",      s:"Read the turning force at that setting"},
+    {f:"balance",   s:"Repair the sabotaged residual file"},
+    {f:"blindspot", s:"Find the corruption the check cannot see"},
+    {f:"collide",   s:"Collapse the determinant past 1.0"},
+    {f:"flip",      s:"Push a coefficient until its sign flips"}
+  ];
+  var AWARD = {dial:60, zero:40, balance:80, blindspot:70, collide:50, flip:60};
+
+  var db=null, saving=false;
+  function persist(){
+    try{ localStorage.setItem("riskdesk", JSON.stringify(S)); }catch(e){}
+    if(db && !saving){
+      saving=true;
+      setTimeout(function(){
+        saving=false;
+        db.doc("progress/state").set(S).catch(function(){});
+      }, 600);
+    }
+  }
+  function restore(o){
+    if(!o || typeof o!=="object") return;
+    if(typeof o.bps==="number") S.bps=o.bps;
+    if(o.feats && typeof o.feats==="object") S.feats=o.feats;
+    if(Array.isArray(o.sab) && o.sab.length===5) S.sab=o.sab.slice();
+    if(typeof o.bestSS==="number") S.bestSS=o.bestSS;
+  }
+  try{ restore(JSON.parse(localStorage.getItem("riskdesk"))); }catch(e){}
+
+  function earn(f){
+    if(S.feats[f]) return false;
+    S.feats[f]=true; S.bps += (AWARD[f]||0);
+    persist(); paintRail(f); return true;
+  }
+
+  /* ================= plate 1 : the dial ================= */
+  var X=[-1.5,-0.5,0,1,2], R=[-2,-2,0.5,4,3.5], NAMES=["AXL","BRN","CHR","DLT","EMK"];
+  var SXX=0, SXR=0, SRR=0;
+  for(var i=0;i<5;i++){ SXX+=X[i]*X[i]; SXR+=X[i]*R[i]; SRR+=R[i]*R[i]; }
+  var BSTAR = SXR/SXX;                       // 15 / 7.5 = 2
+  function SS(b){ return SRR - 2*b*SXR + b*b*SXX; }
+  function pull(b){ return SXR - b*SXX; }    // = sum x*e
+
+  var NS="http://www.w3.org/2000/svg";
+  function el(n,a){ var e=document.createElementNS(NS,n); for(var k in a) e.setAttribute(k,a[k]); return e; }
+  function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+  function drawFit(b){
+    var s=document.getElementById("fit"); while(s.firstChild) s.removeChild(s.firstChild);
+    var L=54,Rt=14,T=14,B=34, W=620,H=300, iw=W-L-Rt, ih=H-T-B;
+    var x0=-2.1,x1=2.4, y0=-6.2,y1=6.2;
+    var px=function(v){ return L+(v-x0)/(x1-x0)*iw; };
+    var py=function(v){ return T+(y1-v)/(y1-y0)*ih; };
+    var RULE=css("--grid"), INK=css("--ink"), FAINT=css("--ink-faint"), SIG=css("--signal"), AL=css("--alarm"), LV=css("--level");
+
+    for(var g=-6; g<=6; g+=2){
+      s.appendChild(el("line",{x1:L,y1:py(g),x2:W-Rt,y2:py(g),stroke:RULE,"stroke-width":1}));
+      var tl=el("text",{x:L-8,y:py(g)+4,fill:FAINT,"font-size":11,"text-anchor":"end","font-family":"IBM Plex Mono, monospace"});
+      tl.textContent=g+"%"; s.appendChild(tl);
+    }
+    for(var gx=-2; gx<=2; gx++){
+      s.appendChild(el("line",{x1:px(gx),y1:T,x2:px(gx),y2:H-B,stroke:RULE,"stroke-width":1}));
+      var tx=el("text",{x:px(gx),y:H-B+18,fill:FAINT,"font-size":11,"text-anchor":"middle","font-family":"IBM Plex Mono, monospace"});
+      tx.textContent=gx; s.appendChild(tx);
+    }
+    s.appendChild(el("line",{x1:L,y1:py(0),x2:W-Rt,y2:py(0),stroke:INK,"stroke-width":1.4}));
+    var ax=el("text",{x:W-Rt,y:py(0)-8,fill:FAINT,"font-size":11,"text-anchor":"end","font-family":"IBM Plex Sans Condensed, sans-serif"});
+    ax.textContent="CHEAPNESS"; s.appendChild(ax);
+
+    s.appendChild(el("line",{x1:px(x0),y1:py(b*x0),x2:px(x1),y2:py(b*x1),stroke:SIG,"stroke-width":2.2}));
+
+    for(var i=0;i<5;i++){
+      var f=b*X[i], e=R[i]-f;
+      s.appendChild(el("line",{x1:px(X[i]),y1:py(f),x2:px(X[i]),y2:py(R[i]),
+        stroke:(Math.abs(e)<0.001?LV:AL),"stroke-width":Math.min(9,2+Math.abs(e)*1.5),"stroke-opacity":.5,"stroke-linecap":"butt"}));
+      s.appendChild(el("circle",{cx:px(X[i]),cy:py(R[i]),r:5,fill:INK}));
+      var lb=el("text",{x:px(X[i]),y:py(R[i])-11,fill:FAINT,"font-size":10,"text-anchor":"middle","font-family":"IBM Plex Sans Condensed, sans-serif"});
+      lb.textContent=NAMES[i]; s.appendChild(lb);
+    }
+  }
+
+  function drawPara(b){
+    var s=document.getElementById("para"); while(s.firstChild) s.removeChild(s.firstChild);
+    var L=54,Rt=14,T=14,B=30, W=620,H=170, iw=W-L-Rt, ih=H-T-B;
+    var x0=-1,x1=5, y0=0,y1=90;
+    var px=function(v){ return L+(v-x0)/(x1-x0)*iw; };
+    var py=function(v){ return T+(y1-v)/(y1-y0)*ih; };
+    var RULE=css("--grid"), FAINT=css("--ink-faint"), SIG=css("--signal"), LV=css("--level"), INK=css("--ink");
+
+    for(var g=0; g<=90; g+=30){
+      s.appendChild(el("line",{x1:L,y1:py(g),x2:W-Rt,y2:py(g),stroke:RULE,"stroke-width":1}));
+      var tl=el("text",{x:L-8,y:py(g)+4,fill:FAINT,"font-size":11,"text-anchor":"end","font-family":"IBM Plex Mono, monospace"});
+      tl.textContent=g; s.appendChild(tl);
+    }
+    var d="";
+    for(var k=0;k<=120;k++){
+      var bb=x0+(x1-x0)*k/120, yy=Math.min(y1,SS(bb));
+      d += (k?"L":"M")+px(bb).toFixed(1)+" "+py(yy).toFixed(1);
+    }
+    s.appendChild(el("path",{d:d,fill:"none",stroke:INK,"stroke-width":1.6}));
+    s.appendChild(el("line",{x1:px(BSTAR),y1:py(0),x2:px(BSTAR),y2:py(SS(BSTAR)),stroke:LV,"stroke-width":1,"stroke-dasharray":"3 3"}));
+    var mn=el("text",{x:px(BSTAR),y:H-B+18,fill:LV,"font-size":11,"text-anchor":"middle","font-family":"IBM Plex Mono, monospace"});
+    mn.textContent="minimum"; s.appendChild(mn);
+    s.appendChild(el("circle",{cx:px(b),cy:py(Math.min(y1,SS(b))),r:6,fill:SIG}));
+    var lab=el("text",{x:L,y:H-B+18,fill:FAINT,"font-size":11,"font-family":"IBM Plex Sans Condensed, sans-serif"});
+    lab.textContent="DIAL SETTING b"; s.appendChild(lab);
+  }
+
+  function setB(b){
+    document.getElementById("bval").textContent=b.toFixed(2);
+    var ss=SS(b), p=pull(b);
+    var ssEl=document.getElementById("ssv"), pEl=document.getElementById("pullv");
+    ssEl.textContent=ss.toFixed(3);
+    pEl.textContent=(p>=0?"+":"")+p.toFixed(3);
+    pEl.className="v num "+(Math.abs(p)<0.02?"ok":"bad");
+    if(S.bestSS===null || ss<S.bestSS){ S.bestSS=ss; persist(); }
+    document.getElementById("bestv").textContent=S.bestSS.toFixed(3);
+    drawFit(b); drawPara(b);
+
+    if(Math.abs(b-BSTAR)<0.026){
+      if(earn("dial")){
+        document.getElementById("p1note").innerHTML=
+          '<span class="win">Minimum found at b = 2 exactly.</span> The miss bottoms out at <span class="num">6.5</span> and it cannot go lower &mdash; that leftover is not error in your arithmetic, it is the part of these five returns that <em>no</em> single cheapness score could ever have explained. CHR is the proof: exposure 0, return +0.5%, unreachable at any b.';
+      }
+      if(Math.abs(pull(b))<0.02) earn("zero");
+    }
+    document.getElementById("p1bps").textContent=(S.feats.dial?AWARD.dial:0)+(S.feats.zero?AWARD.zero:0);
+  }
+
+  /* ================= plate 2 : the balance ================= */
+  var SX=[-2,-1,0,1,2], TRUE_E=[1,-3,2,1,-1];
+  function paintSab(){
+    var tb=document.getElementById("sabBody"); tb.innerHTML="";
+    var s1=0,s2=0;
+    for(var i=0;i<5;i++){ s1+=S.sab[i]; s2+=SX[i]*S.sab[i]; }
+    for(var i=0;i<5;i++){
+      var tr=document.createElement("tr");
+      var solved  = (s1===0 && s2===0);
+      tr.innerHTML='<td>'+NAMES[i]+'</td><td>1</td><td>'+SX[i]+'</td>'+
+        '<td class="stepcell"><button class="step" data-i="'+i+'" data-d="-1" aria-label="decrease '+NAMES[i]+' residual">&minus;</button>'+
+        '<span class="cell-btn'+(solved?" solved":"")+'">'+(S.sab[i]>0?"+":"")+S.sab[i]+'</span>'+
+        '<button class="step" data-i="'+i+'" data-d="1" aria-label="increase '+NAMES[i]+' residual">+</button></td>'+
+        '<td>'+(SX[i]*S.sab[i]>0?"+":"")+(SX[i]*S.sab[i])+'</td>';
+      tb.appendChild(tr);
+    }
+    var e1=document.getElementById("sum1"), e2=document.getElementById("sum2");
+    e1.textContent="Σe = "+(s1>0?"+":"")+s1;
+    e2.textContent="Σx·e = "+(s2>0?"+":"")+s2;
+    e1.style.color = s1===0?css("--level"):css("--alarm");
+    e2.style.color = s2===0?css("--level"):css("--alarm");
+    var b1=document.getElementById("bub1"), b2=document.getElementById("bub2");
+    b1.style.left = (50 + Math.max(-46,Math.min(46, s1*11)))+"%";
+    b2.style.left = (50 + Math.max(-46,Math.min(46, s2*11)))+"%";
+    b1.className="bubble"+(s1===0?" ok":""); b2.className="bubble"+(s2===0?" ok":"");
+
+    if(s1===0 && s2===0){
+      if(earn("balance")){
+        document.getElementById("sabNote").innerHTML=
+          '<span class="win">Both planks level. EMK was the corrupted cell, moved by &delta; = +1.</span> You did not need the returns, the model, or a re-run &mdash; only the two identities the file was obliged to satisfy. That is what a structural check buys you in production. Now the harder half: <b>put +2 into CHR instead</b> and watch what the checks do.';
+      }
+    }
+    if(s2===0 && s1!==0 && S.sab[2]!==TRUE_E[2]){
+      if(earn("blindspot")){
+        document.getElementById("sabNote").innerHTML=
+          '<span class="win">There it is. Check 2 did not move.</span> You corrupted CHR and <span class="num">&Sigma;x&middot;e</span> stayed at exactly zero &mdash; because CHR&rsquo;s exposure is <span class="num">0</span>, so <span class="num">x&middot;e</span> is zero no matter what you write in that cell. The cheapness plank is structurally blind there. Only the market plank caught it, and if this file had no market column, nothing would have. Knowing what your own check cannot see is the part that makes you employable.';
+      }
+    }
+  }
+  document.getElementById("sabBody").addEventListener("click", function(ev){
+    var b=ev.target.closest("button[data-i]"); if(!b) return;
+    var i=+b.getAttribute("data-i"), d=+b.getAttribute("data-d");
+    S.sab[i]=Math.max(-6,Math.min(6,S.sab[i]+d));
+    persist(); paintSab();
+  });
+
+  /* ================= plate 3 : the collision ================= */
+  var C1=[-2,-1,0,1,2], DV=[1,-1,0,1,-1], CR=[-3.5,-1.5,0.5,4.5,3.5];
+  function fit2(t){
+    var c2=[],i;
+    for(i=0;i<5;i++) c2.push(C1[i]+t*DV[i]);
+    var a=0,b=0,c=0,p=0,q=0, m1=0,m2=0;
+    for(i=0;i<5;i++){ m1+=C1[i]; m2+=c2[i]; }
+    m1/=5; m2/=5;
+    for(i=0;i<5;i++){
+      var u=C1[i]-m1, v=c2[i]-m2;
+      a+=u*u; b+=u*v; c+=v*v; p+=u*CR[i]; q+=v*CR[i];
+    }
+    var det=a*c-b*b;
+    return {b1:(c*p-b*q)/det, b2:(a*q-b*p)/det, det:det, corr:b/Math.sqrt(a*c)};
+  }
+  function drawCoef(t){
+    var s=document.getElementById("coef"); while(s.firstChild) s.removeChild(s.firstChild);
+    var L=54,Rt=14,T=16,B=32, W=620,H=190, iw=W-L-Rt, ih=H-T-B;
+    var x0=0.06,x1=1.4, y0=-14,y1=14;
+    var px=function(v){ return L+(v-x0)/(x1-x0)*iw; };
+    var py=function(v){ return T+(y1-Math.max(y0,Math.min(y1,v)))/(y1-y0)*ih; };
+    var RULE=css("--grid"), FAINT=css("--ink-faint"), SIG=css("--signal"), INK=css("--ink"), AL=css("--alarm");
+    for(var g=-12; g<=12; g+=6){
+      s.appendChild(el("line",{x1:L,y1:py(g),x2:W-Rt,y2:py(g),stroke:(g===0?INK:RULE),"stroke-width":g===0?1.3:1}));
+      var tl=el("text",{x:L-8,y:py(g)+4,fill:FAINT,"font-size":11,"text-anchor":"end","font-family":"IBM Plex Mono, monospace"});
+      tl.textContent=g; s.appendChild(tl);
+    }
+    var d1="",d2="";
+    for(var k=0;k<=140;k++){
+      var tt=x0+(x1-x0)*k/140, f=fit2(tt);
+      d1+=(k?"L":"M")+px(tt).toFixed(1)+" "+py(f.b1).toFixed(1);
+      d2+=(k?"L":"M")+px(tt).toFixed(1)+" "+py(f.b2).toFixed(1);
+    }
+    s.appendChild(el("path",{d:d1,fill:"none",stroke:INK,"stroke-width":1.8}));
+    s.appendChild(el("path",{d:d2,fill:"none",stroke:AL,"stroke-width":1.8,"stroke-dasharray":"5 3"}));
+    var f=fit2(t);
+    s.appendChild(el("line",{x1:px(t),y1:T,x2:px(t),y2:H-B,stroke:SIG,"stroke-width":1}));
+    s.appendChild(el("circle",{cx:px(t),cy:py(f.b1),r:5,fill:INK}));
+    s.appendChild(el("circle",{cx:px(t),cy:py(f.b2),r:5,fill:AL}));
+    var k1=el("text",{x:W-Rt,y:T+12,fill:INK,"font-size":11,"text-anchor":"end","font-family":"IBM Plex Sans Condensed, sans-serif"});
+    k1.textContent="b₁"; s.appendChild(k1);
+    var k2=el("text",{x:W-Rt-24,y:T+12,fill:AL,"font-size":11,"text-anchor":"end","font-family":"IBM Plex Sans Condensed, sans-serif"});
+    k2.textContent="b₂"; s.appendChild(k2);
+    var lab=el("text",{x:L,y:H-B+18,fill:FAINT,"font-size":11,"font-family":"IBM Plex Sans Condensed, sans-serif"});
+    lab.textContent="COLUMN SEPARATION →"; s.appendChild(lab);
+  }
+  function setT(t){
+    var f=fit2(t);
+    document.getElementById("tval").textContent=t.toFixed(2);
+    document.getElementById("corrv").textContent=f.corr.toFixed(4);
+    var dv=document.getElementById("detv");
+    dv.textContent=f.det.toFixed(3);
+    dv.className="v num "+(f.det<1?"bad":"");
+    document.getElementById("b1v").textContent=(f.b1>=0?"+":"")+f.b1.toFixed(2);
+    document.getElementById("b2v").textContent=(f.b2>=0?"+":"")+f.b2.toFixed(2);
+    drawCoef(t);
+    if(f.det<1) earn("collide");
+    if(f.b1<0 || f.b2<0){
+      if(earn("flip")){
+        document.getElementById("p3note").innerHTML=
+          '<span class="win">A sign flipped.</span> The same returns, the same two columns, and now the model says one of them <em>hurts</em>. Nothing about the world changed &mdash; only how much the two columns overlap. This is why a coefficient is never &ldquo;the effect of this column&rdquo;; it is the effect of the part of this column nothing else could account for. When almost nothing is left over, the coefficient is dividing by almost nothing.';
+      }
+    }
+  }
+
+  /* ================= rail ================= */
+  function paintRail(justEarned){
+    document.getElementById("bpsN").textContent=S.bps;
+    var n=0; for(var k in S.feats) if(S.feats[k]) n++;
+    var rk=RANKS[Math.min(RANKS.length-1, Math.floor(n/2))];
+    document.getElementById("rankN").textContent=rk;
+    document.getElementById("rankStamp").textContent=rk;
+    var tr=document.getElementById("ranktrack").children;
+    for(var i=0;i<tr.length;i++) tr[i].className = i<=Math.min(4,Math.floor(n/2)) ? "on" : "";
+
+    var box=document.getElementById("terms"); box.innerHTML="";
+    TERMS.forEach(function(o){
+      var d=document.createElement("span");
+      var on = o.f && S.feats[o.f];
+      d.className="term"+(on?" on":"")+(o.f===justEarned?" just":"");
+      d.textContent=o.t;
+      d.title = on ? "earned" : (o.f? "locked — build it on this page" : "locked — earned later in conversation");
+      box.appendChild(d);
+    });
+
+    var tk=document.getElementById("tasks"); tk.innerHTML="";
+    TASKS.forEach(function(o){
+      var d=document.createElement("div");
+      d.className="task"+(S.feats[o.f]?" done":"");
+      d.innerHTML='<span class="box"></span><span>'+o.s+'</span>';
+      tk.appendChild(d);
+    });
+    document.getElementById("save").textContent=saveText();
+  }
+  function saveText(){
+    var done=TASKS.filter(function(o){return S.feats[o.f];}).map(function(o){return o.s;});
+    var words=TERMS.filter(function(o){return o.f && S.feats[o.f];}).map(function(o){return o.t;});
+    var n=0; for(var k in S.feats) if(S.feats[k]) n++;
+    return "=== RISK DESK SAVE ===\n"+
+      "Rank: "+RANKS[Math.min(RANKS.length-1,Math.floor(n/2))]+"\n"+
+      "bps: "+S.bps+"\n"+
+      "Instruments cleared: "+(done.length?done.length+"/6":"none yet")+"\n"+
+      (done.length? done.map(function(s){return "  - "+s;}).join("\n")+"\n" : "")+
+      "Words unlocked: "+(words.length? words.join(", ") : "none yet")+"\n"+
+      "Best miss reached: "+(S.bestSS===null?"—":S.bestSS.toFixed(3))+"\n"+
+      "Next move: levels 5-12 in conversation\n"+
+      "=== END SAVE ===";
+  }
+
+  document.getElementById("copyBtn").addEventListener("click",function(){
+    var b=this;
+    navigator.clipboard.writeText(saveText()).then(function(){
+      b.textContent="Copied"; setTimeout(function(){b.textContent="Copy save file";},1400);
+    },function(){ b.textContent="Select it and copy"; });
+  });
+  document.getElementById("resetBtn").addEventListener("click",function(){
+    S={bps:0,feats:{},sab:[1,-3,2,1,0],bestSS:null};
+    persist(); paintRail(); paintSab();
+    document.getElementById("bslider").value=0.4; setB(0.4);
+    document.getElementById("tslider").value=1.0; setT(1.0);
+  });
+
+  document.getElementById("bslider").addEventListener("input",function(){ setB(parseFloat(this.value)); });
+  document.getElementById("tslider").addEventListener("input",function(){ setT(parseFloat(this.value)); });
+
+  /* ================= boot ================= */
+  function start(){
+    paintRail(); paintSab();
+    setB(parseFloat(document.getElementById("bslider").value));
+    setT(parseFloat(document.getElementById("tslider").value));
+  }
+  start();
+
+  if(window.claude && window.claude.use){
+    window.claude.use("db").then(function(d){
+      if(!d) return;
+      db=d;
+      document.getElementById("dbstate").textContent=" Progress is saved to this artifact, so the next session can read it.";
+      d.doc("progress/state").get().then(function(doc){
+        if(doc && doc.bps !== undefined){ restore(doc); paintRail(); paintSab();
+          setB(parseFloat(document.getElementById("bslider").value)); }
+      }).catch(function(){});
+    }).catch(function(){});
+  }
+  if(window.claude && window.claude.hot){
+    window.claude.hot.snapshot(function(){ return S; });
+  }
+})();
+</script>

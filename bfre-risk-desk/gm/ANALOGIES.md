@@ -127,7 +127,7 @@ but its machinery waits for L9. **Locked:** loss function, least squares, varian
 | Anchor | Page | What it is | Tag |
 |---|---|---|---|
 | `u` in equation (1.7) `r = X f + u` | p.24 | "`X f` is termed the common factor return and `u` is the asset specific, or idiosyncratic, return." | PAPER |
-| Four letters, one idea: `u`, `ū`, `ε`, `ε̃`, `η` | pp.7–8, 10, 12, 24, 26 | The paper runs its whole factor-selection procedure *on residuals* | PAPER |
+| One idea under many letters: `u` and `ū` (1.1)/(1.2); `ε` and `ε̃ᵢ` (1.3)/(1.4); `η` and `η̃ᵢ` (1.5)/(1.6); `u` again in (1.7); `ε` again in (1.11) | pp.7–8, 10, 12, 24, 26 | The paper runs its whole factor-selection procedure *on residuals* | PAPER |
 | **average squared t-statistic** | p.8 | Computed "to distinguish between factors with t-statistics close to +/- 2 and those that are significantly higher" — the authors reaching for squaring, in their own words, for the player's exact reason | PAPER |
 | `R²` defined in words only | p.32 | "the proportion of cross-sectional variation in asset returns explained by the set of common factors in the model." **No formula is printed anywhere in the paper.** | PAPER |
 | Specific = **50%** of Active Risk | p.35 (Fig 1.18 pie) | Half of that portfolio's risk number is built out of these misses | PAPER |
@@ -1517,7 +1517,7 @@ investigated. The envelope story cannot explain that; use it as the hook into L1
 | The cadence | p.24 | "These regressions are performed **daily** for country and regional models and **weekly** for the World model." **No justification given for the weekly choice.** | PAPER |
 | Executive-summary version | p.3 | "Model estimation is performed in cross-section **in two-passes**"; daily factor returns for all models **from March 1996 onwards**. | PAPER |
 | The one place BFRE *does* run a time series | p.42 | Equation (1.12): weekly excess returns, **5 years**, exponentially weighted with a **52-week half-life**, against the cap-weighted Estimation Universe. But its output enters BFRE as an **input substyle to Volatility** (Historical Beta) — never as the exposure mechanism. | PAPER |
-| The rival design | p.2 | STORM: an "asset-by-asset covariance matrix estimated from **asset returns alone**, each asset effectively its own factor". BFRE "imposes far more structure on the asset covariance matrix, reducing the modelling problem to a smaller set of factors". | PAPER |
+| The rival design | p.2 | BFRE is positioned against **STORM**, Aladdin's existing equity approach, which builds an asset-by-asset covariance matrix from asset returns alone — each asset effectively its own factor. *(That characterisation of STORM is the transcriber's gloss in `notes/`, not a printed quotation; the printed clause that **is** quotable is the next one.)* BFRE "imposes far more structure on the asset covariance matrix, reducing the modelling problem to a smaller set of factors, which capture the most important sources of asset return commonality". | PAPER + gloss |
 | What the choice buys | p.2 | Return-only forecasts "can quickly become misleading if a company undergoes changes in its operating activities, or is subject to corporate actions, or experiences changes to its capital structure"; a fundamental model reflects these "immediately", a returns-only model "only gradually". | PAPER |
 | What the choice costs | p.13 | AOL's market-cap substyle exposure rose with the share price while its sales substyle stayed low — the exposure moves with the very thing the model is trying to forecast. Figure 1.6 values are `[APPROX — pixel-measured against warped gridlines]`. | PAPER + `[APPROX]` |
 | The horizon | p.30 | "The forecast horizon of the model is **1-month**"; style and industry factors are "selected by assessing explanatory power using **monthly cross-sectional regressions**". | PAPER |
@@ -2048,7 +2048,7 @@ paper's words. Prefer plain English: "there are directions the data has never se
 | NAMR industry factors | p.57, Table 1.5 | **54 rows**. *The count is the transcriber's — the page prints no total.* | PAPER + counted |
 | NAMR styles | p.10, Table 1.2 | **12 styles plus the market factor** | PAPER |
 | Country and currency blocks | p.3, p.5, p.6 | Every regional model carries country factors and "a series of currency factors"; **the paper prints no count for either** | PAPER + GAP |
-| Candidate substyles screened | p.10, p.56 | "over 200 substyles", formally **N ≥ 200**; the full inventory is Table 1.4 (p.56) | PAPER |
+| Candidate substyles screened | p.10, p.55, p.56 | p.10: "over 200 substyles", formally **N ≥ 200**. p.55: the printed inventory "is a subset of the full list of **200+**", because each horizon variant counts as a separate substyle. The inventory itself is **Table 1.4 on p.56** — 18 styles, 108 printed substyles *(both counts are the transcriber's; the page prints no totals)*. | PAPER + counted |
 
 **GM-only arithmetic, verified computationally.** With a 26-week half-life applied over 104 weekly
 observations, the *effective* number of observations — the standard measure, total weight squared
@@ -2579,7 +2579,7 @@ appears in the paper** — its word is **Active Risk** (p.34, p.35). Flag the le
 |---|---|---|---|
 | Equation (1.7) `r = X f + u` | p.24 | Each asset's return is its characteristics times the payoff to those characteristics, plus what nothing common can reach. Lead-in line: "In general a multi-factor model decomposes asset returns as follows". | PAPER |
 | Equation (1.8) `Σ = X F Xᵀ + Δ` | p.24 | `Xᵀ` reads the portfolio's characteristics; `F` says how those characteristics move together; `X` carries the answer back to assets; `Δ` adds each asset's private wobble. | PAPER |
-| The ingredient list | p.24 | Portfolio risk is computed from portfolio holdings, portfolio-level factor exposures "**aggregated from the asset level**", a factor covariance matrix, and asset specific risk forecasts. | PAPER |
+| The ingredient list | p.24 | Portfolio risk is computed from four things: portfolio holdings (asset weights); portfolio-level factor exposures, **aggregated from the asset level**; a factor covariance matrix; and asset specific risk forecasts. *(Close paraphrase of the page, as recorded in `notes/` — not a verbatim sentence.)* | PAPER |
 | Exposure is a position, not a sensitivity | p.4 | "The market factor **exposure** of a portfolio should not be confused with its market **beta**." Market factor exposure = "the fraction of portfolio %NAV invested in equities" (footnote 3 adds delta-adjusted derivative exposure). | PAPER |
 | Lineage rather than evidence | p.24, fn 13 | The approach is "similar to that used in the fundamental factor risk model literature", citing Rudd and Clasing [24], Grinold and Kahn [25], Connor et al. [17]. **Justified by precedent, not by an empirical comparison.** | PAPER |
 | What the assembled number looks like | p.35 | Banner: Active Risk **2.99%**, Portfolio Beta **1.02**, Portfolio Risk **15.62%**, Benchmark Risk **14.98%**, Base Currency EUR. *(Audit doubt: the middle digit of 2.99 is blobby — 2.89 not fully excluded; the last digit of 15.62 is soft — 15.67 not fully excluded. 14.98 and 1.02 are clean.)* | PAPER + `[partly uncertain]` |
@@ -2603,7 +2603,7 @@ she has to estimate that one entirely on its own.
 | In the story | In the model |
 |---|---|
 | the notes in the till | the positions in the portfolio |
-| counting what she holds in each currency | reading the portfolio's exposure to each factor — `Xᵀ` applied to the holdings, "aggregated from the asset level" (p.24) |
+| counting what she holds in each currency | reading the portfolio's exposure to each factor — `Xᵀ` applied to the holdings; p.24 says portfolio-level exposures are **aggregated from the asset level** |
 | a currency | a factor |
 | **the board showing how currencies move together** | `F`, the factor covariance matrix |
 | euro and franc moving together | positively correlated factors compounding |
@@ -2620,9 +2620,9 @@ value directly and be done — what did the detour through currencies actually b
   between every note and every other note; going through currencies means she only needs relationships
   between the handful of currencies. That is exactly the paper's stated reason on p.2: BFRE "imposes far
   more structure on the asset covariance matrix, reducing the modelling problem to a smaller set of
-  factors, which capture the most important sources of asset return commonality" — as opposed to STORM,
-  where the covariance matrix is estimated "from asset returns alone, each asset effectively its own
-  factor".
+  factors, which capture the most important sources of asset return commonality" — the comparison being
+  with STORM, which builds an asset-by-asset covariance matrix from asset returns alone (that
+  description of STORM is `notes/`'s gloss of p.2, not a printed quotation).
 - **Not landed** sounds like: "because it's more accurate" — it is not obviously more accurate; it is
   vastly more estimable. The player who says "accurate" has missed the entire architectural argument.
 
@@ -2959,11 +2959,16 @@ Terms appear freely in this file. At the table they are gated. Cross-check `gm/V
 | **L11** | marginal contribution *(phrase never appears; p.35's axis says "Contrib. (% of Act. Risk)")* |
 | **L12** | in-sample / out-of-sample *("out-of-sample" appears once, p.30; "in-sample" never)*; bias statistic *(p.32, p.38 — the paper's)* |
 
-**Nine phrases that appear nowhere in the 65 pages** and must never be handed a page number: *least
-squares, sum of squares, normal equation, standard error, degrees of freedom, orthogonal, eigenvalue,
-principal component, marginal contribution, tracking error, Frisch–Waugh, design matrix, loading.*
-Verified by grep over the whole of `notes/`. If you cite a page for one of these, you have broken **NO
-NUMBER WITHOUT ITS ORIGIN** in its most damaging form.
+**Thirteen phrases that appear nowhere in the paper** and must never be handed a page number: *least
+squares · sum of squares · normal equation · standard error · degrees of freedom · orthogonal ·
+eigenvalue · principal component · marginal contribution · tracking error · Frisch–Waugh · design
+matrix · loading.*
+
+Verified by grep over the whole of `notes/`. Three of them do produce hits in `notes/` — "orthogonal"
+once, "shrinkage" in a bibliography title, "standard error" once — and in every case the hit is either a
+**transcriber's commentary line** or a **cited paper's title**, never BFRE's own text. Check the
+surrounding line before you cite. If you hand a page number to one of these, you have broken **NO NUMBER
+WITHOUT ITS ORIGIN** in its most damaging form.
 
 ---
 

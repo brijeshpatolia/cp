@@ -1,7 +1,7 @@
 # Level 4 — The Collision
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level4.py`
-(243 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
+(277 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
 terminate it is written with the word **rounded** next to it; every other decimal on this
 page is exact.
 
@@ -333,8 +333,8 @@ keep quality only:    b = 1,     SS = Σr² − q²/C = 31 − 49/7       = 24
 ```
 
 Worth showing because it is the honest fallback, and because it beats one-at-a-time
-(`17.67 < 29.33`). **Dropping a column is a defensible response to a collision. Reporting
-two one-at-a-time numbers is not.**
+(`53/3 = 17.6667 < 88/3 = 29.3333`, both rounded). **Dropping a column is a defensible
+response to a collision. Reporting two one-at-a-time numbers is not.**
 
 ### 5d. The full scoreboard
 
@@ -348,7 +348,7 @@ two one-at-a-time numbers is not.**
 | give up, predict 0 for everyone | 0 | 0 | 31 | 31.000 |
 
 The method a beginner reaches for first is the second-worst thing on the list, and it is
-beaten by doing nothing at all by a margin of only 1.67.
+beaten by doing nothing at all by a margin of only `31 − 88/3 = 5/3 = 1.6667 (rounded)`.
 
 ---
 
@@ -579,7 +579,7 @@ For the sceptic, `t = 1/2` done the long way, assuming nothing:
 x₂(1/2) = [−5/4, −3/4, 0, 1, 2]
 A = 15/2        B = 15/8 + 3/8 + 0 + 1 + 4 = 29/4        C = 25/16 + 9/16 + 0 + 1 + 4 = 57/8
 det = (15/2)(57/8) − (29/4)² = 855/16 − 841/16 = 14/16 = 7/8              ✓ = (7/2)(1/4)
-p = 10 (unchanged)          q = 15/4 − 9/4 + 0 + 3 + 2 = 17/2
+p = 10 (unchanged)          q = 5 − 3/2 + 0 + 3 + 2 = 17/2
 b₁ = (C·p − B·q)/det = (570/8 − 493/8)/(7/8) = 77/7 = 11                  ✓
 b₂ = (A·q − B·p)/det = (255/4 − 290/4)/(7/8) = (−35/4)(8/7) = −10         ✓
 fitted = 11·x₁ − 10·x₂(1/2) = [−4, +2, 0, +1, +2]                         ✓ identical
@@ -892,7 +892,8 @@ the column was not.** Push them to `v = x₂ − (3/5)x₁` and make them see th
 1. *"His arithmetic checks out. Show me where the error is."* — It is not in the arithmetic.
    `p/A` is a correct answer to "what single number best turns value into return **when
    quality is not in the room**". The firm's question has quality in the room.
-2. *"Value and quality are 0.95 correlated. Isn't one of them redundant?"* — No. Dropping
+2. *"Value and quality are 0.95 correlated. Isn't one of them redundant?"*
+   (`cosθ = 0.948683`, rounded.) — No. Dropping
    quality takes `Σe²` from 3 to `23 − 100/10 = 13`; dropping value takes it from 3 to
    `23 − 64/4 = 7`. The disagreements are small but they are load-bearing.
 3. *"Both his numbers could be backwards then."* — Impossible. Section 9a: at most one of
@@ -943,3 +944,221 @@ hours, one weekend apart. Rebuild from the story, not from the algebra.
 | fit invariant, split explodes as `1/t` | 4 |
 | discontinuity at exact collinearity | 3 |
 | "at most one sign can flip" | 2 — compute |
+
+---
+
+## 14. Back to BFRE — what this machinery does in the real model
+
+Levels 1–3 tied the *estimator* to p.24 eq. (1.7) and the weighting paragraph on p.25. This
+section is different material: it is about what BFRE does when its columns collide, and the
+paper is unusually explicit about it in two places and unusually quiet about it in a third.
+
+### 14a. p.32 — the paper names this level's problem and its diagnostic
+
+**p.32, MODEL ESTIMATION DIAGNOSTICS:** *"Several standard diagnostics were appraised during
+this process to check the overall explanatory power of the models, individual factor efficacy
+and also multicollinearity."* The third of the three is this level.
+
+Verbatim, p.32: *"The final set of diagnostics are **variance inflation factors**. These help
+diagnose issues relating to multicollinearity between the style factors. If style exposures
+are too closely correlated then the regression procedure will encounter problems in
+apportioning the factor return between them. This can result in significant instability in
+the factor return estimates through time¹⁶. In order to guard against these effects,
+variance inflation factors were reviewed over the research history and were found to be well
+within suitable thresholds."*
+
+Every clause of that has now been built:
+
+| The paper's words | This level's arithmetic |
+|---|---|
+| "too closely correlated" | `cosθ → 1`, so `det → 0` |
+| "problems in **apportioning** the factor return between them" | Section 7c: the fit is untouched (`Σe² = 6` at every `t`), only the *split* breaks — "apportioning" is precisely the right word and it is not the same word as "forecasting" |
+| "significant instability … through time" | Section 8: halve the disagreement and a one-stock, one-percentage-point data change moves the split twice as far. `−8/7`, `−16/7`, `−32/7` |
+| "variance inflation factors" | `VIF = A·C/det`; 15 on the main dataset, 10 on the boss dataset |
+
+**Footnote 16, p.32:** *"In the most extreme case, where factor exposures are perfectly
+correlated, identification issues will exist causing the estimation process to fail."*
+That is Section 7d, exactly: `det = 0`, no unique solution, and the *estimation process
+fails* rather than returning a large number.
+
+**The honesty note the player must carry.** The notes record explicitly that **no numeric VIF
+values and no numeric thresholds are printed anywhere in the paper** — "well within suitable
+thresholds" is the entire quantitative content. On p.32 the paper does quote a number for the
+neighbouring diagnostic (t-statistics: *"The majority of factors are significant more than
+10% of time over the research history"*), which makes the silence on VIFs conspicuous rather
+than accidental. That is a Level 12 entry: *a document that names its multicollinearity
+diagnostic, states it passed, and never reports a single value or threshold.*
+
+### 14b. p.26 — BFRE has an **exactly** singular design, on purpose, and says so
+
+This is the sharpest tie-back in the level, because it is not a hypothetical.
+
+**p.26:** *"This specification is not uniquely identified as there are an infinite number of
+possible solutions. The reason for this lies in the fact that, for each asset, there exist
+three intercept terms – the market factor, an industry factor, and a country factor. **Every
+asset has unit exposure to these three factors.** This can be resolved by adding two linear
+restrictions on the definition of the factor returns, which reduces the intercept terms from
+three to one."*
+
+Read that against Section 7d. Every asset has exposure 1 to market, 1 to its industry, 1 to
+its country. Sum the industry columns and you get a column of ones. Sum the country columns
+and you get the same column of ones. That is the market column. **Three parts of the design
+matrix add up to each other: `det = 0` exactly, not approximately.** "Infinite number of
+possible solutions" is the paper's own phrase for the line `b₁ + b₂ = 4/3` in Section 7d.
+
+**Equation (1.10), p.26** — the fix:
+
+```
+Σ_j ω_CInd,j · f_CInd,j = 0            Σ_k ω_CCty,k · f_CCty,k = 0
+```
+
+*(The second sum is printed in the source with index `j` over a summand subscripted `k`;
+`notes/chunk_19-27.md` re-verified this at 6× and records it as a typo in the original. It is
+written here corrected, as `Σ_k`.)* Footnote 15 defines the average as a square-root-of-
+market-capitalisation weighted return. Two restrictions, exactly enough to remove the two
+redundant dimensions.
+
+And then the sentence that this entire level exists to make comprehensible:
+
+**p.26:** *"This identification simply represents a rotation of the factor returns. **It does
+not impact the efficacy of the risk model.**"*
+
+A player who has not done Level 4 has to take that on faith. A player who has done Section 7c
+can *prove* it: the fitted vector `[−4, +2, 0, +1, +2]` and `Σe² = 6` were identical for every
+`t`, while `b₁` ran from 6 to 501. Choosing a restriction picks one point on the line of
+equally-good splits. It changes the attribution and cannot change the fit. The paper's claim
+is true, and now the player knows *why* it is true rather than that it was asserted.
+
+Make them say the converse too, because it is the part the paper does not spell out: since
+the restriction is a free choice, **the industry and country factor returns mean nothing on
+their own** — only relative to the chosen normalisation. The paper does draw out the
+consequence: *"As a result of these restrictions, the industry and country factors are net of
+the market factor return, which impacts their interpretation. To illustrate, if asset returns
+across EMEA are mostly positive on a given day and UK assets are also up but by less than the
+average return over the region, then the UK factor return will be negative."*
+
+### 14c. p.20 — the surgical fix, performed on a live model
+
+**p.20:** earnings yield and dividend yield are separate factors in the BFRE models **except
+in the EMEA model**, where they *"were found to be highly correlated over the research
+history and so were combined into a single factor, referred to as yield."*
+
+That is objection 4 in the boss round, answered by BlackRock in production: when two columns
+collide, merge them into one column and forecast the sum you can actually identify. In this
+level's language, they stopped trying to estimate `b₁` and `b₂` separately and estimated
+`b₁ + b₂` — the only part that was stable at every `t` in Section 7c.
+
+**The caveat the notes attach, which the player should carry:** the evidence offered is Figure
+1.15 (EMEA substyle exposure correlations, Mar 1996 – Dec 2010), whose strongest cell is
+E-to-P vs Normalised E-to-P at **0.85**, while **dividend yield's correlations to the earnings
+substyles are only 0.28 to 0.50**. So for the dividend-yield pairing specifically, "highly
+correlated" is asserted rather than demonstrated by the figure cited. Another Level 12 entry.
+
+### 14d. p.11 — the real collisions in the live NAMR model
+
+**Figure 1.3, p.11 (style exposure correlations, NAMR model, Dec 2013)** gives the actual
+numbers a BFRE modeller is managing:
+
+| Pair | Correlation |
+|---|---:|
+| Size – Liquidity | **0.74** (the largest off-diagonal in the 12×12 matrix) |
+| Earnings Yield – Profitability | 0.64 |
+| Volatility – Dividend Yield | −0.46 |
+| Size – Volatility | −0.36 |
+
+Put 0.74 into this level's machinery, treating it as the `cosθ` of Section 7a:
+`VIF = 1/(1 − 0.74²) = 1/(1131/2500) = 2500/1131 = 2.21 (rounded)`. That is a mild
+collision — the split is still identified, but a Size coefficient carries roughly twice the
+sensitivity to a data change that an uncorrelated factor would. **This is a rounded, illustrative calculation on a
+figure-derived correlation, not a number printed in the paper. Label it as such to the
+player.** BFRE reports no VIFs, so this is our arithmetic on their correlation, nothing more.
+
+### 14e. p.10–p.11 — the paper's substyle screen is a one-at-a-time procedure
+
+This is where the level bites hardest, and it should be handled carefully rather than
+triumphantly.
+
+**p.10, equations (1.3) and (1.4)**, with the text *"for i = 1, 2, …, N (where N ≥ 200 is the
+number of candidate substyles) we run the following two-step regression"*:
+
+```
+(1.3)   r = X_Mkt f_Mkt + Σ_{k∈CCty} X_CCty,k f_CCty,k + Σ_{j∈CInd} X_CInd,j f_CInd,j + ε
+(1.4)   ε = X_subSty,i f_subSty,i + ε̃_i
+```
+
+Read (1.4) with Section 6 in hand. It is the **sequential** method of Section 5b, applied
+across 200-plus candidate columns: the *return* is residualised on market, country and
+industry, and then each candidate substyle is fitted **one at a time, against the raw
+candidate column, with the other candidates not in the room.**
+
+Two things are true at once and the player must hold both:
+
+1. **It is legitimate as a screen.** Section 6c proved the sequential numerator is exactly
+   right; only its denominator is inflated. The ranking of candidates by explanatory power
+   against `ε` is a defensible way to shortlist from 200+, and the paper is explicit that
+   this is a *selection* stage, followed by aggregation and by re-estimation with the chosen
+   style inside the first-step regression.
+2. **It cannot say what any candidate is worth in the presence of the others.** By Section
+   5b, each candidate's coefficient from (1.4) is understated by that candidate's own
+   variance inflation factor against everything omitted. When the top-ranked candidates all
+   "revolve around a common theme" — as p.11 says of the UK model's top four, *Sales, Market
+   Cap, Broker Coverage, Total Assets*, all of them size — that is a collision, and the
+   one-at-a-time ranking is being applied precisely where it is weakest.
+
+The paper's own response is aggregation: p.11 says those four *"should all be aggregated
+together to form the size factor"*, and that *"we run additional univariate regressions on
+various combinations of these four candidate substyles as in Equation (1.4)"*. That is the
+p.20 EMEA fix again — merge the colliding columns. The notes flag that the exact combination
+criterion and threshold are **not stated on that page**. Level 12 entry.
+
+### 14f. Where the machinery ends up in the finished model
+
+**p.24, equation (1.7):** `r = X f + u`. The `f` this level fought over is that `f`.
+**p.24, equation (1.8):** `Σ = X F Xᵀ + Δ`.
+
+Follow the damage through: an unstable split does not merely produce a wrong `f` on one day.
+`F` is the covariance matrix of the `f` **time series** (Level 8), so a collision between two
+columns injects a large spurious *negative* covariance between their factor returns — in
+Section 7c, `b₁` and `b₂` moved in opposite directions by construction, `+1` against `−8/7`,
+`+15/7` against `−16/7`. Two factors that are nearly the same thing will appear in `F` as two
+factors that hedge each other almost perfectly. A portfolio loaded on both will then be
+reported as **less** risky than it is. That is the specific mechanism by which this level's
+abstraction reaches a risk number, and it is the reason the diagnostic on p.32 exists at all.
+
+### 14g. What the notes do NOT support
+
+Searched all 65 transcribed pages in `notes/`:
+
+- **`determinant`** — **zero hits.**
+- **`Frisch`**, **`Waugh`**, **`Lovell`** — **zero hits.** The theorem in Section 6 is
+  nowhere in the paper, even though equations (1.4) and (1.11) are both applications of it.
+- **`singular`**, **`condition number`**, **`matrix inversion`** — **zero hits.**
+- **`orthogonal`** — one hit, and it is the transcriber's own commentary on p.52, **not** a
+  sentence from the paper.
+- **`variance inflation`** — two hits, both on p.32, both quoted in 14a. **No numeric VIF
+  value and no numeric threshold appears anywhere.**
+- **`multicollinear*`** — three hits, all in the p.32 passage.
+
+So: **no BFRE anchor was found in `notes/` for the determinant, for Frisch–Waugh, or for any
+numeric collinearity threshold.** The paper names the disease (p.32), names one exact case of
+it (p.26), and twice performs the cure (p.20, p.11) — but never writes down the quantity that
+measures it. Do not invent one. Say to the player, in these words: *the machinery of this
+level is underneath four separate decisions in the paper and is written down in none of them.*
+
+---
+
+## Verification
+
+```bash
+python3 bfre-risk-desk/tools/verify_level4.py     # 277 exact-rational assertions, exits 0
+```
+
+The script recomputes every figure on this page from the raw `x₁`, `x₂` and `r` vectors in
+`fractions.Fraction`: both datasets' cross-products, determinants, cosines and VIFs; the joint
+fit by Cramer and by elimination; both balance conditions; every wrong method's exact numeric
+output and its `SS`; the excess-loss quadratic form; both Frisch–Waugh directions on both
+datasets; the whole `t`-family with its invariant fitted vector, invariant residuals and
+`1/t` split; the four equally-optimal solutions at `t = 0`; the one-stock sensitivity at three
+tightnesses; and brute-force sweeps over 4,092 datasets confirming Frisch–Waugh, the
+sequential-VIF identity, the explained-variation identity and the "at most one sign flips"
+theorem. If any printed value ever disagrees with this markdown, the markdown is wrong.
