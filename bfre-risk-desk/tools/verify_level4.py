@@ -675,6 +675,109 @@ print("   This is OUR arithmetic on a correlation read off their figure.")
 print("   The paper prints no VIF values. The markdown says so.")
 
 # ============================================================================
+head("SECTION 9  The prose claims, checked AS CLAIMS (adversarial audit pass)")
+# ============================================================================
+print("   Sections 1-8 check that the numbers are right. These check that the")
+print("   SENTENCES built on them are right, which is a different job.")
+
+sub("9.1  'threw away fourteen fifteenths', Section 5a -- not 94%")
+expl_joint = F(31) - F(6)          # 25
+expl_naive = F(31) - SS_naive      # 5/3
+check("explained by the joint fit", expl_joint, F(25))
+check("explained by one-at-a-time", expl_naive, F('5/3'))
+check("captured share of what was there = 1/VIF", expl_naive / expl_joint, F(1, 15))
+check("thrown-away share", 1 - expl_naive / expl_joint, F(14, 15))
+show("  thrown-away percentage (ROUNDED)", dec(F(1400, 15), 1) + "%")
+print("   14/15 = 93.333...%, so the markdown says 93.3% (rounded). '94%' would be")
+print("   the share of the total 31, which is not 'what was there' to be found.")
+
+sub("9.2  Section 3's claim: b1 rests on AXL and BRN alone, b2 does not")
+print("   w = x1 - (B/C)x2 is supported on AXL and BRN only, so b1 = sum(w*r)/sum(w^2)")
+print("   cannot see the other three returns. b2 uses v, which is supported everywhere.")
+frozen1 = []
+for i, nm in enumerate(names):
+    r_i = [ri + (F(1) if k == i else F(0)) for k, ri in enumerate(r)]
+    Ji = joint(x1, x2, r_i)
+    m1 = "moves" if Ji['b1'] != J['b1'] else "FIXED"
+    m2 = "moves" if Ji['b2'] != J['b2'] else "FIXED"
+    print(f"        +1pp on {nm}:  b1 = {S(Ji['b1']):>6s} ({m1})"
+          f"    b2 = {S(Ji['b2']):>7s} ({m2})")
+    if m1 == "FIXED":
+        frozen1.append(nm)
+    if nm in ("DLT", "EMK"):
+        check(f"  b1 unmoved by a bump to {nm}", Ji['b1'], J['b1'])
+        check(f"  b2 DOES move on {nm}", F(Ji['b2'] != J['b2']), F(1))
+check("names that cannot move b1", tuple(frozen1), ("CHR", "DLT", "EMK"))
+print("   CHR is frozen in BOTH columns because x1 = x2 = 0 there -- that is Level 0's")
+print("   CHR trap, not a fact about collinearity. The markdown cites DLT and EMK.")
+
+sub("9.3  Section 7c: SS of the naive pair at t=1/2, traced through 7b's closed form")
+numer = Ch * ph * ph - 2 * Bh * ph * qh + Ah * qh * qh
+check("C p^2 = (57/8)(100)", Ch * ph * ph, F('5700/8'))
+check("2 B p q = 2(29/4)(10)(17/2)", 2 * Bh * ph * qh, F('9860/8'))
+check("A q^2 = (15/2)(289/4)", Ah * qh * qh, F('4335/8'))
+check("numerator 5700/8 - 9860/8 + 4335/8", numer, F('175/8'))
+check("A*C = 855/16", Ah * Ch, F('855/16'))
+check("explained(one-at-a-time) = (175/8)/(855/16)", numer / (Ah * Ch), F('70/171'))
+check("SS = 31 - 70/171", F(31) - numer / (Ah * Ch), F('5231/171'))
+check("  ... and that agrees with fitting it directly",
+      SS2(x1, c_half, r, ph / Ah, qh / Ch), F('5231/171'))
+
+sub("9.4  Section 14d: sensitivity scales with sqrt(VIF), NOT with VIF")
+print("   Section 8's own numbers settle it. Response of b2 to the same one-stock bump:")
+prev = None
+for t in [F(1), F('1/2'), F('1/4')]:
+    ct = col2(t)
+    resp = joint(x1, ct, r_bump)['b2'] - joint(x1, ct, r)['b2']
+    vt = joint(x1, ct, r)['A'] * joint(x1, ct, r)['C'] / joint(x1, ct, r)['det']
+    if prev:
+        print(f"        t {S(prev[2])} -> {S(t)}:  VIF ratio {S(vt/prev[0])} "
+              f"= {dec(vt/prev[0],4)}   response ratio {S(resp/prev[1])}"
+              f"   sqrt(VIF ratio) = {math.sqrt(float(vt/prev[0])):.4f}")
+        check(f"  response ratio t={S(prev[2])}->{S(t)} is exactly 2", resp / prev[1], F(2))
+    prev = (vt, resp, t)
+check("VIF ratio t=1 -> t=1/2 is 57/14, NOT 4",
+      (F('855/14')) / F(15), F(57, 14))
+print("   VIF multiplied by 57/14 = 4.0714 while the response multiplied by exactly 2.")
+print("   sqrt(57/14) = 2.0178. Sensitivity tracks the SQUARE ROOT.")
+check("so for the p.11 illustration, VIF = 2500/1131", vif74, F(2500, 1131))
+show("  sqrt(VIF) (ROUNDED)", dec(math.sqrt(float(vif74)), 2))
+print("   -> 'about one and a half times the sensitivity', not 'twice'.")
+
+sub("9.5  Section 14f: the collision does NOT understate a portfolio's total risk")
+print("   Portfolio equally weighted on AXL and DLT: w = (1/2, 0, 0, 1/2, 0).")
+wp = frac('1/2', '0', '0', '1/2', '0')
+a1 = dot(wp, x1)
+delta = dot(wp, d)
+check("a1 = portfolio cheapness exposure", a1, F('-1/4'))
+check("delta = w . d  (lives only where the columns disagree)", delta, F('1/4'))
+c1_inv = J['b1'] + J['b2']
+c2_inv = F(1) * J['b2']
+check("c1 = b1 + b2 at t=1", c1_inv, F(1))
+check("c2 = t*b2 at t=1", c2_inv, F(-5))
+check("predicted total a1*c1 + delta*c2", a1 * c1_inv + delta * c2_inv, F('-3/2'))
+print()
+print(f"   {'t':>7s} {'a2':>10s} {'b1':>6s} {'b2':>6s} {'a1*b1':>10s} {'a2*b2':>10s} {'total':>7s}")
+for t in [F(1), F('1/2'), F('1/4'), F('1/100')]:
+    ct = col2(t)
+    Jt = joint(x1, ct, r)
+    a2 = dot(wp, ct)
+    k1 = a1 * Jt['b1']
+    k2 = a2 * Jt['b2']
+    print(f"   {S(t):>7s} {S(a2):>10s} {S(Jt['b1']):>6s} {S(Jt['b2']):>6s} "
+          f"{S(k1):>10s} {S(k2):>10s} {S(k1+k2):>7s}")
+    check(f"  t={S(t)}: a2 = a1 + t*delta", a2, a1 + t * delta)
+    check(f"  t={S(t)}: portfolio total is INVARIANT", k1 + k2, F('-3/2'))
+J100 = joint(x1, col2(F('1/100')), r)
+check("t=1/100: cheapness contribution a1*b1", a1 * J100['b1'], F('-501/4'))
+check("t=1/100: quality   contribution a2*b2",
+      dot(wp, col2(F('1/100'))) * J100['b2'], F('495/4'))
+check("t=1/100: they still sum to -3/2 on a two-stock book",
+      a1 * J100['b1'] + dot(wp, col2(F('1/100'))) * J100['b2'], F('-3/2'))
+print("   Contributions explode; the total never moves. So the risk NUMBER survives")
+print("   and the ATTRIBUTION does not -- which is p.32's word 'apportioning'.")
+
+# ============================================================================
 head("ALL CHECKS PASSED")
 print(f"   {CHECKS[0]} exact-rational assertions verified.")
 print("   Every number printed above appears in datasets/level4.md.")

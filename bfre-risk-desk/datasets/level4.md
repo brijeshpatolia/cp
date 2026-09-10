@@ -1,7 +1,7 @@
 # Level 4 — The Collision
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level4.py`
-(277 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
+(314 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
 terminate it is written with the word **rounded** next to it; every other decimal on this
 page is exact.
 
@@ -1220,7 +1220,7 @@ level is underneath four separate decisions in the paper and is written down in 
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level4.py     # 277 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level4.py     # 314 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page from the raw `x₁`, `x₂` and `r` vectors in
