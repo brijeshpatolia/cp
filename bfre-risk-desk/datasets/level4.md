@@ -325,11 +325,11 @@ true b₂ / sequential b₂ = (−5) / (−1/3) = 15
 
 **Fifteen. Exactly.** Not approximately. And 15 is `A·C/det = (15/2)(7)/(7/2)` — the third
 appearance of the same number in three sections (Section 4b's *fourteen fifteenths*, Section
-5a's *one fifteenth*, and now this ratio). It gets a name in Section 7 and not before, so do
-not hand the player one here. This is a general
-theorem, proved in Section 6c and brute-forced over 3,983 datasets by the verifier: *the
-sequential method understates the second coefficient by exactly the factor `A·C/det`,
-always.* It is the cleanest possible statement of what the shortcut leaves out.
+5a's *one fifteenth*, and now this ratio). It gets a name in Section 7 and not before, so
+do not hand the player one here. This is a general theorem, proved in Section 6c and
+brute-forced over 3,983 datasets by the verifier: *the sequential method understates the
+second coefficient by exactly the factor `A·C/det`, always.* It is the cleanest possible
+statement of what the shortcut leaves out.
 
 `SS(4/3, −1/3) = 152/9 = 16.8889 (rounded)`.
 
@@ -413,6 +413,16 @@ b₁ = Σw·r / Σw² = 3 / (1/2) = 6          ← the joint answer, recovered e
 
 **Six.** Identical to the two-column solve in Section 4, obtained by a one-column
 calculation the player has been able to do since Level 1.
+
+**And now collect the debt from Section 3.** Look at what that last line actually used: `r`
+at AXL and `r` at BRN, and nothing else — every other slot of `w` is a zero. So `b₁` on this
+dataset is a function of two returns out of five. Move DLT's return by a full percentage
+point and `b₁` is still exactly 6; move BRN's and it goes to 7 (Section 8 does precisely
+that). This is the cleanest possible version of "a coefficient is what its own column
+explains that the other has not" — the other three names had already been spoken for. Note
+that `b₂` gets no such luxury: `v` in Section 6b is non-zero on four of the five names, so
+`b₂` listens to nearly the whole file. The two coefficients are not symmetric, and Section 6b
+shows why.
 
 *(Optional refinement, also exact: you may strip quality out of the return first, using
 `r − 1·x₂`, and the numerator is unchanged at 3 — because `w` has no quality left in it, so
@@ -1096,10 +1106,10 @@ collision — the split is still identified, but a Size coefficient's leftover d
 into.** A coefficient's *sensitivity* to a data change scales with the square root of the
 `VIF`, not the `VIF` itself, because the `VIF` compares squared sizes — `A` against `Σw²` —
 while a nudge in one return moves `b` linearly. Section 8 already proved it and nobody
-noticed: going from `t = 1` to `t = 1/2` multiplied the `VIF` by `(855/14)/15 = 57/14 ≈ 4.07`
-and multiplied the response `−8/7 → −16/7` by exactly **2**. So the honest sentence for
-Size–Liquidity is: *roughly one and a half times the sensitivity* (`√2.21 = 1.49, rounded`),
-not twice.
+noticed: going from `t = 1` to `t = 1/2` multiplied the `VIF` by `(855/14)/15 = 57/14 =
+4.0714 (rounded)` and multiplied the response `−8/7 → −16/7` by exactly **2**. So the honest
+sentence for Size–Liquidity is *roughly one and a half times the sensitivity* —
+`√(2500/1131) = 1.49 (rounded)` — not twice.
 
 **This is a rounded, illustrative calculation on a figure-derived correlation, not a number
 printed in the paper. Label it as such to the player.** BFRE reports no VIFs, so this is our
@@ -1137,7 +1147,9 @@ Two things are true at once and the player must hold both:
    as well as the kept one, and (1.4) residualises `ε` on market, country and industry but
    **not** on the other 200-odd candidates. So the shortfall is real and it is of that kind,
    but "exactly the `VIF`" is a two-column theorem and does not transfer to (1.4) as an
-   equality. Say the weaker true thing, not the stronger false one. When the top-ranked candidates all
+   equality. Say the weaker true thing, not the stronger false one.
+
+   When the top-ranked candidates all
    "revolve around a common theme" — as p.11 says of the UK model's top four, *Sales, Market
    Cap, Broker Coverage, Total Assets*, all of them size — that is a collision, and the
    one-at-a-time ranking is being applied precisely where it is weakest.
@@ -1181,10 +1193,10 @@ and `b₂ = c₂/t` from Section 7c, and `a₂ = a₁ + t·δ` where `δ = w·d`
 a₁·b₁ + a₂·b₂ = a₁·c₁ + δ·c₂          ← no t anywhere
 ```
 
-and the exposures of any real portfolio to two nearly-identical columns are themselves nearly
-identical, for the same reason the columns are. **So the risk number survives the collision.**
-That is p.26's *"it does not impact the efficacy of the risk model"* arriving a second time,
-one layer up — at the covariance matrix rather than at the factor returns.
+The `t` cancels identically, so this holds for *every* portfolio and every tightness, not
+just the one in the table. **The risk number survives the collision.** That is p.26's *"it
+does not impact the efficacy of the risk model"* arriving a second time, one layer up — at
+the covariance matrix rather than at the factor returns.
 
 What does not survive is the **decomposition**. The report hands the desk a sensible total
 built out of two vast offsetting factor contributions, and every sentence anyone then says
