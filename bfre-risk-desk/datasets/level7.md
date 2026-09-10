@@ -1,7 +1,7 @@
 # Level 7 — The Timeline
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level7.py`
-(238 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
+(252 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
 terminate it is written with the word **rounded** next to it; every other decimal on this
 page is exact.
 
@@ -835,7 +835,7 @@ weights the market column, and `n` is constant here.
 ### 10b. What pooling throws away, measured
 
 The pooled fit is diagonal too (`Σx = 0` over all twenty-five rows), so its SSE comes off the
-three sums already on the page — this is where `Σr² = 272` was for:
+four sums already on the page — this is what `Σr² = 272` was for:
 
 ```
 pooled SSE = Σr² − (Σr)²/25 − (Σxr)²/Σx²
@@ -1317,7 +1317,7 @@ and withholds the trial, and by now the player should notice it without being to
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level7.py     # 238 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level7.py     # 252 exact-rational assertions, exits 0
 ```
 
 The script rebuilds every figure on this page from the raw `x` and `r` tables in
@@ -1334,7 +1334,10 @@ corrected variances; AXL's time-series slope by two routes, its exact three-chan
 decomposition into `+11`, `−15/2` and `−1/2`, the two-column time-series solve `19/23` and
 `−35/23` with its determinant, overlap and VIF, DLT's slope `33/8`, and the (1.12)-shaped
 market slope `13/36`; the pooled regression, its `Q`-weighted-average identity, and the exact
-decomposition `20.5 + 180 + 1685/44 = 10507/44`; and the √-cap-weighted month with both
-weighted balance conditions at zero.
+decomposition `20.5 + 180 + 1685/44 = 10507/44` (with the pooled SSE reached by two independent
+routes — residual-by-residual, and the `Σr² − (Σr)²/25 − (Σxr)²/Σx²` short route of Section 10b);
+all thirteen printed rows of Table 1.2 divided out and compared against the printed Sharpe column,
+which fixes the count at **eight** non-reproducing rows and **five** reproducing ones; and the
+√-cap-weighted month with both weighted balance conditions at zero.
 
 If any printed value ever disagrees with this markdown, the markdown is wrong.

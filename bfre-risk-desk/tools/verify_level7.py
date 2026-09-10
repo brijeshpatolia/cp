@@ -620,6 +620,15 @@ check("M4's weight in the monthly mean", F(1, 5), F(1, 5))
 sub("10b  what pooling throws into the residual")
 check("pooled SSE", ssp, F(10507, 44))
 show("pooled SSE", dec(F(10507, 44), 6))
+# the short route printed in 10b: SSE = sum r^2 - (sum r)^2/25 - (sum x r)^2/sum x^2.
+# Computed from the four pooled sums only, and checked against the residual-by-residual
+# value above -- two independent routes, not one expression evaluated twice.
+ssp_short = dot(rp, rp) - dot(rp, ones(25)) ** 2 / F(25) - dot(xp, rp) ** 2 / dot(xp, xp)
+check("pooled SSE, short route 272 - 25 - 361/44", ssp_short, F(10507, 44))
+check("the two routes to the pooled SSE agree", ssp_short, ssp)
+check("(sum r)^2/25 term", dot(rp, ones(25)) ** 2 / F(25), F(25))
+check("(sum x r)^2/(sum x^2) term", dot(xp, rp) ** 2 / dot(xp, xp), F(361, 44))
+check("272 - 25 = 247", F(272) - F(25), F(247))
 check("sum of the five monthly SSEs", sum(SSE), F(41, 2))
 gapmkt = sum(F(N) * (FIT[m]["b"][0] - bp[0]) ** 2 for m in MONTHS)
 gapval = sum(Q[m] * (FIT[m]["b"][1] - bp[1]) ** 2 for m in MONTHS)
@@ -738,6 +747,51 @@ check("Profitability: printed return / printed volatility", F(31, 10) / F(22, 10
       F(31, 22))
 show("3.1/2.2", dec(F(31, 22), 2))
 check("that is not the printed Sharpe of 1.37", F(31, 22) == F(137, 100), False)
+
+# All 13 printed rows of Table 1.2 (p.10), transcribed in notes/chunk_10-18.md:
+# (factor, annualised return %, annualised volatility %, printed Sharpe).
+TABLE_1_2 = [
+    ("Market",         F(70, 10),  F(198, 10), F(35, 100)),
+    ("Size",           F(-12, 10), F(37, 10),  F(-33, 100)),
+    ("Volatility",     F(-6, 10),  F(75, 10),  F(-8, 100)),
+    ("Mid-cap",        F(9, 10),   F(18, 10),  F(52, 100)),
+    ("Reversal",       F(-51, 10), F(32, 10),  F(-159, 100)),
+    ("Momentum",       F(54, 10),  F(38, 10),  F(143, 100)),
+    ("Liquidity",      F(27, 10),  F(55, 10),  F(49, 100)),
+    ("Value",          F(33, 10),  F(23, 10),  F(143, 100)),
+    ("Earnings Yield", F(7, 10),   F(21, 10),  F(32, 100)),
+    ("Dividend Yield", F(-3, 10),  F(19, 10),  F(-18, 100)),
+    ("Profitability",  F(31, 10),  F(22, 10),  F(137, 100)),
+    ("Growth",         F(-20, 10), F(20, 10),  F(-101, 100)),
+    ("Sentiment",      F(-1, 10),  F(15, 10),  F(-5, 100)),
+]
+
+
+def round2(x):
+    """Round an exact rational to 2 dp, half away from zero, exactly."""
+    sign = -1 if x < 0 else 1
+    return sign * F(int(abs(x) * 100 + F(1, 2)), 100)
+
+
+check("Table 1.2 has 13 factor rows", len(TABLE_1_2), 13)
+reproduce, fail = [], []
+for nm, ret, vol, sharpe in TABLE_1_2:
+    (reproduce if round2(ret / vol) == sharpe else fail).append(nm)
+check("rows whose printed Sharpe DOES reproduce from the printed columns",
+      reproduce, ["Market", "Volatility", "Reversal", "Liquidity", "Value"])
+check("rows whose printed Sharpe does NOT reproduce", fail,
+      ["Size", "Mid-cap", "Momentum", "Earnings Yield", "Dividend Yield",
+       "Profitability", "Growth", "Sentiment"])
+check("how many of the thirteen fail to reproduce", len(fail), 8)
+check("how many reproduce", len(reproduce), 5)
+check("the two groups exhaust the table", len(fail) + len(reproduce), 13)
+check("Mid-cap: 0.9/1.8 rounds to 0.50, printed 0.52", round2(F(9, 18)), F(50, 100))
+check("Dividend Yield: -0.3/1.9 rounds to -0.16, printed -0.18",
+      round2(F(-3, 19)), F(-16, 100))
+check("Profitability: 3.1/2.2 rounds to 1.41, printed 1.37",
+      round2(F(31, 22)), F(141, 100))
+show("0.9/1.8", dec(F(9, 18), 6))
+show("-0.3/1.9", dec(F(-3, 19), 6))
 
 sub("percentage forms of the noise floors, as printed in Section 8")
 check("f_Val noise share as a percentage", 100 * F(14, 75), F(56, 3))
