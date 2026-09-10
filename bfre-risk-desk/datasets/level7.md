@@ -43,7 +43,7 @@ own bar `|t| > 2` (**p.8**).
 stocks *on one day*. Level 6's boss round was six stocks *in one month* — and its pass
 condition already contained the sentence this level is built on:
 
-> *"The player refuses to make the call from one month."*
+> *"The player refuses to make the call from one month …"*
 
 That refusal has been an instruction until now. This level makes it an operation.
 
@@ -834,9 +834,16 @@ weights the market column, and `n` is constant here.
 
 ### 10b. What pooling throws away, measured
 
+The pooled fit is diagonal too (`Σx = 0` over all twenty-five rows), so its SSE comes off the
+three sums already on the page — this is where `Σr² = 272` was for:
+
 ```
-pooled SSE                 = 10507/44 = 238.795455 (rounded)
-sum of the five monthly SSEs =  41/2  =  20.5
+pooled SSE = Σr² − (Σr)²/25 − (Σxr)²/Σx²
+           = 272 − 625/25 − 361/44
+           = 272 −   25   − 361/44   = 247 − 361/44
+           = (10868 − 361)/44        = 10507/44 = 238.795455 (rounded)
+
+sum of the five monthly SSEs         =  41/2   =  20.5
 ```
 
 and the difference is not a mystery — it decomposes exactly:
@@ -853,7 +860,7 @@ extra miss created by pooling = 9605/44 = 218.295455 (rounded)
 ratio pooled/monthly          = 10507/902 = 11.648559 (rounded)
 ```
 
-**Pooling multiplies the unexplained return by 11.65.** And the whole of that increase is
+**Pooling multiplies the unexplained variation — the sum of squared misses — by 11.65.** And the whole of that increase is
 precisely the month-to-month variation in the factor returns — the thing this level produces
 and Level 8 is about to use. *A pooled regression does not lose the timeline by accident; it
 converts the timeline into residual.*
@@ -937,7 +944,7 @@ Two things to say out loud, because both are traps:
 | **Fama–MacBeth** | the industry name for exactly Sections 5 + 6c: run cross-sections period by period, then take the mean of the row and its standard error | **never appears in the paper** — no mention, no citation |
 | **cumulative factor return** | the running sum of Section 6e | Figures 1.7 (p.14), 1.12 (p.18), 1.14 (p.20) — the paper never states whether it sums or compounds |
 | **estimation error in `f̂`, and the noise floor** | Section 8 — the part of the row's spread that is measurement, not market | **nothing in the paper** |
-| **stationarity** | the assumption a time-series beta needs: that the thing being measured did not change over the window | **never appears.** And the paper's own p.17 says style exposures *do* change |
+| **stationarity** | the assumption a time-series beta needs: that the thing being measured did not change over the window | **never appears.** And p.17 says two of BFRE's own styles — reversal and momentum — have exposures that *"can vary considerably through time"* |
 
 Run a **round type F (vocabulary under fire)** on:
 
@@ -1287,9 +1294,10 @@ M4's was — is a bias in everything built on the row.
   Section 8's correction is entirely ours.
 - **No annualisation convention, and no definition of "Sharpe Ratio".**
 - **No statement of whether "cumulative returns" means a sum or a compounded product.**
-- **The words "panel" and "pooled regression" never appear.** Neither does **"Fama–MacBeth"** —
-  not in the text and not in the bibliography (27 entries, counted from the printed rows on
-  p.65; the page prints no total). Fama and French appear only
+- **The phrases "panel regression" and "pooled regression" never appear.** Neither does **"Fama–MacBeth"** —
+  not in the text and not in the bibliography (**27 entries**, `[1]`–`[15]` printed on **p.64**
+  and `[16]`–`[27]` on **p.65**; the count is the highest reference number, neither page prints
+  a total). Fama and French are not in the bibliography at all — they appear only
   as the source of the **SMB** and **HML** comparison series (p.13, p.14, p.20).
 - **The word "stationarity" never appears**, although p.17's finding that reversal and momentum
   exposures *"can vary considerably through time"* is precisely a statement that the assumption
