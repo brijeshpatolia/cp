@@ -980,6 +980,90 @@ check("the level's shapes: X 3x2, F 2x2, D 3x3, V 3x3",
       (len(X), len(X[0]), len(Fm), len(Fm[0]), len(Dm), len(V)),
       (3, 2, 2, 2, 3, 3))
 
+
+# ===========================================================================
+head("SECTION 16 -- EVERY DECIMAL THE MARKDOWN PRINTS, RENDERED AND CHECKED")
+# ===========================================================================
+
+sub("16a. the intermediate products the markdown writes out in longhand")
+
+# Route 2, Book A: the nine products inside V w
+prods = [[V[i][j] * wA[j] for j in range(3)] for i in range(3)]
+check("row AXL products", prods[0], [F(94, 5), F(26, 5), F(-11, 10)])
+check("row CHR products", prods[1], [F(13, 2), F(58, 5), F(37, 10)])
+check("row EMK products", prods[2], [F(-11, 2), F(74, 5), F(214, 25)])
+for lbl, val, printed in [
+        ("37.6 x 0.5", F(94, 5), "18.8000"), ("13 x 0.4", F(26, 5), "5.2000"),
+        ("-11 x 0.1", F(-11, 10), "-1.1000"), ("13 x 0.5", F(13, 2), "6.5000"),
+        ("29 x 0.4", F(58, 5), "11.6000"), ("37 x 0.1", F(37, 10), "3.7000"),
+        ("-11 x 0.5", F(-11, 2), "-5.5000"), ("37 x 0.4", F(74, 5), "14.8000"),
+        ("85.6 x 0.1", F(214, 25), "8.5600")]:
+    check_dec(lbl, val, printed)
+for lbl, val, printed in [("0.5 x 22.9", F(229, 20), "11.4500"),
+                          ("0.4 x 21.8", F(218, 25), "8.7200"),
+                          ("0.1 x 17.86", F(893, 500), "1.7860")]:
+    check_dec(lbl, val, printed)
+
+sub("16b. the cheapness terms both books print")
+check("9 x 0.8 squared, both books", F(9) * F(16, 25), F(144, 25))
+check_dec("that term as a decimal", F(9) * F(16, 25), "5.7600")
+check("2 x 6 x 1 x 0.8", 2 * F(6) * F(4, 5), F(48, 5))
+check_dec("that term as a decimal", 2 * F(6) * F(4, 5), "9.6000")
+check("Book B's specific term for CHR, 0.16 x 4", F(16, 100) * F(4), F(16, 25))
+check_dec("0.16 x 4 as a decimal", F(16, 100) * F(4), "0.6400")
+
+sub("16c. every variance the markdown shows as a decimal")
+for lbl, val, printed in [
+        ("Book A specific terms, AXL", F(3, 20), "0.1500"),
+        ("Book A specific terms, CHR", F(16, 25), "0.6400"),
+        ("Book A specific terms, EMK", F(3, 500), "0.0060"),
+        ("trap 3 variance", F(1862, 125), "14.8960"),
+        ("trap 2 variance", F(7889, 250), "31.5560"),
+        ("trap 6 sum w_i d_i", F(49, 25), "1.9600"),
+        ("trap 6 variance", F(578, 25), "23.1200"),
+        ("convention 2 variance", F(10927, 500), "21.8540"),
+        ("convention 3 variance", F(447, 20), "22.3500"),
+        ("convention 2 specific variance", F(347, 500), "0.6940"),
+        ("benchmark factor variance", F(526, 25), "21.0400"),
+        ("benchmark specific variance", F(551, 500), "1.1020"),
+        ("benchmark total variance", F(11071, 500), "22.1420"),
+        ("active variance, Book A", F(203, 500), "0.4060"),
+        ("active specific variance, Book A", F(23, 500), "0.0460"),
+        ("Book C active specific variance", F(43, 250), "0.1720"),
+        ("sabotaged variance for Book A", F(5739, 250), "22.9560"),
+        ("the specific gap", F(44, 125), "0.3520")]:
+    check_dec(lbl, val, printed)
+
+sub("16d. Book B's V w, as decimals")
+for lbl, val, printed in [("AXL", F(173, 50), "3.4600"), ("CHR", F(157, 5), "31.4000"),
+                          ("EMK", F(113, 2), "56.5000")]:
+    check_dec("Book B (Vw) for " + lbl, val, printed)
+
+sub("16e. Book A's realised deviations, as decimals")
+for lbl, val, printed in [("m1", F(109, 25), "4.3600"), ("m2", F(4, 25), "0.1600"),
+                          ("m3", F(39, 25), "1.5600"), ("m4", F(59, 25), "2.3600"),
+                          ("m5", F(-211, 25), "-8.4400")]:
+    check_dec("deviation " + lbl, val, printed)
+check_dec("Book A's mean monthly return", F(21, 25), "0.8400")
+
+sub("16f. the two-decimal short forms the markdown uses in dialogue")
+check_root("AXL volatility to 2 dp", V[0][0], "6.13", places=2)
+check_root("CHR volatility to 2 dp", V[1][1], "5.39", places=2)
+check_root("EMK volatility to 2 dp", V[2][2], "9.25", places=2)
+check_root("Book B total risk to 2 dp", totB, "6.42", places=2)
+check_root("Book B factor risk to 2 dp", facB, "6.35", places=2)
+check_root("Book B specific risk to 2 dp", specB, "0.89", places=2)
+CHECKS[0] += 1
+check("Book B factor risk + specific risk, to 2 dp",
+      str((sqrtD(facB) + sqrtD(specB)).quantize(Decimal("0.01"))), "7.25")
+
+sub("16g. the p.35 printed values, as decimals")
+for lbl, val, printed in [("Active Risk", ar, "2.9900"), ("Portfolio Beta", beta, "1.0200"),
+                          ("Benchmark Risk", br, "14.9800"),
+                          ("15.67 - 14.98", F(1567, 100) - br, "0.6900"),
+                          ("15.62 - 14.98", pr - br, "0.6400")]:
+    check_dec("p.35 " + lbl, val, printed)
+
 # ===========================================================================
 head("ALL CHECKS PASSED")
 print(f"   {CHECKS[0]} exact-rational assertions verified, plus "
