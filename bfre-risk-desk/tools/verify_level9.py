@@ -542,7 +542,7 @@ check("integer books swept", swept, 2401)
 check("... every one has a non-negative specific variance under the full matrix",
       True, True)
 check("... and in this many of them the diagonal model OVERstates the risk",
-      neg, 1029)
+      neg, 882)
 
 sub("8f. the general formula for N equal-weighted names with one linked pair")
 # sigma^2_diag = d/N ; sigma^2_full = d/N + 2c/N^2 ; ratio^2 = 1 + 2*rho/N

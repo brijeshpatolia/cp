@@ -9,8 +9,8 @@ decimal on this page is exact.
 > plainly as the warnings at Levels 4 and 8** (`prompt/RISK_DESK.md` §8, BE HONEST ABOUT
 > DIFFICULTY).
 >
-> **The arithmetic on this level is the easiest since Level 3.** Nine multiplications and some
-> additions. There is no calculus, no probability, no estimation, nothing graduate-level. A
+> **The arithmetic on this level is the easiest since Level 3.** Two matrix products — thirty
+> small multiplications in all, many of them by `1` or `0` — and one addition. There is no calculus, no probability, no estimation, nothing graduate-level. A
 > player who found Level 8's Section 6 punishing should be told, before starting, that this
 > level is not that.
 >
@@ -1440,8 +1440,8 @@ until it hits 50/50 has committed the error `gm/PLAYBOOK.md` flags at ★ THE RE
 
 **Nothing downstream of this page exists without it.** Every risk number, every beta, every
 attribution, every optimiser run in Aladdin (p.34: the Green Package, PRT, Portfolio Construction
-and Prism) consumes `Σ`. The assembly is nine multiplications and the most important nine
-multiplications in the document.
+and Prism) consumes `Σ`. The assembly is two matrix products and an addition, and they are the two
+most important multiplications in the document.
 
 ### 15f. What the notes do NOT support — searched across all 65 transcribed pages
 
@@ -1451,7 +1451,9 @@ multiplications in the document.
 - **No worked example of (1.8) appears anywhere.** No numeric `X`, no numeric `F`, no numeric `Δ`,
   no numeric `Σ`. Every matrix on this page is the game's.
 - **No formula for portfolio risk is printed.** `wᵀ Σ w` does not appear; nor does `hᵀ F h`. The
-  ingredient list on p.24 is prose.
+  ingredient list on p.24 is prose. The **only** expression of that shape anywhere in `notes/` is
+  the `X_pᵀ F X_b / X_bᵀ F X_b` beta formula on p.4 — recorded as a **reader's pen annotation**,
+  not printed text, and never to be attributed to BlackRock.
 - **The phrase "tracking error" has zero occurrences.** The paper says Active Risk.
 - **No formula for marginal contribution to risk, and the phrase never appears.** "Contribution"
   occurs as a chart axis label on p.35 and as prose on p.34, and that is the whole of it.
@@ -1499,5 +1501,11 @@ factor-cancels-to-zero case; the full four-term expansion of Book A's realised v
 reconciled to the last digit, with the specific gap split into its divisor part and its
 diagonal-assumption part; and the p.35 banner and pie arithmetic, including the two alternative
 digit readings the audit could not exclude.
+
+Its final section exists purely for this page's typography: **every decimal the markdown prints**
+— every intermediate product written out in longhand, every monthly series, every two-decimal
+short form used in the interrogation dialogue — is re-rendered from the exact rational and
+compared string-for-string against what is written above. A rounding that drifted by one in the
+last digit fails the script.
 
 If any printed value ever disagrees with this markdown, the markdown is wrong.
