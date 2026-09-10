@@ -319,6 +319,12 @@ check("so their sample specific-return correlation is exactly 1",
       S8[1][3] ** 2, D8["BRN"] * D8["DLT"])
 check("with 5 assets and 2 columns the misses have only 3 free directions",
       5 - 2, 3)
+check("CHR alone supplies 4 of the file's 46/5 of total specific variance",
+      F(4) / F(46, 5), F(10, 23))
+show("10/23 as a decimal", dec(F(10, 23), 6))
+check("a 5x5 matrix has 10 distinct off-diagonal entries", F(5) * F(4) / 2, F(10))
+check("a 4x4 matrix has 6", F(4) * F(3) / 2, F(6))
+check("a 3000x3000 matrix has 4,498,500", F(3000) * F(2999) / 2, F(4498500))
 
 # ===========================================================================
 head("SECTION 6  THE NEW FILE -- four names, six months, one real link")
@@ -493,6 +499,51 @@ print(f"        risk missing, basis points      = {missW*100:.2f} (ROUNDED)")
 ratio_bps = missP / missW
 print(f"        Book P's shortfall divided by Book W's = {ratio_bps:.1f} (ROUNDED)")
 
+sub("8e. the share of the variance the diagonal model throws away")
+check("Book P: 3 out of 7", F(3) / F(7), F(3, 7))
+show("3/7 as a decimal", dec(F(3, 7), 6))
+check("Book A: (12/16) out of (43/16)", (F(12, 16)) / F(43, 16), F(12, 43))
+show("12/43 as a decimal", dec(F(12, 43), 6))
+check("Book W: (12/2500) out of (411/2500)", F(12, 2500) / F(411, 2500), F(4, 137))
+show("4/137 as a decimal", dec(F(4, 137), 6))
+check("Book H: the discarded term is -3 against a full variance of 1",
+      F(-3) / F(1), F(-3))
+check("the discarded matrix is the same in all four books", DFULL[0][1], F(6))
+sub("8e(ii). how many pairs each book has, and how many are linked")
+for N, pairs in ((2, 1), (4, 6), (50, 1225)):
+    check(f"a {N}-name book has N(N-1)/2 = {pairs} pairs, exactly one of them linked",
+          F(N) * (F(N) - 1) / 2, F(pairs))
+check("1 of 1 pairs versus 1 of 1225 pairs", F(1) / F(1225), F(1, 1225))
+show("1/1225 as a decimal", dec(F(1, 1225), 6))
+
+sub("8e(iii). the discarded part is indefinite -- which is why the sign can flip")
+OFFONLY = [[DFULL[i][j] if i != j else F(0) for j in range(4)] for i in range(4)]
+check("Book P's discarded term is positive", quad(OFFONLY, wP), F(3))
+check("Book H's discarded term is negative", quad(OFFONLY, wH), F(-3))
+check("so no single direction of error can be claimed for the diagonal model",
+      (quad(OFFONLY, wP) > 0, quad(OFFONLY, wH) < 0), (True, True))
+
+sub("8e(iv). sweep: every integer book in [-3,3]^4, matrix against raw series")
+swept = 0
+neg = 0
+for a in range(-3, 4):
+    for b in range(-3, 4):
+        for c in range(-3, 4):
+            for e in range(-3, 4):
+                w = [F(a), F(b), F(c), F(e)]
+                ser = [sum(w[i] * SER9[i][t] for i in range(4)) for t in range(T9)]
+                v = sum(x * x for x in ser) / F(T9)
+                assert v == quad(DFULL, w)
+                assert v >= 0
+                if quad(OFFONLY, w) < 0:
+                    neg += 1
+                swept += 1
+check("integer books swept", swept, 2401)
+check("... every one has a non-negative specific variance under the full matrix",
+      True, True)
+check("... and in this many of them the diagonal model OVERstates the risk",
+      neg, 1029)
+
 sub("8f. the general formula for N equal-weighted names with one linked pair")
 # sigma^2_diag = d/N ; sigma^2_full = d/N + 2c/N^2 ; ratio^2 = 1 + 2*rho/N
 d_gen, rho_gen = F(8), F(3, 4)
@@ -545,6 +596,8 @@ check("+50% one line, -50% the other, full matrix", quad(DSTR, whedge), F(0))
 check("... while the diagonal model still says 4", quad(diagonal_of(DSTR), whedge), F(4))
 check("that is the index-tracker's whole risk, declared to be nothing",
       quad(DSTR, whedge), F(0))
+check("on the 50/50 long-only book the diagonal model throws away exactly half",
+      (F(8) - F(4)) / F(8), F(1, 2))
 
 # ===========================================================================
 head("SECTION 10  SABOTAGE -- two corrupted matrices, two structural checks")
@@ -560,8 +613,9 @@ sub("10b. a corrupted miss, caught by the cross-sectional balance")
 bad_month = [U[nm][0] for nm in NAMES8]
 bad_month[2] = bad_month[2] + F(1)      # CHR's month-1 miss pushed from +2 to +3
 check("the corrupted month's misses no longer sum to zero", sum(bad_month), F(1))
-check("and the cheapness balance also breaks", dot(XCHP, bad_month), F(0))
-check("so the sum-to-zero check is the one that catches it",
+check("but the cheapness balance does NOT break -- CHR's exposure is zero",
+      dot(XCHP, bad_month), F(0))
+check("so on CHR only the sum-to-zero check fires",
       (sum(bad_month) != 0, dot(XCHP, bad_month) == 0), (True, True))
 bad_month2 = [U[nm][0] for nm in NAMES8]
 bad_month2[4] = bad_month2[4] + F(1)    # EMK's month-1 miss pushed from +1 to +2

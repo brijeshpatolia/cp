@@ -1,7 +1,7 @@
 # Level 10 — The Assembly
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level10.py`
-(367 assertions plus 1,167 swept cases, exits 0). Nothing here is rounded by hand. Where a
+(447 assertions plus 1,167 swept cases, exits 0). Nothing here is rounded by hand. Where a
 decimal does not terminate it is written with the word **rounded** next to it; every other
 decimal on this page is exact.
 
@@ -1033,7 +1033,7 @@ matching diagnostic table; these are the escalating versions.
 | Objection | A passing answer contains | Hand-waving sounds like |
 |---|---|---|
 | **"Read `X F Xᵀ` to me as a sentence, right to left, with the units at each step."** | `Xᵀ` turns holdings into the portfolio's factor bets (dimensionless in, dimensionless out); `F` turns factor bets into percent-squared; `X` carries a percent-squared answer back onto assets; the result is a variance and the square root is a percent. Names what vanished: the factor index, twice. | "You transpose it to make the dimensions work." |
-| **"Your factor risk is 6.35 and your specific risk is 0.89. Those add to 7.24 and you told me 6.42. Explain that before we go further."** | **Variances add; risks do not.** `40.36 + 0.796 = 41.156` exactly; `√41.156 = 6.4153` **rounded**. The right-angle picture, and the reason for the right angle: **p.30**, factor returns are *assumed* to have zero correlation with specific returns. And the tell that the report agrees: p.35's pie sums to exactly 100 because it splits **contributions to variance**, not volatilities. | "Risk isn't additive." "There's a correlation term." *(There is not — the model deletes it by assumption, and the player must name the page.)* |
+| **"Your factor risk is 6.35 and your specific risk is 0.89. Those add to 7.25 and you told me 6.42. Explain that before we go further."** | **Variances add; risks do not.** `40.36 + 0.796 = 41.156` exactly; `√41.156 = 6.4153` **rounded**. The right-angle picture, and the reason for the right angle: **p.30**, factor returns are *assumed* to have zero correlation with specific returns. And the tell that the report agrees: p.35's pie sums to exactly 100 because it splits **contributions to variance**, not volatilities. | "Risk isn't additive." "There's a correlation term." *(There is not — the model deletes it by assumption, and the player must name the page.)* |
 | **"Which of your three stocks is the risky one?"** | Refuses the question as posed and separates it. **Standalone:** EMK, `√85.6 = 9.2520%` **rounded**, the most volatile of the three. **In Book B:** EMK carries **68.6413%** of the variance (**rounded**). **In Book A:** the *same stock at the same volatility* carries **8.1345%** (**rounded**) — it was 10% of the money there, and the rest of that book sat in AXL, the one name EMK moves *against* (`V[AXL,EMK] = −11`). *Risky* is not a property of a stock alone; it is a property of a stock **and** a book. | Naming EMK and stopping. |
 | **"So drop `D`. It's two per cent of your number."** | Two answers, and the first one concedes. On **this** book dropping `D` moves total risk from `6.4153` to `6.3530` — **−0.97%** (**rounded**), and on Book A it is **−1.83%**. Both small, and say so rather than bluffing. But the book Section 6e and Section 12.3 exhibit has **zero** factor risk, so dropping `D` prices a real, funded, leverable book at exactly `0`. `D` is not small; it is small *on long-only books measured against cash*. On the paper's own example report, measured against a benchmark, `D`'s share is **50%** of Active Risk (p.35, read directly). | "You need it for completeness." |
 | **"Your market exposure is 1.0 and my report says Portfolio Beta 1.02. Which is which?"** | **PAPER, p.4:** "The market factor exposure of a portfolio should not be confused with its market beta." Exposure is a position — "the fraction of portfolio %NAV invested in equities", footnote 3 adding delta-adjusted derivative exposure. Beta must be computed from portfolio and index exposures **together with** `F`. p.35 prints Portfolio Beta **1.02** as its own banner item. **Never attribute the beta formula in the p.4 margin to BlackRock** — `notes/` records it as a reader's handwritten pen annotation, not printed text. | "They're the same thing when you're fully invested." Or quoting the margin formula as the paper's. |
@@ -1476,7 +1476,7 @@ multiplications in the document.
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level10.py     # 367 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level10.py     # 447 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page in `fractions.Fraction`, from the raw Level 8

@@ -1046,6 +1046,24 @@ for lbl, val, printed in [("m1", F(109, 25), "4.3600"), ("m2", F(4, 25), "0.1600
     check_dec("deviation " + lbl, val, printed)
 check_dec("Book A's mean monthly return", F(21, 25), "0.8400")
 
+sub("16e2. the monthly series the markdown prints in longhand")
+for lbl, val, printed in [("m1", F(26, 5), "5.2000"), ("m2", F(1), "1.0000"),
+                          ("m3", F(12, 5), "2.4000"), ("m4", F(16, 5), "3.2000"),
+                          ("m5", F(-38, 5), "-7.6000")]:
+    check_dec("Book A realised return " + lbl, val, printed)
+for lbl, val, printed in [("m1", F(19, 5), "3.8000"), ("m2", F(9, 5), "1.8000"),
+                          ("m3", F(13, 5), "2.6000"), ("m4", F(23, 5), "4.6000"),
+                          ("m5", F(-34, 5), "-6.8000")]:
+    check_dec("Book A factor-driven return " + lbl, val, printed)
+for lbl, val, printed in [("m1", F(7, 5), "1.4000"), ("m2", F(-4, 5), "-0.8000"),
+                          ("m3", F(-1, 5), "-0.2000"), ("m4", F(-7, 5), "-1.4000"),
+                          ("m5", F(-4, 5), "-0.8000")]:
+    check_dec("Book A specific return " + lbl, val, printed)
+check_dec("market factor volatility, one decimal", F(5), "5.0", places=1)
+check_dec("cheapness factor volatility, one decimal", F(3), "3.0", places=1)
+check_dec("Book A factor share, one decimal", facA / totA * 100, "96.4", places=1)
+check_dec("Book A specific share, one decimal", specA / totA * 100, "3.6", places=1)
+
 sub("16f. the two-decimal short forms the markdown uses in dialogue")
 check_root("AXL volatility to 2 dp", V[0][0], "6.13", places=2)
 check_root("CHR volatility to 2 dp", V[1][1], "5.39", places=2)
