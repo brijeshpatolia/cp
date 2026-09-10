@@ -50,7 +50,7 @@ means and when it stops being trustworthy.** Three new things:
 |---|---|
 | **A meaning for `b₁`** | Not "the effect of column 1". It is *what column 1 explains that column 2 has not already explained* — and that sentence is not a slogan, it is an exact arithmetic identity that will be verified numerically in Section 6. |
 | **A failure mode** | The obvious shortcut — fit each column on its own and report both answers — is not slightly wrong. On the boss-round data it returns a coefficient with **the wrong sign**. |
-| **A health number** | `det = AC − B²`. When it shrinks, the *fit* stays perfect and the *split* becomes garbage. When it hits zero, there is no answer at all. |
+| **A health number** | `det = AC − B²` — this is Level 3's `D`, renamed to match the letters above. Level 3 built it and moved on; Level 4 is what it is *for*. When it shrinks, the *fit* stays perfect and the *split* becomes garbage. When it hits zero, there is no answer at all. |
 
 Say all of this to the player before starting, or they will think Level 4 is Level 3 again.
 
@@ -128,7 +128,11 @@ characteristic, an analyst **quality score**, and a fresh month of returns.
 
 Look at the two columns before doing any arithmetic. **They agree on CHR, DLT and EMK
 exactly, and disagree only on AXL and BRN.** Those two names are the weekend Sunil was away.
-Everything the data will ever say about the *split* comes from them.
+Make the columns agree there too and there is no split left to find at all — that is Section
+7d. Section 6a will show something sharper: on this dataset `b₁` depends on **nothing but
+AXL's and BRN's two returns**. Change DLT's return or EMK's and `b₂` moves; `b₁` does not
+move by a hair. (`b₂` is not so clean — it uses all five names. The asymmetry is real and
+Section 6b shows where it comes from.)
 
 The five numbers that run the whole level:
 
@@ -281,8 +285,10 @@ scores 31. The one-at-a-time answer scores 29.33 (rounded).** It captures
 31 − 88/3 = 5/3      of the 31 available, i.e. 5/93 = 5.38% (rounded)
 ```
 
-against the correct fit's `25/31 = 80.65% (rounded)`. The naive method threw away 94% of
-what was there and reported two confident-looking numbers while doing it.
+against the correct fit's `25/31 = 80.65% (rounded)`. Of the 25 that was actually there to
+be found, the naive method found `5/3` — one fifteenth — and threw away the other fourteen
+fifteenths, `93.3% (rounded)`, while reporting two confident-looking numbers. Hold the
+fraction `1/15`: Section 7b shows it is not a coincidence of this dataset.
 
 The split of `SS` into two exact pieces, so no step is unexplained. With
 `δ₁ = 4/3 − 6 = −14/3` and `δ₂ = 1 − (−5) = +6`:
@@ -317,11 +323,11 @@ step 2:  regress that leftover on x₂ (raw x₂):
 true b₂ / sequential b₂ = (−5) / (−1/3) = 15
 ```
 
-**Fifteen. Exactly.** Not approximately. And 15 is `A·C/det = (15/2)(7)/(7/2)` — the number
-Section 7 names. This is a general theorem, proved in Section 6c and brute-forced over 3,983
-datasets by the verifier: *the sequential method understates the second coefficient by
-exactly the variance inflation factor, always.* It is the cleanest possible statement of
-what the shortcut leaves out.
+**Fifteen. Exactly.** Not approximately. And 15 is `A·C/det = (15/2)(7)/(7/2)` — a quantity
+that has now appeared twice and will be named in Section 7, not before. This is a general
+theorem, proved in Section 6c and brute-forced over 3,983 datasets by the verifier: *the
+sequential method understates the second coefficient by exactly the factor `A·C/det`,
+always.* It is the cleanest possible statement of what the shortcut leaves out.
 
 `SS(4/3, −1/3) = 152/9 = 16.8889 (rounded)`.
 
@@ -347,8 +353,8 @@ response to a collision. Reporting two one-at-a-time numbers is not.**
 | **one-at-a-time** | 4/3 | **+1** | **88/3** | **29.333** |
 | give up, predict 0 for everyone | 0 | 0 | 31 | 31.000 |
 
-The method a beginner reaches for first is the second-worst thing on the list, and it is
-beaten by doing nothing at all by a margin of only `31 − 88/3 = 5/3 = 1.6667 (rounded)`.
+The method a beginner reaches for first is the second-worst thing on the list, and it beats
+doing nothing at all by a margin of only `31 − 88/3 = 5/3 = 1.6667 (rounded)`.
 
 ---
 
@@ -587,10 +593,20 @@ fitted = 11·x₁ − 10·x₂(1/2) = [−4, +2, 0, +1, +2]                     
 
 And the naive method at `t = 1/2` still says quality pays:
 `b₂ᵒⁿᵉ = q/C = (17/2)/(57/8) = 68/57 = 1.1930 (rounded)`, against a truth of `−10`.
-Its `SS` is `5231/171 = 30.5906 (rounded)`, against `31` for predicting zero for every
-stock — the naive two-column answer is now better than doing nothing at all by
-`70/171 = 0.4094 (rounded)`. The tighter the collision, the closer the naive answer gets to
-being worth precisely nothing.
+
+How much does that pair explain? Section 7b's closed form answers it without fitting
+anything:
+
+```
+C·p² − 2B·p·q + A·q² = (57/8)(100) − 2(29/4)(10)(17/2) + (15/2)(289/4)
+                     = 5700/8 − 9860/8 + 4335/8  =  175/8
+explained(one-at-a-time) = (175/8) / (A·C) = (175/8) / (855/16) = 70/171
+SS = Σr² − explained = 31 − 70/171 = 5231/171 = 30.5906 (rounded)
+```
+
+Against `31` for predicting zero for every stock, the naive two-column answer is now better
+than doing nothing at all by `70/171 = 0.4094 (rounded)`. The tighter the collision, the
+closer the naive answer gets to being worth precisely nothing.
 
 ### 7d. `t = 0` exactly: the cliff
 
@@ -688,16 +704,19 @@ wrong, and can be shown why in four lines.
 
 ## 10. Names unlocked at the end of this level
 
-Locked until now on purpose. Each is now attached to something the player built.
+Locked until now on purpose — except the two marked *(recalled)*, which were unlocked in
+earlier levels and turn up here in new clothes. Say so when they do; a name the player
+already owns, reappearing in a bigger setting, is a call-back to make out loud, not a fresh
+unlock to hand over twice. Each name below is attached to something the player built.
 
 | Name | What it actually is, in this level's terms |
 |---|---|
 | **multicollinearity** | two columns that nearly agree, so `det` is small |
-| **orthogonal** | `Σ u·v = 0` — e.g. `Σx₂·w = 0`, "no quality left in the leftover" |
+| **orthogonal** *(recalled — Level 2's word, applied between two columns in Level 3)* | `Σ u·v = 0` — e.g. `Σx₂·w = 0`, "no quality left in the leftover" |
 | **to partial out / partialling** | subtracting from one column what another column can already reproduce, i.e. building `w` or `v` |
 | **partial regression coefficient** | what every coefficient in a multi-column fit already is: an effect *holding the other columns fixed* |
 | **Frisch–Waugh–Lovell theorem** | Section 6: residualise the column, residualise (optionally) the return, run a one-column fit, get the identical number |
-| **determinant** | the pivot; `A·C − B²`; the disagreement gap |
+| **determinant** *(recalled — Level 3's `D`, written `det` here)* | the pivot; `A·C − B²`; the disagreement gap |
 | **singular / ill-conditioned** | `det = 0` / `det` small |
 | **identification** | whether the data can distinguish the split at all. At `t = 0` the model is *not identified* |
 | **variance inflation factor (VIF)** | `A·C/det`; how much the leftover denominator shrank; the exact factor the naive method loses by |
@@ -1068,10 +1087,21 @@ numbers a BFRE modeller is managing:
 
 Put 0.74 into this level's machinery, treating it as the `cosθ` of Section 7a:
 `VIF = 1/(1 − 0.74²) = 1/(1131/2500) = 2500/1131 = 2.21 (rounded)`. That is a mild
-collision — the split is still identified, but a Size coefficient carries roughly twice the
-sensitivity to a data change that an uncorrelated factor would. **This is a rounded, illustrative calculation on a
-figure-derived correlation, not a number printed in the paper. Label it as such to the
-player.** BFRE reports no VIFs, so this is our arithmetic on their correlation, nothing more.
+collision — the split is still identified, but a Size coefficient's leftover denominator is
+`2.21` times smaller than an uncorrelated factor's would be.
+
+**Do not read that 2.21 as "twice as jumpy", and this is a trap worth walking the player
+into.** A coefficient's *sensitivity* to a data change scales with the square root of the
+`VIF`, not the `VIF` itself, because the `VIF` compares squared sizes — `A` against `Σw²` —
+while a nudge in one return moves `b` linearly. Section 8 already proved it and nobody
+noticed: going from `t = 1` to `t = 1/2` multiplied the `VIF` by `(855/14)/15 = 57/14 ≈ 4.07`
+and multiplied the response `−8/7 → −16/7` by exactly **2**. So the honest sentence for
+Size–Liquidity is: *roughly one and a half times the sensitivity* (`√2.21 = 1.49, rounded`),
+not twice.
+
+**This is a rounded, illustrative calculation on a figure-derived correlation, not a number
+printed in the paper. Label it as such to the player.** BFRE reports no VIFs, so this is our
+arithmetic on their correlation, nothing more.
 
 ### 14e. p.10–p.11 — the paper's substyle screen is a one-at-a-time procedure
 
@@ -1098,9 +1128,14 @@ Two things are true at once and the player must hold both:
    against `ε` is a defensible way to shortlist from 200+, and the paper is explicit that
    this is a *selection* stage, followed by aggregation and by re-estimation with the chosen
    style inside the first-step regression.
-2. **It cannot say what any candidate is worth in the presence of the others.** By Section
-   5b, each candidate's coefficient from (1.4) is understated by that candidate's own
-   variance inflation factor against everything omitted. When the top-ranked candidates all
+2. **It cannot say what any candidate is worth in the presence of the others.** Each
+   candidate's coefficient from (1.4) is not the coefficient it would carry alongside the
+   other candidates. Be precise about how much Section 5b actually licenses here: the
+   *exactly-`VIF`* result needs the return to have been residualised on the omitted column
+   as well as the kept one, and (1.4) residualises `ε` on market, country and industry but
+   **not** on the other 200-odd candidates. So the shortfall is real and it is of that kind,
+   but "exactly the `VIF`" is a two-column theorem and does not transfer to (1.4) as an
+   equality. Say the weaker true thing, not the stronger false one. When the top-ranked candidates all
    "revolve around a common theme" — as p.11 says of the UK model's top four, *Sales, Market
    Cap, Broker Coverage, Total Assets*, all of them size — that is a collision, and the
    one-at-a-time ranking is being applied precisely where it is weakest.
@@ -1119,19 +1154,54 @@ criterion and threshold are **not stated on that page**. Level 12 entry.
 Follow the damage through: an unstable split does not merely produce a wrong `f` on one day.
 `F` is the covariance matrix of the `f` **time series** (Level 8), so a collision between two
 columns injects a large spurious *negative* covariance between their factor returns — in
-Section 7c, `b₁` and `b₂` moved in opposite directions by construction, `+1` against `−8/7`,
-`+15/7` against `−16/7`. Two factors that are nearly the same thing will appear in `F` as two
-factors that hedge each other almost perfectly. A portfolio loaded on both will then be
-reported as **less** risky than it is. That is the specific mechanism by which this level's
-abstraction reaches a risk number, and it is the reason the diagnostic on p.32 exists at all.
+**Section 8**, `b₁` and `b₂` moved in opposite directions on a one-stock data change, `+1`
+against `−8/7`, `+15/7` against `−16/7`. Two factors that are nearly the same thing appear in
+`F` as two factors that hedge each other almost perfectly.
+
+**Now stop, because the obvious next sentence is false and it is worth catching in public.**
+The tempting sentence is *"so a portfolio loaded on both gets reported as less risky than it
+is."* It does not. Check it on Section 7c's own family. Take a portfolio equally weighted on
+AXL and DLT, `w = (½, 0, 0, ½, 0)`. Its cheapness exposure is `a₁ = ½(−3/2) + ½(1) = −1/4`,
+and its quality exposure is `a₂(t) = a₁ + t·(w·d) = −1/4 + t/4`:
+
+| `t` | `a₂` | `b₁` | `b₂` | contribution `a₁b₁` | contribution `a₂b₂` | total |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0 | 6 | −5 | −3/2 | 0 | **−3/2** |
+| 1/2 | −1/8 | 11 | −10 | −11/4 | +5/4 | **−3/2** |
+| 1/4 | −3/16 | 21 | −20 | −21/4 | +15/4 | **−3/2** |
+| 1/100 | −99/400 | 501 | −500 | −501/4 | +495/4 | **−3/2** |
+
+The two *contributions* run away to ±125 on a portfolio of two stocks whose returns are −4%
+and +3%. The *total* does not move at all. One line of algebra says why: with `b₁ = c₁ − c₂/t`
+and `b₂ = c₂/t` from Section 7c, and `a₂ = a₁ + t·δ` where `δ = w·d`,
+
+```
+a₁·b₁ + a₂·b₂ = a₁·c₁ + δ·c₂          ← no t anywhere
+```
+
+and the exposures of any real portfolio to two nearly-identical columns are themselves nearly
+identical, for the same reason the columns are. **So the risk number survives the collision.**
+That is p.26's *"it does not impact the efficacy of the risk model"* arriving a second time,
+one layer up — at the covariance matrix rather than at the factor returns.
+
+What does not survive is the **decomposition**. The report hands the desk a sensible total
+built out of two vast offsetting factor contributions, and every sentence anyone then says
+about *which* factor is driving the book is noise. That is the specific mechanism by which
+this level's abstraction reaches a risk number, and it is why p.32's word is **apportioning**
+and not *forecasting*. The one book whose *total* is genuinely fragile is the one built long
+one colliding factor and short the other — the only kind whose `δ` is not small — and `δ` is
+assembled from nothing but the names where the two columns disagree.
 
 ### 14g. What the notes do NOT support
 
 Searched all 65 transcribed pages in `notes/`:
 
 - **`determinant`** — **zero hits.**
-- **`Frisch`**, **`Waugh`**, **`Lovell`** — **zero hits.** The theorem in Section 6 is
-  nowhere in the paper, even though equations (1.4) and (1.11) are both applications of it.
+- **`Frisch`**, **`Waugh`**, **`Lovell`** — **zero hits.** The theorem in Section 6 is nowhere
+  in the paper, even though equations (1.4) and (1.11) are both residualise-then-regress
+  constructions of exactly the kind it governs. Say it that way and not "both applications of
+  it": Section 14e showed (1.4) is the *sequential* method, which is the theorem's incomplete
+  half — the return residualised, the column not.
 - **`singular`**, **`condition number`**, **`matrix inversion`** — **zero hits.**
 - **`orthogonal`** — one hit, and it is the transcriber's own commentary on p.52, **not** a
   sentence from the paper.

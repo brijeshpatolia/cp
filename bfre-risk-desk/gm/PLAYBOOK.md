@@ -532,7 +532,7 @@ derived securities, e.g. Chinese MMA securities, "will be addressed in a forthco
 
 | They answer | The broken rung | Drop to |
 |---|---|---|
-| "Model says ≈14.1%; really 20%, because the two specific returns are the same event" | Nothing broken. `0.2 × √0.5 = 14.14%` versus `20%` — the model understates by about 30% of the true number | Return, then hand them p.28's own sentence |
+| "Model says ≈14.1%; really 20%, because the two specific returns are the same event" | Nothing broken. `0.2 × √0.5 = 14.14%` versus `20%` — an understatement of **≈29%** of the true number | Return, then hand them p.28's own sentence |
 | "The model says 20%" | They have not got the aggregation — they are averaging risks rather than combining them | L10 preview, on two assets only. Variances add, volatilities do not |
 | "It's too high" | **Sign error on the direction**, which is the whole level. Dock and stop | Stay at L9. p.28: ignoring the correlation "would lead to **under** (or over) prediction of specific risk in a **long-only** (long-short) portfolio context" |
 | "They'd be correlated so it's more complicated" | Right instinct, no number | Stay at L9 and make them compute both cases |
@@ -728,7 +728,7 @@ hostile because he is unpleasant; he is hostile because he is the one who gets f
 | Objection | A passing answer contains | Hand-waving sounds like |
 |---|---|---|
 | **"Your default uses 104 weeks. How many factors are in the North America model?"** | **The paper states no total for any model** — that absence is the first half of the finding. The second half is that a *lower bound* for NAMR can be assembled from what is printed, and a Tier 4 answer assembles it rather than shrugging: 1 market (p.4) + 12 styles (Table 1.2, p.10 — 13 rows, Market plus 12) + 54 core industries (Table 1.5, p.57, *rows counted by the transcriber; the page prints no total*) + ~2 core countries (US, Canada — p.4 names Canadian stocks) + ~2 currencies (p.6, assigned from the country exposures) ≈ **71**. So `K ≈ 71` against `T = 104`: **NAMR's WKL matrix is not rank-deficient, and a GM who claims it is will be caught by a player with a calculator.** Say the count, then say it is a floor, then move to the two arguments that survive it (next row) | Any specific factor count offered as *the paper's*. The 71 is **ours**, assembled from two tables; presenting it as printed is the exact fabrication the rules forbid |
-| ↳ *follow-up inside objection 1, not a fourth objection:* **"So your matrix is fine, then. 104 beats 71."** | The two arguments that survive, both **INFER**, both ours, both flagged as such. **(1) The half-life throws most of the sample away.** Weights are `λᵗ` with `λ = 0.5^(1/26) ≈ 0.9737`; the effective sample size `(Σw)²/Σw²` over 104 weeks is **≈ 66** — *below* the ≈71 factors. The oldest week carries `0.5⁴ = 1/16` of the newest week's weight. Show the sum; it is one line of arithmetic and it is Victory Condition 1 in miniature. (For contrast, the daily specific-risk model in Table 1.3 — 125-day half-life over 375 days — gives an effective **≈ 281 of 375**, which is gentle.) **(2) Even at full weight it is thinly determined.** `F` carries `K(K+1)/2 = 2,556` distinct entries for `K = 71`, estimated from `104 × 71 = 7,384` numbers: under **3** observations per estimated parameter, under **2** on the effective count. The paper reports no condition number, no smallest eigenvalue and no shrinkage of `F` | "It's still not enough data." (No mechanism, no number.) Reasserting rank-deficiency after the count has been done |
+| ↳ *follow-up inside objection 1, not a fourth objection:* **"So your matrix is fine, then. 104 beats 71."** | The two arguments that survive, both **INFER**, both ours, both flagged as such. **(1) The half-life throws most of the sample away.** Weights are `λᵗ` with `λ = 0.5^(1/26) ≈ 0.9737`; the effective sample size `(Σw)²/Σw²` over 104 weeks is **≈ 66** — *below* the ≈71 factors. 104 weeks is exactly **four half-lives**, so the far end of the window carries roughly `0.5⁴ = 1/16` of the near end's weight. Show the sum; it is one line of arithmetic and it is Victory Condition 1 in miniature. (For contrast, the daily specific-risk model in Table 1.3 — 125-day half-life over 375 days — gives an effective **≈ 281 of 375**, which is gentle.) **(2) Even at full weight it is thinly determined.** `F` carries `K(K+1)/2 = 2,556` distinct entries for `K = 71`, estimated from `104 × 71 = 7,384` numbers: under **3** observations per estimated parameter, under **2** on the effective count. The paper reports no condition number, no smallest eigenvalue and no shrinkage of `F` | "It's still not enough data." (No mechanism, no number.) Reasserting rank-deficiency after the count has been done |
 | **"If your matrix is rank-deficient, tell me what happens on my book."** | First the honest scope: **literal** rank deficiency needs `K > T`, and the model where that is near-certain is **WRLD** — 49 industry rows in Table 1.11 (p.61, transcriber's count) plus styles plus a country block spanning "the superset of all assets in the regional and country models" across **87 countries** of coverage (p.2, p.3), plus currencies mapped from those countries (p.6), against the same 104 weeks (p.27) and *weekly* regressions (p.24). **But the paper never prints that count**, so this is an inference about an unprinted number: say "it follows that", never "the paper says". Then the consequence: near-null directions are scored at or near zero risk; an optimiser searching for low risk finds them and loads them, so risk is understated precisely where the book concentrates. **INFER throughout** — the paper never confronts rank, and this is the game's argument, not BlackRock's | "The matrix would be unstable." "You'd get numerical problems." Asserting a WRLD factor count as printed |
 | **"Then shrink it. What does shrinkage cost, and what are you shrinking towards?"** | Shrinkage trades bias for variance and is meaningless without saying **towards what** and **by how much**. BFRE's only shrinkage in the paper is p.36's thin country/industry correction — "adding a **Bayesian prior**, which in essence diverts the estimated country/industry return away from the sample factor return and towards a theoretical prior" — which shrinks a **factor return**, not `F`, and whose **form, strength and parameter are not specified**. LASSO, LARS, Group Lasso and Ridge appear only on p.8, as alternatives BFRE **did not adopt**. And the `F` methodology itself is deferred: "Model users are referred to the BRS Covariance Matrix Estimation documentation" (p.27) | "Shrinkage makes it stable." "You'd use Ledoit–Wolf." (Not in this paper — say so if you use it.) |
 
@@ -876,21 +876,25 @@ beats, in this order, and **do not ask the player if they are ready** (Rules §1
    then keep it, in writing, at every close-out.
 3. **Run the 60-second cold open before teaching anything.** Five stocks, one characteristic, one
    return, and one question: *what single number best turns the characteristic into the return, and
-   how did you get it?* The dataset is `datasets/level0.md` — AXL/BRN/CHR/DLT/EMK, `b = 2` exactly.
-   **Let them fail.** The three shortcuts a beginner reaches for return 2.0, 4.0 and 2.7708; the
-   per-stock ratios are 1.3333, 4.0000, 4.0000 and 1.7500 and disagree wildly, which is the hook.
-   Do not rescue, do not hint, and do not name the method. The failure *is* Level 0's opening.
+   how did you get it?* The dataset is `datasets/level0.md` — AXL/BRN/CHR/DLT/EMK. The answer is
+   `b = 2` **exactly** (`Σxr/Σx² = 15 / 7.5`). **Let them fail.** The two shortcuts a beginner
+   actually reaches for return **4.0** ("total return ÷ total exposure", 100% too big) and **2.7708**
+   (the average of the per-stock slopes, 39% too big); those per-stock slopes are 1.3333, 4.0000,
+   4.0000 and 1.7500 and disagree wildly, which is the hook — there is no single ratio sitting in the
+   data waiting to be read off. Do not rescue, do not hint, and do not name the method. The failure
+   *is* Level 0's opening.
 4. **Then begin Level 0.** No lecture in between.
 
 Vocabulary discipline starts at beat 1, not at Level 1. In the cold open the characteristic is a
-"cheapness score" and nothing else — *exposure*, *factor*, *regression* and *residual* are all still
-locked (§1). If the player supplies one of those words themselves, that is a gift: ask them to define
-it, and you have your first ladder reading before the game has started.
+"cheapness score" and nothing else — *exposure*, *factor* and *regression* stay locked until the
+mechanism exists (§1). If the player supplies one of those words themselves, that is a gift: ask them
+to define it, and you have your first ladder reading before the game has started.
 
 The three things that go wrong on beat 3, every time: explaining the loss function before they have
 guessed (which removes the failure the level is built on), accepting "I'd fit a line" as an answer
 (that is a method name, not a number — ask for the number), and treating a wrong guess as a problem.
-A wrong guess with an honest reason is worth 0 bps and is exactly what you wanted.
+A wrong guess with a structurally sound reason is the first **+5** on the ledger (§4.1); a wrong guess
+honestly labelled a guess is **0** and costs nothing (§4.3). Neither is a failure of the player.
 
 ---
 
