@@ -567,6 +567,13 @@ show("that share as a decimal", dec(share1 / dot(h, h)))
 check("share of the book's VARIANCE along the peak direction",
       F(27) * share1 / F(46), F(108, 115))
 show("that share as a decimal", dec(F(27) * share1 / F(46)))
+# The variance share and the volatility ratio are different numbers. The page
+# says "variance"; this is what it would have to say if it said "risk".
+check("sqrt(108/115) to 4dp -- the volatility ratio, not the variance share",
+      sqrt_dec(F(108, 115)), "0.9691 (ROUNDED)")
+check("... and it is strictly larger than the variance share 108/115",
+      (F(108, 115) * F(115, 108)) == 1 and Decimal("0.9691") > Decimal("0.9391"),
+      True)
 
 sub("6h. how much of the whole grid the first direction carries")
 check("lam_max / trace = 27/34", F(27) / F(34), F(27, 34))
@@ -677,11 +684,14 @@ for c in [F(1), F(2), F(-3), F(1, 2), F(10)]:
 check("scaled copies of the zero-risk book, all still exactly zero", cnt, 5)
 check("a levered 100x version is still scored at zero",
       quad(SB, [F(100), F(100), F(-100)]), F(0))
-check("but its actual return moved by 200 basis points every period",
+check("the unlevered book itself moved 200 basis points every period",
       [F(100) * x for x in pb], [F(200), F(200), F(200)])
+check("... so the 100x version moved 200 PERCENT, i.e. 20000 bp, every period",
+      [F(100) * x * 100 for x in pb], [F(20000), F(20000), F(20000)])
 
 sub("11.4 the counting argument")
-check("K, the number of factors", F(3), F(3))
+check("K, the number of factors (counted off the dataset, not asserted)",
+      F(len([G1, G2, G3])), F(3))
 check("T, the number of periods", F(TB), F(3))
 check("independent directions left after removing the mean, T-1", F(TB - 1),
       F(2))
@@ -777,6 +787,8 @@ check("a single factor on its own is untouched", quad(SH, [F(1), F(0), F(0)]),
 
 sub("11.6(iii) after shrinkage, NO book is scored at zero")
 cnt = 0
+pos = 0
+above_floor = 0
 worst = None
 for h1 in range(-4, 5):
     for h2 in range(-4, 5):
@@ -785,14 +797,17 @@ for h1 in range(-4, 5):
                 continue
             h = [F(h1), F(h2), F(h3)]
             vv = quad(SH, h)
-            assert vv > 0
             rq = vv / dot(h, h)
-            assert rq >= F(9, 4)
+            if vv > 0:
+                pos += 1
+            if rq >= F(9, 4):
+                above_floor += 1
             if worst is None or rq < worst[0]:
                 worst = (rq, (h1, h2, h3))
             cnt += 1
 check("non-zero integer books swept against the shrunk grid", cnt, 728)
-check("every one of them got a strictly positive variance", True, True)
+check("every one of them got a strictly positive variance", pos, 728)
+check("every one of them scored at or above the 9/4 floor", above_floor, 728)
 check("the floor: a*min(diagonal) = (1/4)*9", a * F(9), F(9, 4))
 show("that floor as a variance", dec(F(9, 4)))
 show("that floor as a risk, sqrt(9/4)", sqrt_dec(F(9, 4)))
@@ -920,12 +935,22 @@ check("effective-count version: 66 x 71 / 2556", F(66 * 71) / F(2556),
 show("4686/2556 as decimal", dec(F(4686, 2556)))
 
 sub("13d. a real slice of F: Table 1.2's market-correlation column (p.10)")
-for name, val in [("Volatility", F(84, 100)), ("Liquidity", F(69, 100)),
-                  ("Reversal", F(-32, 100)), ("Size", F(23, 100)),
-                  ("Momentum", F(-2, 100))]:
-    check(f"printed correlation with the market factor: {name}", val, val)
+# The printed digits are the left column; the reduced Fraction the code carries
+# is the right one. Comparing a value with itself would prove nothing, so each
+# row is rebuilt from the digits as they appear on p.10 and matched against the
+# reduced form the rest of this file uses.
+for name, printed, val in [("Volatility", "0.84", F(21, 25)),
+                           ("Liquidity", "0.69", F(69, 100)),
+                           ("Reversal", "-0.32", F(-8, 25)),
+                           ("Size", "0.23", F(23, 100)),
+                           ("Momentum", "-0.02", F(-1, 50))]:
+    check(f"printed correlation with the market factor: {name}",
+          F(Decimal(printed)), val)
     show("   as decimal", dec(val, 2))
-check("Volatility's own annualised volatility, Table 1.2", F(75, 10), F(7, 5) * 0 + F(75, 10))
+check("Volatility's own annualised volatility, Table 1.2 (7.5%)",
+      F(Decimal("7.5")), F(15, 2))
+check("the market factor's own annualised volatility, Table 1.2 (19.8%)",
+      F(Decimal("19.8")), F(99, 5))
 show("Volatility 7.5%, Market 19.8% -- both printed on p.10",
      (dec(F(75, 10), 1), dec(F(198, 10), 1)))
 check("implied covariance 0.84 * 7.5 * 19.8 (percent-squared, INFER)",

@@ -1,7 +1,7 @@
 # Level 8 — The Weather Map
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level8.py`
-(347 assertions plus 20,946 swept cases, exits 0). Nothing here is rounded by hand. Where a
+(350 assertions plus 20,946 swept cases, exits 0). Nothing here is rounded by hand. Where a
 decimal does not terminate it is written with the word **rounded** next to it; every other
 decimal on this page is exact.
 
@@ -235,7 +235,8 @@ holding in every column. *This is the object Levels 0–6 wrote as `e`; from her
 Those five columns of misses total `Σu² = 46` across the file, and they are **Level 9's raw
 material, not this level's**. Point at them, name nothing, move on.
 
-**The two rows Level 7 hands to Level 8:**
+**The two rows Level 7's machinery hands to Level 8** (Level 7 ran that machinery on its own
+file, with a *moving* exposure column; these five months are new here):
 
 ```
 f_Mkt  =  +7,  +5,  +1,  +3,  −6      (percent, month 1 to month 5)
@@ -416,7 +417,8 @@ Var(book) = h₁²·25 + 2·h₁h₂·6 + h₂²·9
 
 **That is `hᵀFh`.** It is not a definition and not a convention: it is `(A + B)²` and nothing
 else. The middle term is doubled for exactly the reason the `2AB` in the identity is doubled.
-Name the object *the grid* for now; the notation `hᵀFh` can wait for Level 10.
+Name the object *the grid* for now and hand the name *quadratic form* over at Section 9; the
+row-and-column algebra that makes `hᵀFh` an actual matrix product is Level 10's.
 
 ### 5c. The same number twice, three books over
 
@@ -787,9 +789,11 @@ Now score it using only the two scores:
 The same 46 as Section 5c, by a completely different route.
 
 **And here is the sentence a risk desk actually says.** By size, the book is **80%** along the
-noisy direction. By *variance*, it is `27×(8/5)/46 = 108/115 = 0.9391` (rounded) — **about 94%
-of this book's risk lives in one direction**, even though the book was built as an even split
-between two factors. Balanced-looking exposures, single-direction risk. That is the whole reason
+noisy direction. By *variance*, it is `27×(8/5)/46 = 108/115 = 0.9391` (rounded) — **about 94% of
+this book's variance lives in one direction**, even though the book was built as an even split
+between two factors. Say *variance*, not *risk*, and mean it: the shares that add to 1 are
+variance shares, because variances add and volatilities do not (Section 8, row 2). The
+corresponding volatility ratio is `√(108/115) = 0.9691` (rounded), a different number. Balanced-looking exposures, single-direction risk. That is the whole reason
 this section exists, and it is Level 11's opening move.
 
 ### 6h. Names, now that the mechanisms exist
@@ -859,8 +863,10 @@ Before the boss round, the player should be able to look at any grid and answer 
 without computing a portfolio at all.
 
 **1. Is it possible?** Every eigenvalue must be `≥ 0`. For a 2×2 this needs no eigenvalues at
-all: it is possible exactly when the determinant is `≥ 0` and the diagonal sum is `> 0`. Our
-`F`: `189 > 0` and `34 > 0` ✓. The corrupted grid of 5d: `−31 < 0` ✗ — and the failure is
+all: it is possible exactly when the determinant is `≥ 0` **and** the diagonal sum is `≥ 0`.
+(Why that is airtight: the determinant is the product of the two eigenvalues and the diagonal sum
+is their total, so `det ≥ 0` says they share a sign or one is zero, and the sum then says which
+sign.) Our `F`: `189 ≥ 0` and `34 ≥ 0`, both comfortably ✓. The corrupted grid of 5d: `−31 < 0` ✗ — and the failure is
 exhibited by an actual book with variance `−30`.
 
 **2. How stretched is it?** `λ_max / λ_min`. Here `27/7 = 3.8571` (rounded), which is mild. A
@@ -909,7 +915,7 @@ computed `F` and not understood it.
 | "Volatilities add" | Book A: `5 + 3 = 8%` | **Variances** combine, never volatilities. Truth 6.7823% (rounded) |
 | "Correlation 0.40 is in the grid" | Book A gets `25 + 2(0.4) + 9 = 34.8`, risk `5.8992%` (rounded) instead of 6.7823% (rounded) | Correlation is the covariance *divided by both volatilities*. The grid holds `6`, not `0.4` |
 | "Figure 1.3 on p.11 is `F`" | reads Size–Liquidity 0.74 as a factor-return correlation | p.11 is the correlation of **exposures** — columns of `X`. The factor-return correlations are in **Table 1.2, p.10** |
-| "Table 1.2's 0.84 is a cell of the shipped `F`" | quotes a full-sample equal-weighted 1996–2013 statistic as a live model input | `F` is 104 weeks with a 26-week half-life (p.27). Same kind of object, different window and different weights |
+| "Table 1.2's 0.84 is a cell of the shipped `F`" | quotes a full-sample 1996–2013 summary statistic as a live model input | `F` is 104 weeks with a 26-week half-life (p.27). Same kind of object, different window and — INFER, the paper never states Table 1.2's weighting — different weights |
 | "The riskiest direction is the riskiest factor" | says pure market, 25 | The peak is `(3,1)` at **27**, above either factor alone |
 | "The eigenvalue is the direction" | — | The eigen**vector** is the direction; the eigen**value** is the amount. This is the single most common failure |
 | "A negative eigenvalue just means low risk" | — | It means a book with negative variance — `(3,−5)` at `−30` in 5d. The grid is invalid, not conservative |
@@ -943,10 +949,14 @@ hands.
 | **shrinkage** *(boss round)* | pulling a noisy estimate toward a steadier target on purpose |
 | **bias–variance trade-off** *(boss round)* | what shrinkage buys and what it pays with |
 
-**Say, as you hand over each of the middle nine:** *this is the industry word for the thing you
-just built — the paper never uses it.* Of the seventeen, exactly **three** are the paper's own
-words: **half-life** and **exponential decay**, both on p.27, and **factor covariance matrix**,
-the where-list entry under equation (1.8) on p.24. Everything else is borrowed.
+**Say, as you hand over each of the thirteen borrowed ones:** *this is the industry word for the
+thing you just built — the paper never uses it.* Of the seventeen, exactly **four** are the
+paper's own words: **covariance matrix** and **factor covariance matrix**, both in the where-list
+under equation (1.8) on p.24 (and "asset covariance matrix" again on p.2, "Specific Covariance
+Matrix" as a p.27 heading), and **half-life** and **exponential decay**, both on p.27. Everything
+else is borrowed. Two of the borrowed thirteen do occur somewhere in the 65 pages, but **only
+inside a reference title and never in a sentence of the paper's own**: *positive semi-definite*
+in [26] on p.65 and *shrinkage* in [7] on p.64. Cite those as titles, never as claims (13g).
 
 **Do not unlock here:** *specific risk / `Δ`* (Level 9), *asset covariance matrix `Σ`*
 (Level 10), *tracking error* and *marginal contribution to risk* (Level 11), *bias statistic*
@@ -977,8 +987,10 @@ two-squares identity.
 # 11. BOSS ROUND — The Weather Map
 
 Round type: **E. INTERROGATION**. Play a Chief Risk Officer with thirty years on the desk and no
-patience. The task, from the rulebook: *show why a covariance matrix estimated from fewer
-periods than factors is structurally broken, and what shrinkage does about it.*
+patience. The task, from the rulebook (`prompt/RISK_DESK.md` §5, verbatim): *"Show why a
+covariance matrix estimated from fewer months than factors is structurally broken, and what
+shrinkage does about it."* Section 11.4 sharpens "fewer months than factors" into the count that
+actually bites, `K > T − 1`.
 
 > **Announce the difficulty at the top of the round.** This is graduate material and the paper
 > does not go here. Also announce the scope, in these words or close to them: **"the case I am
@@ -1486,11 +1498,12 @@ something false about the shipped default and has thrown away the boss round: th
 is that they *had* nine hundred-odd weeks and chose to use 104 of them, down-weighted, because
 of the responsive-versus-noisy trade-off p.27 states in its own words.
 
-Also on p.27 and p.3: the matrices are built "**correcting for serial correlations**", and
+Two more sentences, and keep the two pages apart. **p.3** says the factor covariance matrices are
+built from a daily factor-return series "**correcting for serial correlations**". **p.27** says
 Aladdin's Portfolio Risk Tools lets a user "change the half-life of the exponential decay,
 control for serial correlations and asynchronicity in the factor return series, and apply
-different assumptions to factor volatilities and factor correlations". **The correction's form is
-not given.**
+different assumptions to factor volatilities and factor correlations". **Neither page gives the
+correction's form**, and neither names a method for it (13g).
 
 ### 13c. What BFRE's own half-life does to its own sample — arithmetic, and it is ours
 
@@ -1605,8 +1618,10 @@ warnings, both of which a CRO will test:
    digits; Figure 1.3 is one of only four exhibits in the paper that prints its values). Same
    word, different object. Section 4c's table exists to keep them apart.
 2. **Table 1.2 is the right kind of object but is still not a cell of the shipped `F`.** It is a
-   full-sample, equally-weighted summary over Mar 1996 – Dec 2013. `F` is 104 weeks with a
-   26-week half-life. Same species, different animal.
+   summary over the whole of Mar 1996 – Dec 2013, as its printed caption says; `F` is 104 weeks
+   with a 26-week half-life. Same species, different animal. **INFER on the weighting:** the
+   paper never states how Table 1.2's statistics are weighted through time, so "equally
+   weighted" is a reading of an unlabelled summary table, not a printed fact.
 
 **If a player asks what a covariance cell would look like — INFER, and label it.** Table 1.2 also
 prints annualised volatilities: Volatility **7.5%**, Market **19.8%**. Multiplying,
@@ -1713,8 +1728,9 @@ Trace it forward once, out loud, so the player sees the level's place in the pip
    on the paper's one worked example, an EMEA equity portfolio whose banner reads **Active Risk
    2.99%** `[read directly; the middle digit is soft and 2.89 is not fully excluded]`, the
    common-factor half is Style 25%, Industry 14%, Country 6%, FX 4% and Act Sec 1% of active
-   risk against Specific at 50% `[p.35 pie, read directly — INFERRED, the slices carry no printed
-   labels; they do sum to 100]`. p.34 says it in prose: "the Active Risk is split equally between
+   risk against Specific at 50% `[p.35 pie; the slice labels and the first five values are read
+   directly and are unambiguous. Act Sec **1% is INFERRED** — the glyph reads 1 or 2, and 1 is
+   recorded only because the six then sum to exactly 100]`. p.34 says it in prose: "the Active Risk is split equally between
    common factors and stock specific sources". (Level 11.)
 
 Get the half-life wrong at step 2 and every one of those percentages moves, with no change to a
@@ -1752,7 +1768,7 @@ is that the document does not contain what a reader would need to rule it out.*
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level8.py     # 347 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level8.py     # 350 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page from the raw exposure column and the five months
