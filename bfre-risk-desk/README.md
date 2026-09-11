@@ -15,6 +15,7 @@ datasets each level runs on, and the save files that carry progress between sess
 | `prompt/RISK_DESK.md` | The game-master prompt. Paste into a fresh chat alongside the paper, then say "Begin." |
 | `notes/` | Page-indexed transcription of the BFRE paper — equations, tables, numbers, and methodological choices, keyed to PDF page. |
 | `datasets/` | The datasets for each level, small enough to compute by hand, with the exact arithmetic worked out. |
+| `gm/` | Game-master reference: BFRE anchor map, vocabulary, the Level 12 critique dossier, the analogy bank, and the playbook. |
 | `tools/` | Scripts that produced or verify the above. |
 | `saves/` | Save files. `SAVE_TEMPLATE.md` is the blank; each session appends a dated save. |
 
@@ -48,6 +49,10 @@ never drift:
 ```bash
 python bfre-risk-desk/tools/verify_coldopen.py      # the 60-second cold open
 python bfre-risk-desk/tools/verify_level0_boss.py   # Level 0 boss round
+python bfre-risk-desk/tools/verify_level1.py        # Level 1 derivation + boss round
+python bfre-risk-desk/tools/verify_level2.py        # Level 2 balance condition + sabotage boss
+python bfre-risk-desk/tools/verify_level3.py        # Level 3 two-column normal equations
+python bfre-risk-desk/tools/verify_level4.py        # Level 4 collinearity + Frisch-Waugh
 ```
 
 ## The four victory conditions
