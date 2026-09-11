@@ -1,9 +1,12 @@
 # ★ THE REBUILD — the final exam
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_rebuild.py`
-(**676 assertions, exits 0**). Nothing here is rounded by hand. Where a decimal does not
-terminate it is written with the word **rounded** next to it; every other decimal on this
-page is exact.
+(**690 assertions, exits 0**). Nothing here is rounded by hand. Where a decimal does not
+terminate, the word **rounded** stands next to it at the point where it is computed; every
+decimal that never carries that tag anywhere on the page is exact. Sections 9, 11, 13, 14
+and the Verification note then re-quote those same rounded figures as shorthand — in table
+rows, marking criteria and debrief lines — without repeating the tag, so a decimal seen only
+there should be read back to its first appearance before it is trusted to its last digit.
 
 > **This is the win condition, and there is no boss round after it.** `prompt/RISK_DESK.md`
 > §5 gives Level ★ one line — *"Everything, from blank"* — and §3 makes Victory Condition 4
@@ -18,18 +21,23 @@ page is exact.
 >
 > - **Nothing in the eight stages is graduate-level.** Every step is arithmetic the player
 >   has done before, on a file they have not seen. The exam is long, not deep. Budget
->   **90 to 150 minutes**; a few hundred multiplications, and two square roots that
->   both come out exact.
+>   **90 to 150 minutes**; a few hundred multiplications, and four square roots that all come
+>   out exact — the two standard deviations in Stage 1 and the two risk numbers at the end.
+>   Everything else a calculator is wanted for is presentation, not the answer.
 > - **Three things that a professional would do here are deliberately absent**, and the
 >   player must be able to *name* them, not perform them: the √-market-cap regression
 >   weighting (**PAPER, p.25**), the exponential decay with a half-life (**PAPER, p.27**),
 >   and the Newey–West serial-correlation adjustment (**PAPER, p.27–28**). Section 14 says
 >   why each is out of scope and what each would change.
 > - **Eigen-decomposition, shrinkage and Newey–West are graduate-level** and appear nowhere
->   in the eight stages. Two of the three appear nowhere in the paper either:
->   `gm/VOCAB.md` §6 records that *eigenvalue* has **zero** occurrences in 65 pages, and
->   `gm/LEVEL_ANCHORS.md` §11 records that BFRE's only shrinkage is the p.36 Bayesian prior
->   on thin country/industry **returns**, never on `F`.
+>   in the eight stages. They stand in three different relations to the paper, and the GM must
+>   not flatten them into one: *eigenvalue* has **zero** occurrences in 65 pages
+>   (`gm/VOCAB.md` §6) and the whole construction is the game's; *shrinkage* is in the paper
+>   but not where a quant would expect it — `gm/LEVEL_ANCHORS.md` §11 records that BFRE's
+>   only shrinkage is the p.36 Bayesian prior on thin country/industry **returns**, never on
+>   `F`, and the word itself occurs only inside reference [7]'s title on p.64 (`gm/VOCAB.md`
+>   §6); *Newey–West* is the paper's own, named on **p.27** and parameterised in **Table 1.3,
+>   p.28**, and is out of scope here for length, not for absence.
 > - **The hardest part of this level is not arithmetic.** It is Section 11's rule that a
 >   right final number with a wrong intermediate object is a **fail**. Section 12.2 proves
 >   why that rule has to exist: there is a wrong path on this very file that reaches
@@ -62,7 +70,7 @@ paid for. The callbacks are the level.
 | **Level 3** | Two columns need two balance conditions solved *together*. Stage 2's 2×2 system, and the `/10` in its answer. |
 | **Level 4** | A coefficient is a leftover; `det = AC − B²`; the variance inflation factor. Stage 1 measures the collision (**ρ = 2/3**, VIF **1.8**); Stage 2 is where a player who forgot Level 4 loses the exam. |
 | **Level 5** | Centering; a column of ones is an intercept; standardisation. The whole of Stage 1, and the reason `Σ1·x = 0` makes Stage 2 fast. |
-| **Level 6** | `n − k`; leverage `h_i`; why a denominator is what it is. Stage 4's divisor argument, and Section 5f's `Σh = k = 3`. |
+| **Level 6** | `n − k`; leverage `h_i`; why a denominator is what it is. Stage 4's divisor argument, and Section 5e's `Σh = k = 3`. |
 | **Level 7** | The same cross-section, month after month, producing a *row* of factor returns. Stage 2 run five times. |
 | **Level 8** | `F` — covariance of factor returns, divisor `T − 1`. Stage 3. Also `det F ≠ 0`, Level 4's test aimed at a new target. |
 | **Level 9** | `D` — each stock's private wobble; what least squares **guarantees** versus what BFRE **assumes**. Stage 4, and Section 14. |
@@ -108,7 +116,7 @@ is expected to be able to name all three back at the end (Section 13, VC2 check 
 >
 > | Stock | Earnings yield (%) | Operating margin (%) | M1 | M2 | M3 | M4 | M5 |
 > |---|---:|---:|---:|---:|---:|---:|---:|
-> | GRV | 8 | 12 | +8.5 | +3.5 | +3.5 | +2.5 | −4.5 |
+> | GBX | 8 | 12 | +8.5 | +3.5 | +3.5 | +2.5 | −4.5 |
 > | HLX | 7 | 12 | +13.5 | +4.0 | +7.5 | −1.5 | −1.5 |
 > | JDR | 5 | 12 | +11.5 | −3.0 | +1.5 | +0.5 | +2.5 |
 > | KPN | 4 | 13 | +7.0 | +1.5 | +1.0 | +3.0 | 0.0 |
@@ -116,17 +124,19 @@ is expected to be able to name all three back at the end (Section 13, VC2 check 
 > | MRA | 2 | 7 | −2.0 | −13.5 | +2.0 | −6.0 | +1.0 |
 >
 > **The book** (Kestrel Fund, % of NAV, fully invested):
-> GRV **30%**, HLX **40%**, KPN **15%**, MRA **15%**.
+> GBX **30%**, HLX **40%**, KPN **15%**, MRA **15%**.
 >
 > **The benchmark** (the NG-6 index, % weights, published by the index provider):
-> GRV **25%**, HLX **10%**, JDR **25%**, KPN **15%**, LTS **10%**, MRA **15%**.
+> GBX **25%**, HLX **10%**, JDR **25%**, KPN **15%**, LTS **10%**, MRA **15%**.
 
 That is the whole file: 12 characteristic values, 30 returns, 4 holdings, 6 index weights.
 Nothing else exists. No market caps, no industries, no countries, no risk-free rate — the
 returns are already in excess of it.
 
-**Nothing in this file appears in Levels 0–12.** Those levels ran on AXL, BRN, CHR, DLT,
-EMK and FNX; this one runs on GRV, HLX, JDR, KPN, LTS, MRA. The returns, the exposures,
+**Nothing in this file appears in Levels 0–12 — not a number, and not a name.** The main
+cast there was AXL, BRN, CHR, DLT, EMK and FNX, with walk-ons in two levels (GRV and JDE on
+Level 4; TLM, KVR, HRB and GNP on Level 9). This one runs on GBX, HLX, JDR, KPN, LTS, MRA,
+none of which is used anywhere else in the game. The returns, the exposures,
 `F`, `D` and every risk number below are new.
 
 ### 1b. The task sheet
@@ -162,8 +172,9 @@ way to get the wrong one.
 > *"The mean is defined as the square-root of market capitalisation weighted average value
 > so that the transformed substyles (and styles) have the property that their weighted
 > average is zero. Additionally, these values are divided by their equally-weighted
-> standard deviation so that a value of +1 … is one standard deviation above the market
-> average. An exposure of zero indicates that a security has the market average value."*
+> standard deviation so that a value of +1 for a substyle or style can be interpreted as a
+> security having an exposure of one standard deviation above the market average. An
+> exposure of zero indicates that a security has the market average value."*
 
 And **PAPER, p.39**: exposures *"take values between +/- 3 and are standardised to a
 square-root capitalisation mean of zero, with an equal-weighted standard deviation of
@@ -200,7 +211,7 @@ exposures        +1/2   +1/2   +1/2   +1     −1/2   −2
 
 ```
         ┌                      ┐
-        │  1    +3/2    +1/2   │   GRV
+        │  1    +3/2    +1/2   │   GBX
         │  1    +1      +1/2   │   HLX
   X  =  │  1     0      +1/2   │   JDR     6 rows (assets) x 3 columns (factors)
         │  1    −1/2    +1     │   KPN
@@ -247,12 +258,26 @@ VIF = 1/(1 − ρ²) = 1/(1 − 4/9) = 9/5 = 1.8
 
 **PAPER, p.11, Figure 1.3**, printed digits — one of only four exhibits in the paper that
 prints its values: in the live NAMR model the **Earnings Yield–Profitability** exposure
-correlation is **0.64**. Our 0.6667 is that collision, very nearly to the digit. This is
-the one place where the toy is not a toy: cheap stocks really are also the ones whose
-margins are thin, and the paper's own matrix says so.
+correlation is **0.64**. Ours is `0.6667` **rounded** — the same collision, and, more
+importantly, the same **sign**. It is *positive*: in this file the cheap names are also the
+fat-margin names, and the paper's own matrix says the same of the real market. Do not
+oversell the closeness; 0.64 and 0.67 are two different numbers that happen to land near
+each other, and the agreement that matters is the direction.
 
-**A VIF of 1.8 is mild.** It does not break anything. What it does is make the
-one-at-a-time answer wrong by a factor of two in Stage 2 — which is the point.
+**A VIF of 1.8 is mild.** It does not break anything — and it is **not** the size of the
+error in Stage 2. The VIF says how much the collision inflates the *variance* of an
+estimate; it does not say how far the shortcut lands from the truth. That distance has its
+own exact address, and the player should derive it in one line. Write
+`r = f_Mkt·1 + f_EY·x + f_Prof·g + u` and hit both sides with `x`, using the three sums
+above (`Σx·1 = 0`, `Σx² = 6`, `Σx·g = 4`, and `Σx·u = 0` once the misses are right):
+
+```
+Σx·r = 6·f_EY + 4·f_Prof        so        Σx·r/6 = f_EY + (2/3)·f_Prof
+```
+
+**The one-at-a-time answer is the truth plus two-thirds of the other factor's return**, and
+that `2/3` is `Σx·g/Σx²` — the collision itself, wearing a different hat. Section 3d is
+that leak, month by month.
 
 ---
 
@@ -320,7 +345,7 @@ method being kind; nothing in the method promises it.
 
 `u = r − f_Mkt·1 − f_EY·x − f_Prof·g`, computed stock by stock:
 
-| month | GRV | HLX | JDR | KPN | LTS | MRA | `Σu` | `Σx·u` | `Σg·u` | `Σu²` |
+| month | GBX | HLX | JDR | KPN | LTS | MRA | `Σu` | `Σx·u` | `Σg·u` | `Σu²` |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | M1 | −3 | +3 | +3 | −2 | −1 | 0 | **0** | **0** | **0** | 32 |
 | M2 | 0 | +2 | −2 | +2 | −4 | +2 | **0** | **0** | **0** | 32 |
@@ -330,12 +355,12 @@ method being kind; nothing in the method promises it.
 
 **Total `Σu²` over the five months = 114.** Hold on to that number; Section 5c spends it.
 
-Worked example, M1, GRV: `r = +8.5`, exposures `(1, +1.5, +0.5)`, factor returns
+Worked example, M1, GBX: `r = +8.5`, exposures `(1, +1.5, +0.5)`, factor returns
 `(+7, +2, +3)`. Fitted `= 7 + 2(1.5) + 3(0.5) = 7 + 3 + 1.5 = 11.5`. Miss
 `= 8.5 − 11.5 = −3`. ✔
 
 **Degrees of freedom per month: `n − k = 6 − 3 = 3`** (Level 6). Six misses, three of which
-are determined by the other three through the three balance conditions above. Section 5f
+are determined by the other three through the three balance conditions above. Section 5e
 shows what that costs.
 
 ### 3d. The wrong way, and exactly what it returns
@@ -351,15 +376,23 @@ that the other column exists — is `Σxr/6` and `Σgr/6`:
 | M4 | 0 | **+2** | +3 | **+3** |
 | M5 | −2 | **−4/3 = −1.3333** *(rounded)* | +1 | **−1/3 = −0.3333** *(rounded)* |
 
+Every entry in the "one-at-a-time" columns is Section 2f's leak, and the player should check
+two of them that way rather than re-adding the products: **one-at-a-time = truth + (2/3) ×
+the other factor's truth.** M1's Earnings Yield: `2 + (2/3)(3) = 4`. M3's Profitability:
+`−1 + (2/3)(2) = 1/3`.
+
 Three things to point at:
 
-- **M1's Earnings Yield return is exactly double the truth.** Not noisy — double.
+- **M1's Earnings Yield return is exactly double the truth.** Not noisy — double. And it is
+  double only because `(2/3)·f_Prof` happens to equal `f_EY` this month; the shortcut has no
+  fixed factor of error, it has a fixed *leak*.
 - **M5's Profitability return changes sign**, from `+1` to `−1/3`. The naive method reports
   that being profitable *lost* money in a month when it made money.
 - **M4's Profitability return is right by accident.** The shortcut agrees with the truth
-  exactly when `3·Σxr = 2·Σgr`, and in M4 both sides are **36**. That is the cruellest row:
-  a player who spot-checks one number and finds agreement will conclude the shortcut is
-  fine — while M4's *Earnings Yield* return, in the same month, is 2 against a true 0.
+  exactly when `3·Σxr = 2·Σgr`, and in M4 both sides are **36** — which is the same thing as
+  saying the leaking factor, `f_EY`, is **0** that month. That is the cruellest row: a player
+  who spot-checks one number and finds agreement will conclude the shortcut is fine — while
+  M4's *Earnings Yield* return, in the same month, is 2 against a true 0.
 
 Section 12.1 carries this error all the way to the risk number.
 
@@ -454,7 +487,7 @@ months):
 
 | Stock | M1 | M2 | M3 | M4 | M5 | `Σu²` | `d = Σu²/5` | specific vol |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| GRV | −3 | 0 | −2 | +2 | −1 | 18 | **18/5 = 3.6** | 1.8974 *(rounded)* |
+| GBX | −3 | 0 | −2 | +2 | −1 | 18 | **18/5 = 3.6** | 1.8974 *(rounded)* |
 | HLX | +3 | +2 | +3 | −2 | +1 | 27 | **27/5 = 5.4** | 2.3238 *(rounded)* |
 | JDR | +3 | −2 | −1 | 0 | +3 | 23 | **23/5 = 4.6** | 2.1448 *(rounded)* |
 | KPN | −2 | +2 | 0 | +1 | −1 | 10 | **2** | 1.4142 *(rounded)* |
@@ -486,11 +519,12 @@ forces a stock's misses to average zero *through time* — the balance condition
 **across stocks within one month**, never across months within one stock. The five sums:
 
 ```
-GRV −4      HLX +7      JDR +3      KPN 0      LTS −10      MRA +4
+GBX −4      HLX +7      JDR +3      KPN 0      LTS −10      MRA +4
 ```
 
-LTS's five misses are `−1, −4, 0, −2, −3`: **every one of them negative**, averaging −2.
-Five months of a name that did nothing but disappoint. The model books that as wobble, not
+LTS's five misses are `−1, −4, 0, −2, −3`: **not one of them positive**, averaging −2.
+Four disappointments and one month that was merely par — and nothing in the method that
+would have stopped all five from being negative. The model books that as wobble, not
 as a level, because it has been told the level is zero. With `T = 375` daily observations
 (**PAPER, p.28, Table 1.3**) the distinction stops mattering; with `T = 5` it is a live
 choice, and Section 14 prices it.
@@ -508,7 +542,7 @@ single cheapest error-catcher in the exam and the player should run it unprompte
 
 ### 5d. The other two divisor conventions, for the record
 
-| Convention | `d` for GRV…MRA |
+| Convention | `d` for GBX…MRA |
 |---|---|
 | **used here** — divisor `T = 5`, mean asserted zero | **3.6, 5.4, 4.6, 2, 6, 1.2** |
 | divisor `T − 1 = 4`, mean still asserted zero | 4.5, 6.75, 5.75, 2.5, 7.5, 1.5 |
@@ -519,13 +553,16 @@ Stages 5–8 takes whatever `D` it is handed and does not care which convention 
 
 ### 5e. Level 6's leverage, and a warning this file has to carry
 
-`h_i = Xᵢ (XᵀX)⁻¹ Xᵢᵀ`. With `(XᵀX)⁻¹ = diag-block(1/6, [[3/10, −1/5], [−1/5, 3/10]])`:
+`h_i = Xᵢ (XᵀX)⁻¹ Xᵢᵀ`. The inverse is Section 2e's Gram matrix turned over by hand — the
+market row is alone, so it inverts to `1/6`, and the 2×2 style block `[[6,4],[4,6]]` inverts
+to `(1/det)·[[6,−4],[−4,6]]` with `det = 20`, i.e. `[[3/10, −1/5], [−1/5, 3/10]]`. So
+`(XᵀX)⁻¹ = diag-block(1/6, [[3/10, −1/5], [−1/5, 3/10]])` and:
 
 ```
 h_i = 1/6 + (3/10)x² − (2/5)x·g + (3/10)g²
 ```
 
-| | GRV | HLX | JDR | KPN | LTS | MRA |
+| | GBX | HLX | JDR | KPN | LTS | MRA |
 |---|---:|---:|---:|---:|---:|---:|
 | `h_i` | 37/60 | 41/120 | 29/120 | 89/120 | 13/60 | **101/120** |
 
@@ -555,7 +592,7 @@ private life, which no factor can speak to.
 
 ### 6b. One row, in full, so the pattern is visible
 
-GRV's row of `X` is `(1, +3/2, +1/2)`.
+GBX's row of `X` is `(1, +3/2, +1/2)`.
 
 ```
 F · Xᵀ_GRV = ( 16(1) + 2(3/2)  + (−2)(1/2),
@@ -564,22 +601,22 @@ F · Xᵀ_GRV = ( 16(1) + 2(3/2)  + (−2)(1/2),
            = ( 16 + 3 − 1,  2 + 6 + 0.5,  −2 + 1.5 + 2 )
            = ( 18,  8.5,  1.5 )
 
-GRV–GRV common factor variance = 1(18) + 1.5(8.5) + 0.5(1.5) = 18 + 12.75 + 0.75 = 31.5
-GRV–GRV total                  = 31.5 + d_GRV = 31.5 + 3.6   = 35.1
+GBX–GBX common factor variance = 1(18) + 1.5(8.5) + 0.5(1.5) = 18 + 12.75 + 0.75 = 31.5
+GBX–GBX total                  = 31.5 + d_GRV = 31.5 + 3.6   = 35.1
 ```
 
-And a cross term, GRV against MRA, whose `X` row is `(1, −3/2, −2)`:
+And a cross term, GBX against MRA, whose `X` row is `(1, −3/2, −2)`:
 
 ```
 F · Xᵀ_MRA = ( 16 − 3 + 4,  2 − 6 − 2,  −2 − 1.5 − 8 ) = ( 17, −6, −11.5 )
-GRV–MRA    = 1(17) + 1.5(−6) + 0.5(−11.5) = 17 − 9 − 5.75 = 2.25      (no D: i ≠ j)
+GBX–MRA    = 1(17) + 1.5(−6) + 0.5(−11.5) = 17 − 9 − 5.75 = 2.25      (no D: i ≠ j)
 ```
 
 ### 6c. `V`, all thirty-six cells
 
-|  | GRV | HLX | JDR | KPN | LTS | MRA |
+|  | GBX | HLX | JDR | KPN | LTS | MRA |
 |---|---:|---:|---:|---:|---:|---:|
-| **GRV** | **35.1** | 27.25 | 18.75 | 15.25 | 13 | 2.25 |
+| **GBX** | **35.1** | 27.25 | 18.75 | 15.25 | 13 | 2.25 |
 | **HLX** | 27.25 | **29.4** | 17.5 | 14.75 | 13.25 | 5.25 |
 | **JDR** | 18.75 | 17.5 | **19.6** | 13.75 | 13.75 | 11.25 |
 | **KPN** | 15.25 | 14.75 | 13.75 | **16** | 11.75 | 8.5 |
@@ -588,7 +625,7 @@ GRV–MRA    = 1(17) + 1.5(−6) + 0.5(−11.5) = 17 − 9 − 5.75 = 2.25      
 
 Every entry is exact. Volatilities down the diagonal:
 
-| | GRV | HLX | JDR | KPN | LTS | MRA |
+| | GBX | HLX | JDR | KPN | LTS | MRA |
 |---|---:|---:|---:|---:|---:|---:|
 | monthly vol, % | 5.9245 | 5.4222 | 4.4272 | **4.0000** | 4.9497 | **7.0852** |
 | | *rounded* | *rounded* | *rounded* | **exact** | *rounded* | *rounded* |
@@ -600,8 +637,8 @@ plus **1.2** of itself — 97.6% *(rounded)* of it is the market and the two sty
 with big exposures. That distinction is the entire difference between `X F Xᵀ` and `D`, and
 a player who has not internalised it will read every big number as idiosyncratic.
 
-The mirror case is on the same table: GRV–MRA covariance is **2.25**, the smallest of the
-fifteen off-diagonals, because GRV is `(+1.5, +0.5)` and MRA is `(−1.5, −2)` — opposite
+The mirror case is on the same table: GBX–MRA covariance is **2.25**, the smallest of the
+fifteen off-diagonals, because GBX is `(+1.5, +0.5)` and MRA is `(−1.5, −2)` — opposite
 bets on both styles, so their factor exposures nearly cancel even though both load on the
 market.
 
@@ -610,6 +647,10 @@ market.
 `X F Xᵀ` is built from three factors and describes six assets, so its rank is at most 3 and
 **`det(X F Xᵀ) = 0`** — exactly, always, whenever assets outnumber factors. `det V` is
 `2308676544/625`, comfortably non-zero: **`D` is what makes `V` invertible.** Level 10 §6e.
+*(That exact determinant is the verifier's, not paper work — nobody hand-eliminates a 6×6 of
+quarters and fifths, and the exam never asks. What the player must produce is the rank
+argument above and the words "so `D` is what makes it invertible". Section 11 marks the
+argument, not the number.)*
 
 Concretely: take month 1's miss column as a set of weights —
 `(−30%, +30%, +30%, −20%, −10%, 0%)`. Its factor exposures are `(0, 0, 0)` — all three,
@@ -621,7 +662,7 @@ book can be built out of pure miss, and the model prices it entirely out of `D`.
 
 ## 7. STAGE 6 — PRICE THE BOOK
 
-The Kestrel Fund: GRV 30%, HLX 40%, KPN 15%, MRA 15%. JDR and LTS are not held.
+The Kestrel Fund: GBX 30%, HLX 40%, KPN 15%, MRA 15%. JDR and LTS are not held.
 
 ### 7a. The book's exposures — `h = Xᵀ w`
 
@@ -741,7 +782,7 @@ equally between common factors and stock specific sources."*
 
 ### 8a. The bets
 
-| | GRV | HLX | JDR | KPN | LTS | MRA |
+| | GBX | HLX | JDR | KPN | LTS | MRA |
 |---|---:|---:|---:|---:|---:|---:|
 | book | 30% | 40% | 0% | 15% | 0% | 15% |
 | index | 25% | 10% | 25% | 15% | 10% | 15% |
@@ -782,7 +823,9 @@ factor   0.8475 / 1.69 = 339/676 = 50.1479%   (rounded)
 specific 0.8425 / 1.69 = 337/676 = 49.8521%   (rounded)
 ```
 
-Half a percentage point off a dead heat. **PAPER, p.35, Figure 1.18**, printed digits:
+**0.1479 of a percentage point off a dead heat** *(rounded)*, and exactly so: `339/676` and
+`337/676` each sit `1/676` away from a half, and `100/676 = 0.1479`.
+**PAPER, p.35, Figure 1.18**, printed digits:
 Specific **50%**, Style **25%**, Industry **14%**, Country **6%**, FX **4%**, Act Sec
 **1%** `[INFERRED — the glyph reads 1 or 2; 1% is recorded only because the six then sum to
 exactly 100]`. The common blocks sum to 50 and Specific is 50.
@@ -865,7 +908,7 @@ V a  =  ( 3.9425,  4.4825,  −0.0875,  0.5750,  −1.2625,  −3.7000 )
 
 | | active bet `aᵢ` | `(V a)ᵢ` | contribution `aᵢ(Va)ᵢ` | share of active variance | marginal contribution `(Va)ᵢ / 1.3` |
 |---|---:|---:|---:|---:|---:|
-| GRV | +5% | 3.9425 | 0.197125 | **11.6642%** | +3.0327 |
+| GBX | +5% | 3.9425 | 0.197125 | **11.6642%** | +3.0327 |
 | HLX | **+30%** | 4.4825 | 1.344750 | **79.5710%** | +3.4481 |
 | JDR | **−25%** | −0.0875 | 0.021875 | **1.2944%** | −0.0673 |
 | KPN | 0% | 0.5750 | 0 | **0.0000%** | +0.4423 |
@@ -884,9 +927,13 @@ exact.)*
    contributes **1.29%**. Its marginal contribution is **−0.0673**, so covering one
    percentage point of that short moves active risk by `−7/10400 = −0.000673` *(rounded)*
    percentage points: nothing. Exposure is not contribution.
-   This is exactly the pattern printed on **p.35**, where Airlines is ninth of ten by
-   exposure and second by risk contribution `[APPROX — every bar and dot on p.35 is a pixel
-   measurement, ±10%; the ordering survives, the magnitudes are not figures]`.
+   The industry panel on **p.35** prints both halves of this, and the player should be shown
+   the right half: **Food Household** is JDR's twin — second-largest active exposure in the
+   panel (≈ −5.5% of NAV) and only *fourth* by risk contribution. **Airlines** is the mirror
+   image, and worth naming as such — ninth of ten by exposure (≈ +2.2% of NAV) and *second*
+   by risk contribution. Big bet, small risk; small bet, big risk; both on one chart.
+   `[APPROX — every bar and dot on p.35 is a pixel measurement, ±10%; the orderings survive
+   that error bar, the magnitudes are not figures]`
 3. **The riskiest stock in the universe contributes nothing.** MRA has the highest total
    volatility (7.0852% *rounded*) and is **held at 15%** — and its contribution to *active*
    risk is exactly zero, because the index holds 15% too. Its marginal contribution is
@@ -897,7 +944,7 @@ exact.)*
    has. Risk relative to a benchmark is about **differences**, and a position that matches
    the index is invisible to it however wild the stock.
 
-The same machinery on the book's **total** risk gives a different ordering again — GRV
+The same machinery on the book's **total** risk gives a different ordering again — GBX
 **35.6370%**, HLX **45.3037%**, KPN **10.4815%**, MRA **8.5778%** *(all rounded, summing to
 100%)*. MRA is 8.6% of total risk and 0% of active risk. Two correct answers to two
 different questions, and a player who cannot say which question a PM is asking will answer
@@ -961,7 +1008,7 @@ never a concept.
 
 | | |
 |---|---|
-| **Full credit** | `d = (3.6, 5.4, 4.6, 2, 6, 1.2)`, divisor `T = 5`, **no** mean subtracted, and the player states that the zero mean is an *assumption* — plus notices that LTS's five misses are all negative and says why that is allowed. Check 2 (114 twice) run. |
+| **Full credit** | `d = (3.6, 5.4, 4.6, 2, 6, 1.2)`, divisor `T = 5`, **no** mean subtracted, and the player states that the zero mean is an *assumption* — plus notices that not one of LTS's five misses is positive and says why that is allowed. Check 2 (114 twice) run. |
 | **Near miss** | Right numbers, but the divisor defended by "that's how you average" rather than by the degrees-of-freedom argument. Or the LTS observation not made until prompted. |
 | **Fail** | Divisor `T − 1` (gives 4.5, 6.75, 5.75, 2.5, 7.5, 1.5). Or each stock's own mean subtracted (gives 3.7, 4.3, 5.3, 2.5, 2.5, 0.7). Or the misses averaged **across stocks within a month**, which produces five numbers when `D` needs six — a shape error, and an immediate fail. |
 
@@ -1031,7 +1078,7 @@ reverts to `Σxr/Σx²` per column does not merely get the factor returns wrong.
 propagates: their misses no longer balance (`Σx·u = −52/3` in month 1), so their `F` comes
 out `[[16, 2/3, −2/3], [2/3, 64/9, 61/9], [−2/3, 61/9, 64/9]]` — note the style
 correlation, which should be +1/4, has become `61/64 = 0.953125` — and their `D` reads
-`(15, 52/9, 92/15, 26/9, 139/45, 454/15)`, i.e. GRV at **15** against the true 3.6 and MRA
+`(15, 52/9, 92/15, 26/9, 139/45, 454/15)`, i.e. GBX at **15** against the true 3.6 and MRA
 at **30.2667** *(rounded)* against the true 1.2. The book prices at **4.8388%** *(rounded)*
 and the active book at **1.7039%** *(rounded)* — **7.5%** and **31%** too high
 respectively. The tell is not the risk number, which looks plausible. It
@@ -1283,7 +1330,7 @@ that does not know its own limits is a Victory-Condition-2 failure waiting to ha
    known address: it lands on a size segment, not uniformly.
 3. **No exponential decay, no half-life, no Newey–West.** All three are **PAPER** (p.27),
    all three are out of scope here, and the third is graduate-level. Their absence means
-   this `F` treats a five-month-old observation exactly like last week's, which is the one
+   this `F` treats M1 — five months stale — exactly like M5, which is the one
    thing p.27 says a covariance matrix must not do if forecasts are to be *"responsive to
    changes in the market environment."*
 4. **`D` is diagonal here, and BFRE's is not.** **PAPER, p.27:** *"The asset specific
@@ -1356,19 +1403,20 @@ somebody made on a Tuesday.
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_rebuild.py     # 676 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_rebuild.py     # 690 exact-rational assertions, exits 0
 ```
 
 The script rebuilds the entire model from the raw spreadsheet in `fractions.Fraction`:
 the two standardisations and their exact standard deviations; the Gram matrix, its
 determinants and the VIF; all five monthly solves, done twice (by the `/10` shortcut and by
-Gaussian elimination) and agreeing; all fifteen balance conditions; the thirty misses; `F`
+Gaussian elimination) and agreeing; the one-at-a-time leak `Σx·r/6 = f_EY + (2/3)f_Prof` in
+both columns in all five months; all fifteen balance conditions; the thirty misses; `F`
 by mean-subtracted sample covariance with divisor `T − 1`, its volatilities, correlations,
 leading minors and determinant; `D` under three divisor conventions plus Level 6's leverage
 correction, with `Σh = k = 3` checked exactly; all thirty-six cells of `V`, its symmetry,
 the singularity of `X F Xᵀ` and the non-singularity of `V`; the book's exposures, both
 routes to `81/4`, and the factor/specific split; the active book, both routes to `169/100`,
-the 50.1479/49.8521 split, the index's own risk, the `Var(p) = Var(b) + 2Cov + Var(a)`
+the 50.1479/49.8521 split and its exact `1/676` gap from a dead heat, the index's own risk, the `Var(p) = Var(b) + 2Cov + Var(a)`
 identity and the beta; the five realised book returns and their exact split into factor
 and specific parts; all six risk contributions and marginal contributions, summing to
 100%; and every trap in Section 12 with the exact number it returns — including the proof

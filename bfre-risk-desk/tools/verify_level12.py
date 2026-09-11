@@ -288,12 +288,22 @@ for lab in LABELS:
         check(f"bar agrees with t^2 for S={Sc}, Q={dot(R,R)}",
               (t2 >= 4), (Sc * Sc >= 3 * dot(R, R)))
 
+
+def even_bar(three_q):
+    """Smallest EVEN |S| that satisfies S^2 >= 3Q. S is even on this file because
+    S = 2 x (sum of the high triple) and the returns are whole percents."""
+    s = 0
+    while s * s < three_q:
+        s += 2
+    return s
+
+
 check("month 1 bar  S^2 >= 3Q", 3 * Q1, F(168))
 show("month 1 bar in |S|", root(F(168)))
-check("month 1 bar in |S| for an even S", 14, 14)
+check("month 1 bar in |S| for an even S", even_bar(3 * Q1), 14)
 check("month 2 bar  S^2 >= 3Q", 3 * Q2, F(234))
 show("month 2 bar in |S|", root(F(234)))
-check("month 2 bar in |S| for an even S", 16, 16)
+check("month 2 bar in |S| for an even S", even_bar(3 * Q2), 16)
 
 # cross-check the closed form against a generic least-squares solve
 sub("closed form checked against a generic OLS solve, all ten columns, both months")
@@ -448,7 +458,8 @@ check("month 2  C2  b = 3 = the true f2, estimated exactly", M2["C2"][1], F(3))
 check("month 2  C2  SSE = sum e2^2", M2["C2"][2], F(24))
 check("month 2  C2  sigma^2", M2["C2"][3], F(6))
 check("month 2  C2  Var(b)", M2["C2"][4], F(1))
-check("month 2  C2  SE = 1 exactly", F(1), F(1))
+check("month 2  C2  SE = 1 exactly (SE^2 = Var(b), and Var(b) = 1)",
+      (M2["C2"][4], F(1) * F(1) == M2["C2"][4]), (F(1), True))
 check("month 2  C2  t^2 = 9, so |t| = 3 exactly", M2["C2"][5], F(9))
 check("month 2  C2  R2", M2["C2"][6], F(9, 13))
 show("month 2  C2  R2 as a decimal", dec(F(9, 13)))
@@ -516,8 +527,8 @@ for i, R in enumerate(MONTHS, start=1):
     Qm = dot(R, R)
     show(f"month {i}: Q = {Qm}, bar S^2 >= {3 * Qm}, |S| >=", root(3 * Qm))
     BARS.append(3 * Qm)
-check("month 3 bar in |S| for an even S", 12, 12)
-check("month 4 bar in |S| for an even S", 10, 10)
+check("month 3 bar in |S| for an even S", even_bar(BARS[2]), 12)
+check("month 4 bar in |S| for an even S", even_bar(BARS[3]), 10)
 
 PANEL = {}
 print("   lab     S in m1   m2   m3   m4     months cleared")
@@ -536,7 +547,10 @@ check("every other column never clears",
 check("columns clearing the paper's '>10% of months' bar over 4 months",
       sorted(lab for lab in LABELS if F(PANEL[lab][1], 4) > F(1, 10)),
       ["C1", "C2", "C8"])
-check("   ... of which junk", 2, 2)
+ADMITTED = sorted(lab for lab in LABELS if F(PANEL[lab][1], 4) > F(1, 10))
+JUNK_ADMITTED = sorted(lab for lab in ADMITTED if COLS[lab] != Z)
+check("   ... of which junk (every admitted column that is not the true factor)",
+      (JUNK_ADMITTED, len(JUNK_ADMITTED)), (["C1", "C8"], 2))
 check("C1's proportion of significant months", F(PANEL["C1"][1], 4), F(1, 4))
 check("C2's proportion of significant months", F(PANEL["C2"][1], 4), F(3, 4))
 check("with 4 months the smallest non-zero proportion is 25%", F(1, 4), F(25, 100))
@@ -588,7 +602,8 @@ check("the 3-of-4 rule divides the junk count by", P_NULL / p34, F(1000, 37))
 check("expected junk columns (9 of the 10) clearing at least once in 4 months",
       9 * p14, F(30951, 10000))
 show("   as a decimal", dec(9 * p14, 4))
-check("   the file delivered", 2, 2)
+check("   the file delivered (junk columns clearing at least once in four months)",
+      len([lab for lab in LABELS if COLS[lab] != Z and PANEL[lab][1] >= 1]), 2)
 show("   that factor as a decimal", dec(P_NULL / p34))
 
 sub("7b. the same rules with 200 candidates instead of 10")
@@ -697,8 +712,14 @@ CITES = [
      "the same bar, restated"),
     ("p.16", "chunk_10-18.md", "overreacting", "the reversal story"),
     ("p.17", "chunk_10-18.md", "11 months with a one month lag", "momentum's window"),
+    ("p.24", "chunk_19-27.md", "In general a multi-factor model",
+     "p.24's lead-in, quoted in trap 5"),
     ("p.25", "chunk_19-27.md", "square-root of market capitalisation",
      "the regression weights (a cheap shot to refuse)"),
+    ("p.26", "chunk_19-27.md", "there exist three intercept terms",
+     "the three columns of ones, quoted in 3c"),
+    ("p.28", "chunk_28-36.md", "in-line with standard modelling practice",
+     "the across-company zero, the real attack behind trap 5"),
     ("p.27", "chunk_19-27.md", "104 weeks", "the default factor covariance window"),
     ("p.27", "chunk_19-27.md", "26 weeks", "the default half-life"),
     ("p.27", "chunk_19-27.md", "March 1996", "the start of the factor return history"),
@@ -707,13 +728,32 @@ CITES = [
     ("p.5", "chunk_1-9.md", "8 August 2011", "the stressed-day illustration"),
     ("p.6", "chunk_1-9.md", "16 August 2011", "the calm-day illustration"),
     ("p.30", "chunk_28-36.md", "Out-of-sample", "the single occurrence of the phrase"),
+    ("p.30", "chunk_28-36.md", "The forecast horizon of the model is",
+     "the 1-month organising principle, quoted in trap 7"),
     ("p.32", "chunk_28-36.md", "well within suitable thresholds", "the VIF pass mark"),
+    ("p.32", "chunk_28-36.md",
+     "proportion of cross-sectional variation in asset returns explained by the set of "
+     "common factors in the model", "the paper's own R2, quoted in 4f"),
+    ("p.32", "chunk_28-36.md", "significant instability in the factor return estimates",
+     "what the paper says unstable columns do, quoted in 6d"),
+    ("p.32", "chunk_28-36.md", "1996 to 2013",
+     "the dated testing span 7c sets against p.8's '15-year'"),
+    ("p.35", "chunk_28-36.md", "Active Risk",
+     "the paper's word, which trap 3 forbids replacing with 'tracking error'"),
     ("p.32", "chunk_28-36.md", "majority", "the word that concedes F-1"),
     ("p.32", "chunk_28-36.md", "exhaustive set", "the bias-statistic claim"),
     ("p.33", "chunk_28-36.md", "available on request", "where the test results went"),
     ("p.38", "chunk_37-45.md", "99% 1-day VaR over the previous 252 days",
      "the one externally-anchored parameter"),
     ("p.38", "chunk_37-45.md", "Kupiec", "its external anchor"),
+    ("p.38", "chunk_37-45.md", "12 monthly standardised returns",
+     "the bias-statistic window required in Move 1"),
+    ("p.38", "chunk_37-45.md", "95% confidence interval",
+     "the exception band required in Move 1"),
+    ("p.38", "chunk_37-45.md", "STORM",
+     "the benchmark model -- p.38, NOT p.30"),
+    ("p.47", "chunk_46-55.md", "s <= t",
+     "the lag convention behind 'look-ahead bias' in 13"),
     ("p.55", "chunk_46-55.md", "200+", "the full candidate list"),
     ("p.56", "chunk_56-65.md", "Random Substyle", "the placebo, by name"),
     ("p.56", "chunk_56-65.md", "18 styles, 108 substyles",
@@ -734,10 +774,6 @@ for page, fn, needle, why in CITES:
 
 sub("things the markdown says are ABSENT from the paper -- checked as absences")
 ALL_NOTES = "\n".join(TEXT.values())
-for word in ["multiple testing", "multiple-testing correction is applied",
-             "sensitivity analysis was", "data mining", "family-wise",
-             "false discovery"]:
-    pass  # see the per-word checks below, which are the ones that matter
 
 # 'placebo', 'falsifiable', 'post hoc', 'look-ahead' never appear as the paper's words.
 # notes/ mixes paper text with the transcriber's commentary, so the honest check is on

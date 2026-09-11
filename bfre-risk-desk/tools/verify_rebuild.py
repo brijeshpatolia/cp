@@ -224,7 +224,7 @@ def addm(A, B):
 # ===========================================================================
 head("SECTION 1 -- THE FILE, exactly as the player receives it")
 
-NAMES = ["GRV", "HLX", "JDR", "KPN", "LTS", "MRA"]
+NAMES = ["GBX", "HLX", "JDR", "KPN", "LTS", "MRA"]
 N, K, T = 6, 3, 5
 
 # raw characteristics
@@ -232,7 +232,7 @@ EY_RAW = [F(8), F(7), F(5), F(4), F(4), F(2)]           # earnings yield, %
 OM_RAW = [F(12), F(12), F(12), F(13), F(10), F(7)]      # operating margin, %
 
 # monthly returns, percent (rows = stocks, columns = months 1..5)
-R = [[F(17, 2), F(7, 2),   F(7, 2),  F(5, 2),  F(-9, 2)],     # GRV
+R = [[F(17, 2), F(7, 2),   F(7, 2),  F(5, 2),  F(-9, 2)],     # GBX
      [F(27, 2), F(4),      F(15, 2), F(-3, 2), F(-3, 2)],     # HLX
      [F(23, 2), F(-3),     F(3, 2),  F(1, 2),  F(5, 2)],      # JDR
      [F(7),     F(3, 2),   F(1),     F(3),     F(0)],         # KPN
@@ -250,8 +250,16 @@ check("book weights sum to 1", sum(WP, F(0)), F(1))
 check("index weights sum to 1", sum(WB, F(0)), F(1))
 check("book holds four names", sum(1 for w in WP if w != 0), 4)
 check("index holds six names", sum(1 for w in WB if w != 0), 6)
+# the five monthly returns exactly as section 1a prints them, re-entered by hand
+# from the markdown so that this is a comparison and not a restatement
+MD_RETURNS = [(F(17, 2), F(7, 2), F(7, 2), F(5, 2), F(-9, 2)),
+              (F(27, 2), F(4), F(15, 2), F(-3, 2), F(-3, 2)),
+              (F(23, 2), F(-3), F(3, 2), F(1, 2), F(5, 2)),
+              (F(7), F(3, 2), F(1), F(3), F(0)),
+              (F(7, 2), F(-21, 2), F(5, 2), F(-9, 2), F(-7, 2)),
+              (F(-2), F(-27, 2), F(2), F(-6), F(1))]
 for i, nm in enumerate(NAMES):
-    check(f"{nm} returns", tuple(R[i]), tuple(R[i]))
+    check(f"{nm} returns match section 1a's printed row", tuple(R[i]), MD_RETURNS[i])
 check("every return is a multiple of 1/2",
       all((2 * R[i][t]).denominator == 1 for i in range(N) for t in range(T)),
       True)
@@ -261,9 +269,10 @@ check("smallest return in the file", min(R[i][t] for i in range(N) for t in rang
       F(-27, 2))
 
 sub("1b. no number in this file appears in levels 0-12's files")
-# levels 0-12 use tickers AXL BRN CHR DLT EMK FNX; this level uses GRV..MRA
-check("tickers disjoint from levels 0-12",
-      set(NAMES) & {"AXL", "BRN", "CHR", "DLT", "EMK", "FNX"}, set())
+# levels 0-12 use tickers AXL BRN CHR DLT EMK FNX; this level uses GBX..MRA
+check("tickers disjoint from every name used in levels 0-12",
+      set(NAMES) & {"AXL", "BRN", "CHR", "DLT", "EMK", "FNX",
+                    "GRV", "JDE", "TLM", "KVR", "HRB", "GNP"}, set())
 
 # ===========================================================================
 # STAGE 1 -- BUILD X
@@ -380,11 +389,11 @@ for t in range(T):
           [F(32), F(32), F(14), F(14), F(22)][t])
 
 sub("3.5b the worked example the markdown prints in full")
-check("M1 GRV fitted = 7 + 2(1.5) + 3(0.5)",
+check("M1 GBX fitted = 7 + 2(1.5) + 3(0.5)",
       fM[0] + fX[0] * x[0] + fG[0] * g[0], F(23, 2))
-check("M1 GRV miss = 8.5 - 11.5", R[0][0] - (fM[0] + fX[0] * x[0] + fG[0] * g[0]),
+check("M1 GBX miss = 8.5 - 11.5", R[0][0] - (fM[0] + fX[0] * x[0] + fG[0] * g[0]),
       F(-3))
-check_dec("M1 GRV fitted, as a decimal", F(23, 2), "11.5000")
+check_dec("M1 GBX fitted, as a decimal", F(23, 2), "11.5000")
 for t in range(T):
     check(f"M{t+1} numerators printed in the table",
           (3 * SXR[t], 2 * SGR[t], 3 * SGR[t], 2 * SXR[t]),
@@ -406,6 +415,14 @@ for t in range(T):
           [F(4), F(17, 3), F(4, 3), F(2), F(-4, 3)][t])
     check(f"M{t+1} naive f_Prof = Sg/6", SGR[t] / 6,
           [F(13, 3), F(6), F(1, 3), F(3), F(-1, 3)][t])
+check("the leak coefficient is Sx.g / Sx^2", dot(x, g) / dot(x, x), F(2, 3))
+for t in range(T):
+    check(f"M{t+1} naive f_EY = truth + (2/3) x the OTHER truth",
+          SXR[t] / 6, fX[t] + F(2, 3) * fG[t])
+    check(f"M{t+1} naive f_Prof = truth + (2/3) x the OTHER truth",
+          SGR[t] / 6, fG[t] + F(2, 3) * fX[t])
+check("M4's shortcut is right for Prof only because the leaking f_EY is zero",
+      (fX[3], SGR[3] / 6 - fG[3]), (F(0), F(0)))
 check("naive M1 f_EY is exactly double the truth", SXR[0] / 6, 2 * fX[0])
 check("naive M5 f_Prof has the wrong SIGN", (SGR[4] / 6 < 0) and (fG[4] > 0), True)
 check_dec("naive M1 f_Prof", F(13, 3), "4.3333")
@@ -505,8 +522,10 @@ for i, nm in enumerate(NAMES):
     check(f"{nm} sum of misses over the five months",
           sum(U[t][i] for t in range(T)),
           [F(-4), F(7), F(3), F(0), F(-10), F(4)][i])
-check("LTS's five misses are every one of them negative or zero",
-      all(U[t][4] <= 0 for t in range(T)), True)
+check("LTS's five misses: four negative, one zero, none positive",
+      (sum(1 for t in range(T) if U[t][4] < 0),
+       sum(1 for t in range(T) if U[t][4] == 0),
+       sum(1 for t in range(T) if U[t][4] > 0)), (4, 1, 0))
 check("LTS average miss", mean([U[t][4] for t in range(T)]), F(-2))
 
 sub("5e. the two other divisor conventions, and what each returns")
@@ -549,14 +568,14 @@ sub("6a. the common-factor block, row by row")
 check("X F X^T is symmetric",
       all(XFXt[i][j] == XFXt[j][i] for i in range(N) for j in range(N)), True)
 check("F X_GRV^T", matvec(Fm, X[0]), [F(18), F(17, 2), F(3, 2)])
-check("GRV's common-factor variance", dot(X[0], matvec(Fm, X[0])), F(63, 2))
-check("GRV-MRA common-factor covariance", bilin(Fm, X[0], X[5]), F(9, 4))
+check("GBX's common-factor variance", dot(X[0], matvec(Fm, X[0])), F(63, 2))
+check("GBX-MRA common-factor covariance", bilin(Fm, X[0], X[5]), F(9, 4))
 
 sub("6a2. the second row the markdown works in full")
 check("F X_MRA^T", matvec(Fm, X[5]), [F(17), F(-6), F(-23, 2)])
-check_dec("GRV's common-factor variance, as a decimal", F(63, 2), "31.5000")
-check_dec("GRV-MRA common-factor covariance, as a decimal", F(9, 4), "2.2500")
-check("GRV total variance = 31.5 + 3.6", F(63, 2) + d[0], F(351, 10))
+check_dec("GBX's common-factor variance, as a decimal", F(63, 2), "31.5000")
+check_dec("GBX-MRA common-factor covariance, as a decimal", F(9, 4), "2.2500")
+check("GBX total variance = 31.5 + 3.6", F(63, 2) + d[0], F(351, 10))
 
 sub("6b. V, all thirty-six cells")
 VWANT = [[F(351, 10), F(109, 4), F(75, 4), F(61, 4), F(13), F(9, 4)],
@@ -595,7 +614,7 @@ check_dec("the same, to one decimal as the markdown prints it",
           XFXt[5][5] / V[5][5] * 100, "97.6", places=1)
 offdiag = [V[i][j] for i in range(N) for j in range(N) if i < j]
 check("there are fifteen off-diagonals", len(offdiag), 15)
-check("GRV-MRA is the smallest of them", min(offdiag), V[0][5])
+check("GBX-MRA is the smallest of them", min(offdiag), V[0][5])
 
 sub("6d. the free structural check -- X F X^T must be singular")
 check("det X F X^T = 0 (6 assets, 3 factors)", det_gauss(XFXt), F(0))
@@ -771,6 +790,9 @@ check("active factor share", afac / avar, F(339, 676))
 check("active specific share", aspec / avar, F(337, 676))
 check_dec("active factor share, per cent", afac / avar * 100, "50.1479")
 check_dec("active specific share, per cent", aspec / avar * 100, "49.8521")
+check("each share sits exactly 1/676 from a half",
+      (afac / avar - F(1, 2), F(1, 2) - aspec / avar), (F(1, 676), F(1, 676)))
+check_dec("that gap, in percentage points", F(100, 676), "0.1479")
 check("the split is within half a point of 50/50",
       abs(afac / avar - F(1, 2)) < F(1, 200), True)
 CHECKS[0] += 1
@@ -1102,7 +1124,7 @@ check("its active variance", quad(Fn, hA)
       + sum(WA[i] ** 2 * dn[i] for i in range(N)), F(52261, 18000))
 check_root("its active risk", quad(Fn, hA)
            + sum(WA[i] ** 2 * dn[i] for i in range(N)), "1.7039")
-check("its GRV specific variance, against the true 18/5", dn[0], F(15))
+check("its GBX specific variance, against the true 18/5", dn[0], F(15))
 check_dec("its MRA specific variance, against the true 6/5", dn[5], "30.2667")
 CHECKS[0] += 1
 r1 = ((sqrtD(fvn + svn) / Decimal("4.5") - 1) * 100).quantize(Decimal("0.1"))
@@ -1171,14 +1193,15 @@ check("ours: +1/4 and -1/4", (Fm[0][1] / 8, Fm[0][2] / 8), (F(1, 4), F(-1, 4)))
 check("p.35 banner, printed: Portfolio Beta 1.02", F(102, 100), F(51, 50))
 check("p.35 pie, printed: Specific 50, Style 25, Industry 14, Country 6, FX 4",
       50 + 25 + 14 + 6 + 4 + 1, 100)
-check("our active split against that 50: factor 50.1479, specific 49.8521",
-      afac / avar + aspec / avar, F(1))
-check("p.28 Table 1.3 daily row (printed digits)", (125, 375, 10),
-      (125, 375, 10))
-check("p.27 WKL (printed digits)", (104, 26), (104, 26))
+check("our active split against that 50: factor 339/676, specific 337/676",
+      (afac / avar, aspec / avar), (F(339, 676), F(337, 676)))
+check("p.28 Table 1.3 daily row: 375 observations is exactly three 125-day half-lives, "
+      "Newey-West lag 10 days", (375 // 125, 375 % 125, 10), (3, 0, 10))
+check("p.27 WKL: 104 weeks is exactly four 26-week half-lives",
+      (104 // 26, 104 % 26), (4, 0))
 check("our T, against BFRE's 104 and 375", (T, 104, 375), (5, 104, 375))
-check("BFRE's observations per estimated specific variance, daily model", 375,
-      375)
+check("BFRE's observations per estimated specific variance, daily model, "
+      "against ours", (375, T, 375 // T), (375, 5, 75))
 check("ours", T, 5)
 
 
@@ -1208,7 +1231,7 @@ for lab, val, pr, pl in [
         ("1.5 x -6", F(3, 2) * F(-6), "-9.0", 1),
         ("0.5 x -11.5", F(1, 2) * F(-23, 2), "-5.75", 2),
         ("F X_MRA third entry", F(-23, 2), "-11.5", 1),
-        ("GRV common-factor variance", F(63, 2), "31.5", 1),
+        ("GBX common-factor variance", F(63, 2), "31.5", 1),
         ("total variance", totvar, "20.25", 2),
         ("active variance", avar, "1.69", 2),
         ("book factor variance", facvar, "18.99", 2),
@@ -1225,10 +1248,10 @@ for lab, val, pr, pl in [
     check_dec(lab, val, pr, places=pl)
 
 sub("16c. the D variants, as printed")
-for lab, val, pr, pl in [("T-1 GRV", F(9, 2), "4.5", 1), ("T-1 HLX", F(27, 4), "6.75", 2),
+for lab, val, pr, pl in [("T-1 GBX", F(9, 2), "4.5", 1), ("T-1 HLX", F(27, 4), "6.75", 2),
                          ("T-1 JDR", F(23, 4), "5.75", 2), ("T-1 KPN", F(5, 2), "2.5", 1),
                          ("T-1 LTS", F(15, 2), "7.5", 1), ("T-1 MRA", F(3, 2), "1.5", 1),
-                         ("own-mean GRV", F(37, 10), "3.7", 1),
+                         ("own-mean GBX", F(37, 10), "3.7", 1),
                          ("own-mean HLX", F(43, 10), "4.3", 1),
                          ("own-mean JDR", F(53, 10), "5.3", 1),
                          ("own-mean LTS", F(5, 2), "2.5", 1),

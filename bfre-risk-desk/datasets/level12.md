@@ -1,7 +1,7 @@
 # Level 12 — The Critique
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level12.py`
-(406 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
+(418 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
 terminate at six places it is written with the word **rounded** next to it; every other
 decimal on this page is exact.
 
@@ -52,7 +52,7 @@ Every tool this level uses was built somewhere else. The level adds no machinery
 |---|---|---|
 | **Level 0** | three desks, identical `Σe = 0`, `Σe²` of 1, 144 and 0 — a published diagnostic that cannot tell a perfect model from a catastrophic one | §11's whole class of complaint, and `gm/CRITIQUE.md`'s Class G. Say the words "Desk B" out loud when you get there |
 | **Level 1** | `b = Σxr/Σx²`, derived by nudging | §3c — every candidate column here has `Σx² = 6`, so the dial is just `S/6` |
-| **Level 2** | `Σx·e = 0`, forced by the arithmetic | §3d and §4f — used as an audit on every fit on this page, and as the reason the true dial comes out exactly right |
+| **Level 2** | `Σx·e = 0`, forced by the arithmetic | §3a and §4f — §3a is where `Σz·e = 0` makes the true dial come out exactly right; §4f is where it is printed as an audit on the shipped fit |
 | **Level 3** | two columns, two balance conditions, the 2×2 system | §4f — the joint fit of the truth and the placebo |
 | **Level 4** | a coefficient is a *leftover*; overlap wrecks the split while leaving the fit intact; `det = AC − B²`; VIF | §4d and §4f — the placebo steals three eighths of the true factor's coefficient, with `det = 32` and `VIF = 9/8` |
 | **Level 5** | centering; a column of ones is an intercept | §3a — the market column, which fits exactly zero here and still costs a degree of freedom |
@@ -205,8 +205,10 @@ columns in the script.) So:
 20 splits ÷ 2 mirror images  =  10 distinct tests
 ```
 
-**Ten candidates is not a number I chose. It is every balanced column that exists on six
+**Ten candidates is not a number I chose. It is every balanced `±1` column that exists on six
 stocks.** That exhaustiveness is what makes Section 5's null rate exact rather than assumed.
+*(Columns with other values — `+2, +1, 0, 0, −1, −2` — are balanced too; the level restricts
+itself to the three-high/three-low rule defined above, and that family has exactly ten members.)*
 
 List them with AXL always on the high side, one per mirror pair. The names are **invented**,
 except one: *Random Substyle* is the paper's own (p.56, Table 1.4).
@@ -396,8 +398,10 @@ Three things to say to the player, in this order:
    made the real one look *more* significant, not less. There is no diagnostic on this page
    that flags what has happened.
 3. **`R²` went up.** `3/7 → 51/56`, i.e. `0.428571 → 0.910714` (both rounded). It always
-   does. `R²` rising when you add a column is
-   not evidence, it is arithmetic — Level 6 §8c — and it is why the paper's own
+   does, and the one-line reason is new here, so give it: least squares is free to set the new
+   column's coefficient to **zero**, which reproduces the old fit exactly, so the best it can do
+   is never worse — `SSE` can only fall and `R²` can only rise. `R²` rising when you add a column
+   is not evidence, it is arithmetic — and it is why the paper's own
    `R²` (**PAPER, p.32:** *"the proportion of cross-sectional variation in asset returns
    explained by the set of common factors in the model"*) cannot on its own distinguish a
    model that explains from a model that interpolates.
@@ -676,9 +680,14 @@ BFRE's cross-sections carry thousands of stocks, so `df` is enormous and Level 6
 about **1 month in 20** — *this is an assumption, it is not on any page, and the player must
 say so every single time.* Take the 15-year monthly history of p.8 as ~180 cross-sections and
 the bar of p.14 as 10% of them. *(Even that count is approximate **on the paper's own
-evidence**: p.8 says "15-year research history", while every dated exhibit runs Mar 1996 –
-Dec 2013, which is nearly eighteen years and would be ~213 cross-sections. The paper never
-reconciles the two, so say "roughly 180" and never quote a precise month count as theirs.)*
+evidence**: p.8 says "15-year research history", while **p.32** dates the whole testing
+history *"from 1996 to 2013"* and the paper's longest-running dated exhibits — Table 1.2 on
+**p.10** and Figure 1.7 on **p.14** — are labelled **Mar 1996 – Dec 2013**, which is nearly
+eighteen years and would be ~214 monthly cross-sections. (Do **not** say "every dated exhibit":
+the paper's dated exhibits run to several different windows — Figure 1.8 ends Jun 2013,
+Figure 1.10 ends Dec 2010, and Figures 1.1–1.3 are single dates.) The paper never reconciles
+the 15 years with the 1996–2013 span, so say "roughly 180" and never quote a precise month
+count as theirs.)*
 
 ```
 expected significant months for a junk column   =  180 × 1/20  =  9        ← hand arithmetic
@@ -847,7 +856,7 @@ on.
 | 8 | Quoting *"…no multiple-testing correction is mentioned despite 200+ candidates being tested"* as the paper's words | That sentence is the **transcriber's commentary** in `notes/`, not the paper's text | The worst defect available at this level: it puts a self-indictment in BlackRock's mouth. Say it as an **absence you have checked**, in your own voice |
 | 9 | *"I computed the null rate: 10% of columns clear the bar by chance, so their 10% bar is exactly the noise rate."* | **This level's own trap.** `1/10` is an exact fact about a **six-stock** file with `df = 4`. BFRE's cross-sections carry thousands of stocks | Laundering a toy number onto the real model — the same offence as trap 1, committed with your own arithmetic. The transferable claim is the **mechanism**, never the number |
 | 10 | *"The Random Substyle proves the model is data-mined."* | It proves the opposite about the authors: a team that carries a placebo has understood the problem. It is **concession 6** in the dossier | Hands the defence a free point. The attack is that its **score** is unpublished |
-| 11 | *"They report `R² = 0.91` after adding the junk column, so the model got better."* | §4f. `R²` rises whenever a column is added — Level 6 §8c | The same failure as Level 0's Desk B: a diagnostic that cannot discriminate |
+| 11 | *"They report `R² = 0.91` after adding the junk column, so the model got better."* | §4f. `R²` rises whenever a column is added, because the fit can always set the new coefficient to zero and do no worse | The same failure as Level 0's Desk B: a diagnostic that cannot discriminate |
 
 ---
 
@@ -973,11 +982,11 @@ a gesture at it. The pass bar is that they produce these before hearing any come
 Require all four: **the genre** (client model documentation, not a research paper — and it
 specifies the model completely, (1.7)–(1.11), Table 1.3, and (1.12)–(1.55)); **the cycle**
 (specification changes rarely, surveillance is continuous — monthly exception logging, a 95%
-confidence interval on a rolling 12-month bias statistic, quarterly client reporting); **the
-reproducibility** (statistic, window, band, tail test and portfolio set are all specified
-precisely enough for a user to run every one of them on their own book); **the external
-exposure** (benchmarking against STORM, and quarterly out-of-sample back-testing in front of
-clients, p.30).
+confidence interval on a rolling 12-month bias statistic, quarterly client reporting, all
+**p.38**); **the reproducibility** (statistic, window, band, tail test and portfolio set are all
+specified precisely enough for a user to run every one of them on their own book); **the external
+exposure** (benchmarking against STORM, **p.38**, and quarterly out-of-sample back-testing in
+front of clients, **p.30** — two different pages, and say which is which).
 
 **Attack 2 — F-2, the multiple-testing charge** (rank 2 of 20; graduate-level, say so).
 > *"You tested more than two hundred candidates at `|t| > 2` with no correction for having
@@ -1219,7 +1228,7 @@ exhibit and the attack's best proof that publishing such a thing was possible.
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level12.py     # 406 assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level12.py     # 418 assertions, exits 0
 ```
 
 The script recomputes every figure on this page from the raw `r₁`, `r₂` and `z` vectors in
@@ -1245,9 +1254,14 @@ p.4's `beta = 0.99` and `R2 = 91%`; p.8's threshold, its average squared t-stati
 15-year history, its five-year sub-samples and its stated reason for declining LASSO and the
 rest; p.10's `N ≥ 200` and the six Table 1.2 cells used in §7d and §16; p.11's 0.74; p.12's
 `10% - 15%`; p.14's and p.16's inclusion bar; p.16's "overreacting" and p.17's momentum
-window; p.25's √-cap weights; p.27's 104 weeks, 26 weeks, March 1996 and the deferred BRS
-document; pp.5-6's two August 2011 trading days; p.30's single "Out-of-sample"; p.32's "well within suitable thresholds", "exhaustive
-set" and "majority"; p.33's "available on request"; p.38's 99%/252-day VaR and Kupiec; p.55's
+window; p.24's "In general a multi-factor model"; p.25's √-cap weights; p.26's "three intercept
+terms"; p.27's 104 weeks, 26 weeks, March 1996 and the deferred BRS
+document; p.28's "in-line with standard modelling practice";
+pp.5-6's two August 2011 trading days; p.30's single "Out-of-sample" and its 1-month forecast
+horizon; p.32's "well within suitable thresholds", "exhaustive
+set", "majority", its `R²` definition, its "significant instability" sentence and its
+"1996 to 2013" span; p.33's "available on request"; p.35's "Active Risk"; p.38's 99%/252-day
+VaR, Kupiec, the 12-month bias window, the 95% band and STORM; p.47's `s ≤ t`; p.55's
 `200+`; p.56's Random Substyle and its 18/108 row counts; and p.65's "forthcoming" — plus a
 check that nine phrases that must never be attributed to this paper (Bonferroni, family-wise,
 false discovery rate, eigenvalue, principal component, tracking error, least squares, normal
