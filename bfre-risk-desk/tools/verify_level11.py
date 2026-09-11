@@ -366,7 +366,8 @@ check("the variance moved by exactly 2(0.01)(36.70) + (0.01)^2(85.6)",
       vEMK1 - varD, 2 * F(1, 100) * VwD[4] + F(1, 10000) * V[4][4])
 check_dec("that change, as a decimal", vEMK1 - varD, "0.7426")
 check_dec("the first-order piece 2(0.01)(36.70)", 2 * F(1, 100) * VwD[4], "0.7340")
-check_dec("the second-order piece (0.01)^2(85.6)", F(1, 10000) * V[4][4], "0.0086")
+check_dec("the second-order piece (0.01)^2(85.6)", F(1, 10000) * V[4][4],
+          "0.00856", places=5)
 check_root("exact new risk after +1% EMK", vEMK1, "5.0737")
 check("MCR prediction 5 + 0.01 x 7.34", F(5) + F(1, 100) * F(367, 50), F(25367, 5000))
 check_dec("that prediction as a decimal", F(25367, 5000), "5.0734")
@@ -374,6 +375,8 @@ check_dec("that prediction as a decimal", F(25367, 5000), "5.0734")
 wAXL1 = [F(31, 100), F(17, 100), F(8, 100), F(15, 100), F(30, 100)]
 vAXL1 = var_of(wAXL1)
 check("Book D with AXL at 31%: exact new variance", vAXL1, F(157951, 6250))
+check_dec("the second-order piece (0.01)^2(37.6)", F(1, 10000) * V[0][0],
+          "0.00376", places=5)
 check("the variance moved by exactly 2(0.01)(13.42) + (0.01)^2(37.6)",
       vAXL1 - varD, 2 * F(1, 100) * VwD[0] + F(1, 10000) * V[0][0])
 check_dec("that change, as a decimal", vAXL1 - varD, "0.2722")
@@ -386,12 +389,14 @@ sub("4d. the square-root nudge, checked as algebra")
 
 # (sigma + delta/(2 sigma))^2 = Var + delta + delta^2/(4 sigma^2)
 sig = F(5)
+swept = 0
 for delta in (F(367, 500), F(671, 2500), F(-367, 500), F(1, 1000)):
     lhs = (sig + delta / (2 * sig)) ** 2
     rhs = varD + delta + delta * delta / (4 * sig * sig)
     if lhs != rhs:
         sys.exit("square-root nudge algebra failed")
-check("(sigma + delta/2sigma)^2 = Var + delta + delta^2/(4 Var), swept", 4, 4)
+    swept += 1
+check("(sigma + delta/2sigma)^2 = Var + delta + delta^2/(4 Var), swept", swept, 4)
 check("the leftover on the +1% EMK nudge, delta^2/(4 Var)",
       (vEMK1 - varD) ** 2 / (4 * varD), F(21538881, 3906250000))
 check_dec("that leftover as a decimal", (vEMK1 - varD) ** 2 / (4 * varD), "0.0055")
@@ -453,7 +458,6 @@ check("so it scales RISK by exactly (1+e): the Euler premise",
 
 sub("5c. Euler swept over many books")
 
-grid = [F(k, 100) for k in range(5, 45, 5)]
 swept = 0
 for combo in product(range(1, 9), repeat=4):
     rest = 20 - sum(combo)
@@ -575,7 +579,9 @@ check_dec("EMK's weight there (%)", wStar[4] * 100, "13.9669")
 vStar = var_of(wStar)
 check("the variance at that point", vStar, F(321671, 15125))
 check_root("the risk at that point", vStar, "4.6117")
-check_root("how much risk the whole swap removes, in points", varD, "5.0000")
+check_root("the risk it started from, for the 'against 5.00' comparison", varD, "5.0000")
+show("context, not a printed figure -- the whole swap removes",
+     (sqrtD(varD) - sqrtD(vStar)).quantize(Decimal("0.0001")))
 check("the swap is a genuine minimum: nudging t either way raises the variance",
       (var_of(swap_book(tstar + F(1, 100))) > vStar,
        var_of(swap_book(tstar - F(1, 100))) > vStar), (True, True))
@@ -601,8 +607,17 @@ for lbl, exact_var, pred in [
     err = sqrtD(exact_var) - (Decimal(F(pred).numerator) / Decimal(F(pred).denominator))
     print(f"        {lbl:18s} exact {sqrtD(exact_var).quantize(Decimal('0.000001'))}  "
           f"predicted {float(pred):.6f}  error {err.quantize(Decimal('0.000001'))}")
-CHECKS[0] += 1
-print("   [OK ] all six first-order errors are positive-or-zero in the fourth decimal")
+signs = []
+for lbl, exact_var, pred in [
+        ("+1% EMK", vEMK1, F(25367, 5000)),
+        ("+1% AXL", vAXL1, F(125671, 25000)),
+        ("cut 1% EMK", vCutE, F(24633, 5000)),
+        ("cut 1% AXL", vCutA, F(124329, 25000)),
+        ("swap 1% EMK->AXL", vSwap, F(30959, 6250)),
+        ("swap 1% AXL->EMK", vSwapBad, F(31541, 6250))]:
+    signs.append(sqrtD(exact_var)
+                 > Decimal(F(pred).numerator) / Decimal(F(pred).denominator))
+check("all six first-order predictions come in BELOW the exact answer", signs, [True] * 6)
 
 
 
@@ -621,7 +636,9 @@ check("its factor part is exactly 25 -- a pure market bet", quad(Fm, hB), F(25))
 check("its specific part", sum(BM[i] ** 2 * dvec[i] for i in range(5)), F(46, 125))
 check_root("the benchmark's own risk", varB, "5.0367")
 check("Book D is LESS volatile than its benchmark", varD < varB, True)
-check_root("the difference of the two risks", varB, "5.0367")
+show("context, not a printed figure -- benchmark risk minus Book D risk "
+     "(the ACTIVE risk is not this)",
+     (sqrtD(varB) - sqrtD(varD)).quantize(Decimal("0.0001")))
 
 A = [WD[i] - BM[i] for i in range(5)]
 check("the active weights a = w - b", A,
@@ -711,10 +728,10 @@ head("SECTION 9 -- TRAPS, EACH WITH THE NUMBER IT RETURNS")
 sub("trap 1: rank by weight and cut the biggest position")
 check_root("cut 1% of AXL (joint-largest) to cash", vCutA, "4.9735")
 check_root("cut 1% of EMK (same size) to cash", vCutE, "4.9269")
-CHECKS[0] += 1
 d1 = (sqrtD(varD) - sqrtD(vCutA)).quantize(Decimal("0.0001"))
 d2 = (sqrtD(varD) - sqrtD(vCutE)).quantize(Decimal("0.0001"))
-print(f"   [OK ] risk removed: AXL cut {d1}, EMK cut {d2}")
+check("risk removed by the AXL cut and by the EMK cut, as printed",
+      (str(d1), str(d2)), ("0.0265", "0.0731"))
 check("first-order, EMK removes 1835/671 times as much per point sold",
       MCRD[4] / MCRD[0], F(1835, 671))
 
@@ -732,11 +749,10 @@ for n, i, printed in [("AXL", 0, "1.8396"), ("BRN", 1, "0.8328"), ("CHR", 2, "0.
           + ("" if ok else f"   MARKDOWN SAYS {printed}"))
     if not ok:
         sys.exit("MISMATCH naive contribution")
-CHECKS[0] += 1
-print(f"   [OK ] naive total: {naive_tot.quantize(Decimal('0.0001'))} against a true 5.0000")
-CHECKS[0] += 1
+check("the naive total, as the markdown prints it",
+      str(naive_tot.quantize(Decimal("0.0001"))), "6.9180")
 over = ((naive_tot - 5) / 5 * 100).quantize(Decimal("0.0001"))
-print(f"   [OK ] the naive total overstates the risk by {over}%")
+check("and it overstates the risk by, as printed", str(over), "38.3609")
 CHECKS[0] += 1
 naive_rank = sorted(range(5), key=lambda i: -naive[i])
 ok = (naive_rank == [4, 0, 3, 1, 2])
@@ -753,8 +769,8 @@ sub("trap 4: use only the diagonal of V")
 tdiag = sum(WD[i] ** 2 * V[i][i] for i in range(5))
 check("sum w_i^2 V_ii", tdiag, F(16309, 1250))
 check_root("the risk that returns", tdiag, "3.6121")
-CHECKS[0] += 1
-print(f"   [OK ] versus 5.0000: {((sqrtD(tdiag)-5)/5*100).quantize(Decimal('0.01'))}%")
+check("versus 5.0000, as printed",
+      str(((sqrtD(tdiag) - 5) / 5 * 100).quantize(Decimal("0.01"))), "-27.76")
 
 sub("trap 5: drop D, or drop F's off-diagonals")
 check("drop D entirely", facD, F(61909, 2500))
@@ -791,7 +807,7 @@ check("the printed contributions, one of them corrupted", corrupt,
       [F(2013, 2500), F(1649, 2500), F(252, 625), F(903, 1000), F(1101, 500)])
 check("they sum to", sum(corrupt), F(49730, 10000))
 check_dec("that sum", sum(corrupt), "4.9730")
-check("Euler says the sum must be the total risk", F(5), F(5))
+check("Euler says the sum must be the total risk", sum(CTRD), rootF(varD))
 check("the shortfall", F(5) - sum(corrupt), F(27, 1000))
 check_dec("the shortfall", F(5) - sum(corrupt), "0.0270")
 check("the four uncorrupted entries sum to",
@@ -881,9 +897,8 @@ check_dec("factor share (%)", facP / varP * 100, "98.2376")
 check("specific share of Book P's risk", specP / varP, F(1155, 65536))
 check_dec("specific share (%)", specP / varP * 100, "1.7624")
 check_root("the risk that survives if every specific wobble vanished", facP, "5.0747")
-CHECKS[0] += 1
 gap = (sqrtD(varP) - sqrtD(facP)).quantize(Decimal("0.0001"))
-print(f"   [OK ] so all five names' private lives are worth {gap} of the 5.1200")
+check("so all five names' private lives are worth, of the 5.1200", str(gap), "0.0453")
 check("EMK and CHR are 54% of the money", WP[4] + WP[2], F(27, 50))
 check_dec("EMK + CHR share of risk (%)", (shP[4] + shP[2]) * 100, "66.56", places=2)
 
@@ -894,7 +909,9 @@ for n, printed in [(5, "5.0367"), (10, "5.0184"), (50, "5.0037"), (1000, "5.0002
     check_root(f"an equally weighted book of {n} names like these", v, printed)
 check("the equally weighted five-name book IS the benchmark", F(25) + F(46, 25) / 5,
       varB)
-check("the floor as the name count grows without limit", F(25), F(25))
+check("the floor as the name count grows without limit is the factor term alone",
+      [F(25) + F(46, 25) / n - F(25) < F(1, 1000) for n in (10000, 1000000)],
+      [True, True])
 check("average standalone variance across the five names",
       sum(V[i][i] for i in range(5)) / 5, F(1121, 25))
 check_root("average standalone volatility", F(1121, 25), "6.6963")
@@ -937,7 +954,13 @@ check("Book P active variance", varAP, F(53, 625))
 check_root("Book P ACTIVE RISK", varAP, "0.2912")
 VaP = matvec(V, AP)
 check("V a for Book P", VaP, [F(-183, 250), F(-1, 5), F(17, 25), F(17, 25), F(369, 250)])
-check("CHR and DLT have IDENTICAL marginal contributions", VaP[2], VaP[3])
+check("CHR and DLT have IDENTICAL co-movements (V a)_i", VaP[2], VaP[3])
+check("that common co-movement", VaP[2], F(17, 25))
+CHECKS[0] += 1
+mcrCD = ((Decimal(F(VaP[2]).numerator) / Decimal(F(VaP[2]).denominator))
+         / sqrtD(varAP)).quantize(Decimal("0.0001"))
+check("so their common MARGINAL contribution, (V a)_i / active sigma, as printed",
+      str(mcrCD), "2.3351")
 ctrAP = [AP[i] * VaP[i] for i in range(5)]
 check("their contributions have opposite signs", (ctrAP[2] > 0, ctrAP[3] < 0),
       (True, True))
@@ -989,11 +1012,10 @@ sub("our toy against the paper's report -- an order-of-magnitude check, not a ta
 check_root("Book D annualised (ours, x sqrt 12)", varD * 12, "17.3205")
 check_root("Book P annualised (ours, x sqrt 12)", varP * 12, "17.7362")
 check_root("Book D's active risk annualised", varA * 12, "0.9798")
-check("p.35's Active Risk as a multiple of Book D's, in monthly terms", 1, 1)
-CHECKS[0] += 1
 mult = (Decimal("2.99") / sqrtD(varA)).quantize(Decimal("0.0001"))
-print(f"   [OK ] p.35's 2.99% is {mult} times Book D's monthly active risk "
-      f"-- different books, different horizons, no comparison intended")
+check("p.35's 2.99% as a multiple of Book D's monthly active risk, as printed "
+      "-- different books, different horizons, no comparison intended",
+      str(mult), "10.5712")
 
 
 # ===========================================================================
@@ -1018,7 +1040,7 @@ for i, (mcr, ctr, sh) in enumerate([("2.684", "0.8052", "16.104"),
     check_dec(f"{NAMES[i]} share, 3 dp (%)", shareD[i] * 100, sh, places=3)
 
 sub("14c. two-decimal short forms used in the dialogue")
-check_dec("Book D total risk, 2 dp", varD if False else F(5), "5.00", places=2)
+check_root("Book D total risk, 2 dp", varD, "5.00", places=2)
 check_dec("Book P total risk, 2 dp", F(128, 25), "5.12", places=2)
 check_root("Book D active risk, 2 dp", varA, "0.28", places=2)
 check_root("benchmark risk, 2 dp", varB, "5.04", places=2)
@@ -1357,5 +1379,6 @@ check("Book D's active cheapness longhand terms",
 head("ALL CHECKS PASSED")
 print(f"   {CHECKS[0]} exact-rational assertions verified, plus "
       f"{40 + 4 + 5 + EULER_SWEEP + MIN_SWEEP + ACTIVE_SWEEP + SABOTAGE_SWEEP} swept cases.")
-print("   Every number printed above appears in datasets/level11.md.")
+print("   Every decimal datasets/level11.md prints is re-rendered and compared above;")
+print("   lines marked 'context, not a printed figure' are reported, not asserted.")
 print("   Decimals shown as ROUNDED above are marked 'rounded' in the markdown.")

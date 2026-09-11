@@ -651,8 +651,10 @@ check("what it returns (rounded)",
       str(sum_of_risks.quantize(Decimal("0.0001"))), "5.4922")
 
 sub("trap 5: the shapes of the wrong transpose")
-check("X is 3x2, so X^T F X has inner dimensions 3 and 2 -- undefined",
-      (len(XT[0]), len(matmul(Fm, X)[0]) if False else len(Fm)), (3, 2))
+# X^T is 2x3 and F is 2x2: the shared index would have to be 3 on the left and
+# 2 on the right, so no matmul exists. Assert the two counts and their inequality.
+check("X^T has 3 columns but F has 2 rows, so X^T F -- and X^T F X -- is undefined",
+      (len(XT[0]), len(Fm), len(XT[0]) != len(Fm)), (3, 2, True))
 check("X F X^T is 3x3, one row and one column per HELD ASSET",
       (len(XFXt), len(XFXt[0])), (3, 3))
 check("X^T V X would be 2x2 -- a factor-shaped object, not an asset-shaped one",
@@ -931,8 +933,8 @@ check("cost of the diagonal assumption alone", term4 - diag_same_conv, F(227, 50
 check_dec("that cost as a decimal", term4 - diag_same_conv, "0.4540")
 check("cost of the divisor convention alone", diag_same_conv - specA, F(-51, 500))
 check_dec("that cost as a decimal", diag_same_conv - specA, "-0.1020")
-check("the three pieces add up to the whole specific gap",
-      (term4 - diag_same_conv) + (diag_same_conv - specA), term4 - specA)
+check("the whole specific gap -- the 0.352 the markdown prints",
+      term4 - specA, F(44, 125))
 check("and the model's shortfall is the specific gap plus the cross term",
       (term4 - specA) + term23, realised - totA)
 check("direction: the model's number is the SMALLER one",
@@ -1072,8 +1074,14 @@ check_root("Book B total risk to 2 dp", totB, "6.42", places=2)
 check_root("Book B factor risk to 2 dp", facB, "6.35", places=2)
 check_root("Book B specific risk to 2 dp", specB, "0.89", places=2)
 CHECKS[0] += 1
-check("Book B factor risk + specific risk, to 2 dp",
-      str((sqrtD(facB) + sqrtD(specB)).quantize(Decimal("0.01"))), "7.25")
+check("the interrogation script's 2 dp sum: 6.35 + 0.89 as printed",
+      str(Decimal("6.35") + Decimal("0.89")), "7.24")
+
+CHECKS[0] += 1
+check("sum of the exact roots, rounded once, is 7.2451 -- not the 7.2452 you get "
+      "by rounding first",
+      (str((sqrtD(facB) + sqrtD(specB)).quantize(Decimal("0.0001"))),
+       str(Decimal("6.3530") + Decimal("0.8922"))), ("7.2451", "7.2452"))
 
 sub("16g. the p.35 printed values, as decimals")
 for lbl, val, printed in [("Active Risk", ar, "2.9900"), ("Portfolio Beta", beta, "1.0200"),

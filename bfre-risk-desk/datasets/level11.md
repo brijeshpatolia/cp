@@ -1,7 +1,7 @@
 # Level 11 — The Desk
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level11.py`
-(624 assertions plus 3,815 swept cases, exits 0). Nothing here is rounded by hand. Where a
+(626 assertions plus 3,815 swept cases, exits 0). Nothing here is rounded by hand. Where a
 decimal does not terminate it is written with the word **rounded** next to it; every other
 decimal on this page is exact.
 
@@ -248,8 +248,10 @@ deliberate: they remove every excuse the arithmetic could otherwise offer.
 **The book's risk is exactly 5% a month.** That is not luck. The weights were chosen so that the
 total variance is a perfect square, which makes every marginal contribution and every
 contribution on this page an exact terminating decimal instead of a wall of fractions
-(`prompt/RISK_DESK.md` §8: vile fractions are a design failure, not a fact of life). Only the
-standalone volatilities in §3c and the benchmark work in §8 need rounding, and each is marked. Annualised by `×√12` it is
+(`prompt/RISK_DESK.md` §5 asks for "a tiny dataset the player can compute by hand"; that vile
+fractions are a design failure rather than a fact of life is our gloss on it, not the rulebook's
+words). Only the standalone volatilities in §3c and the benchmark work in §8 need rounding, and
+each is marked. Annualised by `×√12` it is
 **17.3205%** a year, **rounded** — and, as at Level 10, **that `×√12` is ours and assumes
 independent months, which p.30 says BFRE does not assume.**
 
@@ -260,9 +262,10 @@ turns on it.
 ### 3e. Three simplifications, declared before they can be mistaken for the model
 
 1. **Five assets, two factors, one month.** BFRE's North America model carries a market factor,
-   twelve styles, fifty-four core industries and a country/currency block — a count the paper
-   never prints (Level 8 assembled a floor of ≈71 from Table 1.2, p.10, and Table 1.5, p.57, and
-   **that count is ours**).
+   twelve styles, fifty-four industry rows (fifty-three of them *core* — Level 8 §13c drew that
+   distinction from p.25's "all industries **except** the Multi-Sector Holding industry") and a
+   country/currency block — a count the paper never prints (Level 8 assembled a floor of ≈71 from
+   Table 1.2, p.10, and Table 1.5, p.57, and **that count is ours**).
 2. **`V` is treated as known.** It is not. It is a forecast from a 104-week window (p.27). Every
    contribution on this page inherits that.
 3. **Percent and percent-squared per month throughout.** BFRE's forecast horizon is **1 month**
@@ -361,7 +364,7 @@ Put numbers on it. Nudge EMK by `ε = +0.01` — one point of NAV, funded from c
 
 ```
   exact new variance  =  25 + 2(0.01)(36.70) + (0.01)²(85.6)
-                      =  25 + 0.7340         + 0.0086
+                      =  25 + 0.7340         + 0.00856
                       =  25.74256            exactly      (160891/6250)
 ```
 
@@ -374,7 +377,7 @@ Two things then get thrown away, and it is worth naming both.
 ```
 
 **The two discards push in opposite directions.** Dropping `δ²/(4σ²)` makes the guess too
-**high** — by `0.0005`, **rounded**. Dropping `ε²V_ii = 0.0086` of variance makes it too
+**high** — by `0.0005`, **rounded**. Dropping `ε²V_ii = 0.00856` of variance makes it too
 **low** — by `0.0003`, **rounded**. Keep both discards, as every risk report does, and the net
 error is **three ten-thousandths of a percentage point on a nudge of a full point of NAV.** Say
 that number; the player will need it again in Section 7d when they push the same tool ten times
@@ -396,7 +399,7 @@ standalone-volatility table is about to be wrong.
 ```
   AXL at 31% instead of 30%:
     exact new variance =  25 + 2(0.01)(13.42) + (0.01)²(37.6)
-                       =  25 + 0.2684         + 0.0038
+                       =  25 + 0.2684         + 0.00376
                        =  25.27216            exactly     (157951/6250)
     guessed new risk   =  5 + 0.2684/10  =  5.0268
     exact new risk     =  √25.27216      =  5.0271     rounded
@@ -1003,7 +1006,9 @@ ranking by contribution are not the same list.
 
 **2. Her smallest position beats one twice its size.** DLT is **9%** of the fund and carries
 **11.01%**. AXL is **18%** — exactly twice as much money — and carries **8.51%**. **Half the
-position, 2.51 percentage points more risk.**
+position, 2.51 percentage points more risk** (**rounded**: the exact gap is `2.5076`, and
+subtracting the two-decimal shares in the table gives `2.50` — that is rounding drift, not a
+second answer).
 
 **3. And now the number that answers the actual question.** Split her risk:
 
@@ -1075,7 +1080,7 @@ Play Meera. Nineteen years of it, a committee behind her, and no patience at all
 | **"My net style tilt is 0.06. You cannot pin a style story on 0.06."** | Sets it to exactly 0 and shows the co-movements are still `13, 19, 25, 31, 37` — a factor of **2.8462** (**rounded**) — because the ranking runs through `F`'s off-diagonal `+6`, not through her aggregate bet. **What cancels in `Xᵀw` does not cancel in `Vw`.** | "It's still a tilt." (Unquantified, and she will eat them.) |
 | **"Fine. I'll add fifteen more names. Then what?"** | The table in 11.3: the specific term falls like `1/n` and the factor term does not move at all. 5 names → 5.0367; 1,000 names → 5.0002; the floor is 5.0000. **Names diversify names. They do not diversify a shared factor.** | "It'll help a bit." |
 | **"So what do I sell?"** | Refuses the trap and answers with the model. On a funded basis, sell the highest MCR and buy the lowest: sell EMK (7.5383 **rounded**) and buy AXL (2.4195 **rounded**). Says the size of the effect, says it is **first order** and re-priced after any large trade, and says the thing that is not in the model: **the risk is a price, not a verdict — nothing here says what her EMK bet is worth.** | "Sell EMK." Full stop, with no size, no first-order caveat, and no acknowledgement that return exists. |
-| **"Your report has a slice at minus fifty-two per cent."** *(if the player has shown Book D §8b, or once Book P's active table is on the table)* | A contribution is negative when the position offsets the rest of the book: adding to it reduces the total. Book P's own active table has a cleaner version — **CHR and DLT have identical marginal contributions of `+0.68`, and opposite-signed contributions**, because one is an `+8%` overweight and the other an `−11%` underweight. Shares: `17.2642, 2.3585, 64.1509, −88.2075, 104.4340` (all **rounded**), which sum to exactly 1 as fractions and to `100.0001` as printed — **rounding drift, said out loud.** | "That's a rounding error." Or drawing it as a pie. |
+| **"Your report has a slice at minus fifty-two per cent."** *(if the player has shown Book D §8b, or once Book P's active table is on the table)* | A contribution is negative when the position offsets the rest of the book: adding to it reduces the total. Book P's own active table has a cleaner version — **CHR and DLT have identical co-movements, `(V a)_i = +0.68` each, so identical marginal contributions of `2.3351` — that is `0.68/0.2912`, rounded — and opposite-signed contributions**, `+0.1868` against `−0.2569` (both **rounded**), because one is an `+8%` overweight and the other an `−11%` underweight. Shares: `17.2642, 2.3585, 64.1509, −88.2075, 104.4340` (all **rounded**), which sum to exactly 1 as fractions and to `100.0001` as printed — **rounding drift, said out loud.** | "That's a rounding error." Or drawing it as a pie. |
 
 ### 11.6 Pass conditions
 
@@ -1348,7 +1353,7 @@ until it matches p.35 has committed the error `gm/PLAYBOOK.md` flags at ★ THE 
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level11.py     # 624 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level11.py     # 626 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page in `fractions.Fraction`, from the Level 7/8

@@ -1,7 +1,7 @@
 # Level 10 — The Assembly
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level10.py`
-(447 assertions plus 1,167 swept cases, exits 0). Nothing here is rounded by hand. Where a
+(449 assertions plus 1,167 swept cases, exits 0). Nothing here is rounded by hand. Where a
 decimal does not terminate it is written with the word **rounded** next to it; every other
 decimal on this page is exact.
 
@@ -145,7 +145,9 @@ agreed by everybody. `F` is *estimated*, by one desk, from a window the paper se
 (p.27), and it is not observable at all. Also, currency conversion is exact and loses nothing,
 whereas going through factors deliberately throws away everything the factors cannot express —
 and that discarded part is not an error. It is `D`, and on the paper's own example report it is
-**half the number** (p.35 pie, read directly: Specific **50%**).
+**half the number** — half of that report's *Active* Risk, which is **not** the same quantity as its
+total risk, and Section 8c is where that distinction is made to stick (p.35 pie, read directly:
+Specific **50%**).
 
 ---
 
@@ -311,10 +313,11 @@ it wrong has lost twenty minutes for nothing.
 ### 3e. Three simplifications, declared before they can be mistaken for the model
 
 1. **Three assets and two factors.** BFRE's North America model carries a market factor, twelve
-   styles, fifty-four core industries and a country/currency block — a count the paper never
-   prints (Level 8 §13c assembled a floor of ≈71 from Table 1.2 on p.10 and Table 1.5 on p.57,
-   and that count is **ours**, not the paper's). Three and two are chosen so that every
-   multiplication fits on a page.
+   styles, **fifty-three** core industries out of the fifty-four industry rows printed in Table
+   1.5, and a country/currency block — a count the paper never prints (Level 8 §13c assembled a
+   floor of ≈70–71 from Table 1.2 on p.10 and Table 1.5 on p.57, and that count is **ours**, not
+   the paper's; p.25 is what removes Multi-Sector Holding from the core block). Three and two are
+   chosen so that every multiplication fits on a page.
 2. **Exposures frozen across the five months.** BFRE re-standardises and reposts exposures
    weekly (p.36, PAPER). Level 7 already paid for this simplification and named its cost.
 3. **Monthly units throughout, percent and percent-squared.** BFRE's forecast horizon is
@@ -533,8 +536,10 @@ a deep-value name and a deep-growth name, and it is the reason a portfolio holdi
 quieter than a portfolio holding either.
 
 **And now the trap next to it.** Switch `D` off and recompute the same three correlations from
-`X F Xᵀ` alone: `0.4274`, `−0.1961`, `0.8026` (all **rounded**). Every one of them is *further
-from zero* than the correlation implied by `V`. Say why: `D` adds variance to the diagonal and
+`X F Xᵀ` alone, and **name each one as you read it**, because the pairs are easy to mis-match:
+AXL–CHR `0.4274`, CHR–EMK `0.8026`, AXL–EMK `−0.1961` (all **rounded**) against `0.3937`,
+`0.7426` and `−0.1939` in the table above. Every one of them is *further from zero* than the
+correlation implied by `V`. Say why: `D` adds variance to the diagonal and
 nothing to the off-diagonal, so it can only dilute a correlation, never strengthen one. **A
 model with more specific risk in it is a model with lower asset correlations**, mechanically,
 before anyone has looked at any data. That single fact is worth a full minute — it is the
@@ -882,7 +887,7 @@ halves on this file. Both fail. The direction of the failure is the one **p.28**
 
 Every row is computed by the verifier. **Give the number, not the adjective** — "you'd be wrong"
 teaches nothing; "you'd have reported 5.6175 instead of 4.6857" teaches permanently. All roots
-below are **rounded**; all variances are exact.
+below are **rounded** except `4.6000`, which is the exact root `23/5`; all variances are exact.
 
 | Wrong belief | What it computes | Variance | Risk | Versus 4.6857 |
 |---|---|---:|---:|---:|
@@ -1000,8 +1005,13 @@ Cross-check by Route 2: `V w = (3.46, 31.40, 56.50)` and `w·(Vw) = 41.156`. Sam
 
 Shares of variance: factor **98.0659%**, specific **1.9341%**, both **rounded**.
 
-The additivity test again: `6.3530 + 0.8922 = 7.2451` **rounded**, against a truth of `6.4153`
-**rounded** — an overstatement of **12.94%**, **rounded**.
+The additivity test again: `√40.36 + √0.796 = 7.2451` **rounded**, against a truth of
+`√41.156 = 6.4153` **rounded** — an overstatement of **12.94%**, **rounded**.
+
+*(Add the two exact roots, then round once at the end. Adding the four-decimal displays as printed
+— `6.3530 + 0.8922` — gives `7.2452`, because rounding-then-adding is a different operation from
+adding-then-rounding. Every root on this page is rounded at the last step only. A player who spots
+the one-in-the-last-digit difference has spotted something real, and should be paid for it.)*
 
 ### 11.3 The mirror question — this is what is actually being marked
 
@@ -1033,7 +1043,7 @@ matching diagnostic table; these are the escalating versions.
 | Objection | A passing answer contains | Hand-waving sounds like |
 |---|---|---|
 | **"Read `X F Xᵀ` to me as a sentence, right to left, with the units at each step."** | `Xᵀ` turns holdings into the portfolio's factor bets (dimensionless in, dimensionless out); `F` turns factor bets into percent-squared; `X` carries a percent-squared answer back onto assets; the result is a variance and the square root is a percent. Names what vanished: the factor index, twice. | "You transpose it to make the dimensions work." |
-| **"Your factor risk is 6.35 and your specific risk is 0.89. Those add to 7.25 and you told me 6.42. Explain that before we go further."** | **Variances add; risks do not.** `40.36 + 0.796 = 41.156` exactly; `√41.156 = 6.4153` **rounded**. The right-angle picture, and the reason for the right angle: **p.30**, factor returns are *assumed* to have zero correlation with specific returns. And the tell that the report agrees: p.35's pie sums to exactly 100 because it splits **contributions to variance**, not volatilities. | "Risk isn't additive." "There's a correlation term." *(There is not — the model deletes it by assumption, and the player must name the page.)* |
+| **"Your factor risk is 6.35 and your specific risk is 0.89. Those add to 7.24 and you told me 6.42. Explain that before we go further."** | **Variances add; risks do not.** `40.36 + 0.796 = 41.156` exactly; `√41.156 = 6.4153` **rounded**. The right-angle picture, and the reason for the right angle: **p.30**, factor returns are *assumed* to have zero correlation with specific returns. And the tell that the report agrees: p.35's pie sums to exactly 100 because it splits **contributions to variance**, not volatilities. | "Risk isn't additive." "There's a correlation term." *(There is not — the model deletes it by assumption, and the player must name the page.)* |
 | **"Which of your three stocks is the risky one?"** | Refuses the question as posed and separates it. **Standalone:** EMK, `√85.6 = 9.2520%` **rounded**, the most volatile of the three. **In Book B:** EMK carries **68.6413%** of the variance (**rounded**). **In Book A:** the *same stock at the same volatility* carries **8.1345%** (**rounded**) — it was 10% of the money there, and the rest of that book sat in AXL, the one name EMK moves *against* (`V[AXL,EMK] = −11`). *Risky* is not a property of a stock alone; it is a property of a stock **and** a book. | Naming EMK and stopping. |
 | **"So drop `D`. It's two per cent of your number."** | Two answers, and the first one concedes. On **this** book dropping `D` moves total risk from `6.4153` to `6.3530` — **−0.97%** (**rounded**), and on Book A it is **−1.83%**. Both small, and say so rather than bluffing. But the book Section 6e and Section 12.3 exhibit has **zero** factor risk, so dropping `D` prices a real, funded, leverable book at exactly `0`. `D` is not small; it is small *on long-only books measured against cash*. On the paper's own example report, measured against a benchmark, `D`'s share is **50%** of Active Risk (p.35, read directly). | "You need it for completeness." |
 | **"Your market exposure is 1.0 and my report says Portfolio Beta 1.02. Which is which?"** | **PAPER, p.4:** "The market factor exposure of a portfolio should not be confused with its market beta." Exposure is a position — "the fraction of portfolio %NAV invested in equities", footnote 3 adding delta-adjusted derivative exposure. Beta must be computed from portfolio and index exposures **together with** `F`. p.35 prints Portfolio Beta **1.02** as its own banner item. **Never attribute the beta formula in the p.4 margin to BlackRock** — `notes/` records it as a reader's handwritten pen annotation, not printed text. | "They're the same thing when you're fully invested." Or quoting the margin formula as the paper's. |
@@ -1120,8 +1130,8 @@ pie, and now the player has felt it rather than been told it.
   ACTIVE risk            =  0.6372%     rounded
 ```
 
-**The book is slightly *less* volatile than its benchmark, and it still carries two thirds of a
-percent of active risk a month.** Risks do not subtract any more than they add. A manager who
+**The book is slightly *less* volatile than its benchmark, and it still carries nearly two thirds
+of a percent of active risk a month.** Risks do not subtract any more than they add. A manager who
 says "my portfolio is less risky than the index, so I'm not taking risk" has said something
 false, and this is the arithmetic that shows it.
 
@@ -1456,8 +1466,13 @@ most important multiplications in the document.
   the `X_pᵀ F X_b / X_bᵀ F X_b` beta formula on p.4 — recorded as a **reader's pen annotation**,
   not printed text, and never to be attributed to BlackRock.
 - **The phrase "tracking error" has zero occurrences.** The paper says Active Risk.
-- **No formula for marginal contribution to risk, and the phrase never appears.** "Contribution"
-  occurs as a chart axis label on p.35 and as prose on p.34, and that is the whole of it.
+- **No formula for marginal contribution to risk, and the phrase "marginal contribution" never
+  appears.** Be precise about the bare word "contribution", because it *does* occur elsewhere and a
+  player who checks will find it: pp.4–6 use it in the **return**-attribution sense (Figure 1.1's
+  axis label is "contribution to return"; p.4 has "the contribution of different effects on
+  portfolio risk and return"). The only **risk**-contribution usages are p.34's prose and the p.35
+  chart labels — "Contrib. to Act. Risk", "Contrib. to Spec. Risk", "Contribution (%)". No formula
+  anywhere, on any page.
 - **The approach is justified by precedent, not by evidence.** p.24, footnote 13: the method is
   "similar to that used in the fundamental factor risk model literature", citing Rudd and Clasing
   [24], Grinold and Kahn [25] and Connor et al. [17]. **No empirical comparison against any
@@ -1479,7 +1494,7 @@ most important multiplications in the document.
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level10.py     # 447 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level10.py     # 449 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page in `fractions.Fraction`, from the raw Level 8
@@ -1507,6 +1522,9 @@ Its final section exists purely for this page's typography: **every decimal the 
 — every intermediate product written out in longhand, every monthly series, every two-decimal
 short form used in the interrogation dialogue — is re-rendered from the exact rational and
 compared string-for-string against what is written above. A rounding that drifted by one in the
-last digit fails the script.
+last digit fails the script. It also checks the one place on this page where the distinction
+matters out loud: the sum of Book B's two risks is `7.2451` when the exact roots are added and
+rounded once, and `7.2452` when the printed four-decimal displays are added instead — both
+strings are asserted, so neither can drift into the other.
 
 If any printed value ever disagrees with this markdown, the markdown is wrong.
