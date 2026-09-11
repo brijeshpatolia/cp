@@ -1,7 +1,7 @@
 # Level 8 — The Weather Map
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level8.py`
-(350 assertions plus 20,946 swept cases, exits 0). Nothing here is rounded by hand. Where a
+(366 assertions plus 20,946 swept cases, exits 0). Nothing here is rounded by hand. Where a
 decimal does not terminate it is written with the word **rounded** next to it; every other
 decimal on this page is exact.
 
@@ -43,7 +43,7 @@ decimal on this page is exact.
 
 ## 0. What the player is already holding, and what is actually new
 
-**From Level 0** — the miss `u`, and why it is scored by its size and not its sign.
+**From Level 0** — the miss `e`, and why it is scored by its size and not its sign.
 **From Level 1** — `b = Σxr/Σx²`, derived by nudging.
 **From Level 2** — the balance condition `Σx·e = 0`, forced by the arithmetic of minimising.
 **From Level 3** — two columns require two balance conditions at once; the 2×2 solve.
@@ -363,10 +363,15 @@ same factor and no comparison between books changes at all.
 
 Row 3 is a different object and does not scale. Its sums are taken about zero instead of about
 the mean: `Σ f_Mkt² = 120`, `Σ f_Chp² = 41` and `Σ f_Mkt·f_Chp = 34`, giving `120/5 = 24`,
-`41/5 = 8.2` and `34/5 = 6.8`. Note the variances went **down**
-and the covariance went **up** — because it silently asserts that the true average factor return
-is zero, and any real average gets counted as wobble. The exact relationship is worth showing,
-because it is Level 5's algebra again:
+`41/5 = 8.2` and `34/5 = 6.8`. Note the variances went **down** and the covariance went
+**up**, and do not hand the player a single cause for both — there are two changes fighting, and
+the identity below separates them. Not subtracting the mean silently asserts that the true
+average factor return is zero, so any real average gets counted as wobble: that pushes every cell
+**up**, by the product of the two means. The divisor changing from 4 to 5 pulls every cell
+**down**, by a factor of `4/5`. Which of the two wins is a race, decided cell by cell: on the two
+variances the divisor wins (`−5` against `+4`, and `−1.8` against `+1`), on the covariance the
+mean wins (`−1.2` against `+2`). The exact relationship is worth showing, because it is Level 5's
+algebra again:
 
 ```
 no-mean grid  =  (4/5) × F  +  (mean vector) × (mean vector)ᵀ
@@ -954,13 +959,17 @@ thing you just built — the paper never uses it.* Of the seventeen, exactly **f
 paper's own words: **covariance matrix** and **factor covariance matrix**, both in the where-list
 under equation (1.8) on p.24 (and "asset covariance matrix" again on p.2, "Specific Covariance
 Matrix" as a p.27 heading), and **half-life** and **exponential decay**, both on p.27. Everything
-else is borrowed. Two of the borrowed thirteen do occur somewhere in the 65 pages, but **only
-inside a reference title and never in a sentence of the paper's own**: *positive semi-definite*
-in [26] on p.65 and *shrinkage* in [7] on p.64. Cite those as titles, never as claims (13g).
+else is borrowed. Two of the borrowed thirteen occur in the 65 pages **only inside a reference
+title, never in a sentence of the paper's own**: *positive semi-definite* in [26] on p.65 and
+*shrinkage* in [7] on p.64. Cite those as titles, never as claims (13g). (One caveat, so the
+count is honest: the bare words *variance* and *covariance* do appear in the paper's own
+sentences — "variance inflation factors" on p.32, "minimum variance portfolios" on p.33, and
+*covariance* throughout. What is borrowed in that row is the two-series formula `Σd₁d₂/(T−1)`,
+which the paper never writes, not the word.)
 
-**Do not unlock here:** *specific risk / `Δ`* (Level 9), *asset covariance matrix `Σ`*
-(Level 10), *tracking error* and *marginal contribution to risk* (Level 11), *bias statistic*
-(Level 12).
+**Do not unlock here:** *specific risk / `Δ`* (Level 9), *asset covariance matrix `Σ`* and
+*tracking error* (Level 10 — `gm/VOCAB.md` row 13 and Level 10 §12.4; the report is *read* at
+Level 11), *marginal contribution to risk* (Level 11), *bias statistic* (Level 12).
 
 ---
 
@@ -1089,11 +1098,21 @@ row 1 plus row 2, exactly.**
 
 - The model reports this book's risk as **0.00%**. Not "small". Zero.
 - Multiply the book by 100 — hold `+100, +100, −100`. The reported risk is **still exactly
-  zero**, because scaling a zero is a zero. Meanwhile the thing actually moved **200 basis
-  points every single month**.
-- So the model has certified an **unlimited** position in a book that demonstrably moves. Any
-  risk budget, any optimiser, any leverage limit expressed in forecast risk is now unbounded in
-  this direction.
+  zero**, because scaling a zero is a zero. Meanwhile the unit book returned **+2%, i.e. 200
+  basis points, every single month**, so the 100× version returned **+200% — 20,000 basis
+  points — a month**.
+- So the model has certified an **unlimited** position in a book that carries a real, scaling,
+  non-zero return stream. Any risk budget, any optimiser, any leverage limit expressed in
+  forecast risk is now unbounded in this direction.
+
+**And close the loophole a good CRO will reach for immediately, because the honest version of
+this argument does not need it.** *"A constant +2% a month has no wobble. Zero variance is the
+right answer."* On these three months, yes — the deviations really are `0, 0, 0`, and the grid
+is not misreporting them. That is exactly the point: the three months contain **no information
+at all** about how this direction moves, and the estimate reports that void as the number
+`0.00%` rather than as "unknown". Section 11.4 is what makes it damning — the zero is forced by
+a count, so it is there for *every* such dataset, including the ones where the direction does
+wobble violently in the fourth month.
 
 **That is what "structurally broken" means, and it is why it is not the same as "imprecise".**
 An imprecise number is 4% when the truth is 6%. This is a *hole*: a direction the estimate has
@@ -1319,17 +1338,23 @@ this table is the cleanest statement of it in the whole game.
 ## 11.8 What shrinkage costs — a number, not an adjective
 
 A player who says shrinkage "makes the estimate better" has memorised something. Make them price
-it. The 2×2 file is the one place where the *truth* is known, because Section 5c computed Book
-C's variance from the series directly: **625**, exactly.
+it. The 2×2 file is the one place where the answer the grid is *supposed* to reproduce is known
+exactly, because Section 5c computed Book C's variance straight from the five months of series:
+**625**. (Say *realised over these five months*, not *true* — five months is not the truth
+either, and the boss round just spent ten minutes saying so.)
 
 ```
-   Book C = (4, 3)      true variance (from the five months)   =  625     risk = 25%
-                        under the a = ½ grid                   =  525     risk = √525 = 22.9129%  (rounded)
-                        moved by                                  100     =  4/25  =  16% of it
+   Book C = (4, 3)      realised variance (from the five months)  =  625     risk = 25%
+                        under the a = ½ grid                      =  525     risk = √525 = 22.9129%  (rounded)
+                        moved by                                     100     =  4/25  =  16% of it
 ```
 
 Shrinkage put a **16% error into a number that was previously exactly right**, in exchange for
-closing holes elsewhere. That is the trade, stated with a number:
+closing holes elsewhere. **Keep the units straight, the same way Section 6g did:** that 16% is
+16% of the *variance*. On the *risk* it is `1 − √(525/625) = 1 − √(21/25) = 0.0835`, i.e. **8.35%
+(rounded)** — 25% falling to 22.9129% (rounded). Variances move by 16%, volatilities by 8.35%; a
+player who quotes the 16% as a risk error has made this level's own mistake. That is the trade,
+stated with a number:
 
 > **You buy a reduction in how wildly the estimate would jump around on fresh data, and you pay
 > in being wrong on purpose. Bias for variance.**
@@ -1349,7 +1374,7 @@ exactly like choosing a half-life — and the player should say so before the CR
 | **shrinkage** | 11.6 |
 | **shrinkage target** | the steadier thing you pull toward — here `diag(S)`, and in 11.7 `17·I` |
 | **shrinkage intensity** | `a` |
-| **bias–variance trade-off** | 11.8, priced at 16% |
+| **bias–variance trade-off** | 11.8, priced at 16% of Book C's variance (8.35% of its risk) |
 | **Bayesian prior** | the target, said the other way round: what you believed before you saw three months of data. **The paper's own phrase — p.36** |
 | **regularisation** | the family name for adding structure to fix an under-determined estimate |
 
@@ -1400,8 +1425,9 @@ nothing about optimisers. Then the leverage point: the reported risk of that boo
 **4. "Then shrink it. Towards what, by how much, and what does it cost me?"**
 *Passing:* names all three. Target: `diag(S)` — keep the variances, disbelieve the correlations
 (or the average-variance identity of 11.7). Intensity: `a`, and the hole's variance becomes
-exactly `83a` so any positive `a` closes it. Cost: bias — 16% on Book C in 11.8, a number that
-was previously exactly right. And the honest closing line: nothing in the mathematics picks `a`.
+exactly `83a` so any positive `a` closes it. Cost: bias — 16% of Book C's variance in 11.8
+(8.35% of its risk), a number that was previously exactly right. And the honest closing line:
+nothing in the mathematics picks `a`.
 *Hand-waving:* "shrinkage makes it stable." "You'd use Ledoit–Wolf." (Not in this paper — say so
 if you use the name at all.)
 
@@ -1768,7 +1794,7 @@ is that the document does not contain what a reader would need to rule it out.*
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level8.py     # 350 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level8.py     # 366 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page from the raw exposure column and the five months
@@ -1784,14 +1810,16 @@ peak and trough ladders; the perpendicular-pair sum rule; the degenerate `λ = 2
 quadratic turns linear; the discriminant, the characteristic quadratic and its factorisation;
 the two sum-of-squares identities checked on **361** directions; `Fv = λv` for both eigenvectors;
 the rebuild `F = 27P₁ + 7P₂` with `P₁+P₂ = I`, `P₁² = P₁` and `P₁P₂ = 0`; the split of Book A
-between the two directions; the perfectly-correlated cliff grid and its zero-risk book; and the
-entire boss round — the 3×3 grid, its three exact volatilities, all three correlations,
+between the two directions; the perfectly-correlated cliff grid and its zero-risk book; the two
+competing effects behind 4d's no-mean grid, cell by cell, and which of the two wins in each cell;
+and the entire boss round — the 3×3 grid, its three exact volatilities, all three correlations,
 `S·w = 0`, the determinant, the row-3-equals-row-1-plus-row-2 structure, the levered version, the
 **19,683**-case brute force showing every three-factor three-month dataset is singular, the
 no-mean second-moment contrast, the shrunk grid at `a = 1/4` with every entry and correlation,
-the hole's variance as exactly `83a`, the positive-definiteness floor of `9/4` checked on **728**
-books, the five-intensity 2×2 shrinkage table with eigenvalues, spreads and determinants at each
-`a`, and the 16% bias priced on Book C.
+the hole's variance as exactly `83a`, the 200bp-per-month unit book and its 20,000bp levered
+version, the positive-definiteness floor of `9/4` checked on **728** books, the five-intensity
+2×2 shrinkage table with eigenvalues, spreads and determinants at each `a`, and the bias priced
+on Book C both ways — 16% of its variance and 8.35% of its risk.
 
 The only non-rational quantities on the page are in Section 13c, where the decay factor is
 `2^(−1/26)`. Those are computed with `decimal.Decimal` at 50 digits, the closed forms

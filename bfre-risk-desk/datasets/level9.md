@@ -1,7 +1,7 @@
 # Level 9 — The Private Drama
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level9.py`
-(230 assertions plus 2,401 swept books, exits 0). Nothing here is rounded by hand. Where a
+(273 assertions plus 2,401 swept books, exits 0). Nothing here is rounded by hand. Where a
 decimal does not terminate it is written with the word **rounded** next to it; every other
 decimal on this page is exact. Every square root on this page sits on top of an **exact**
 variance, and the root itself is printed as an explicitly-rounded decimal.
@@ -11,7 +11,7 @@ variance, and the root itself is printed as an explicitly-rounded decimal.
 > **Difficulty.** Two things on this page are above 12th-standard:
 > - **Section 5** — the argument that the fit's own balance condition makes an exactly
 >   diagonal specific covariance matrix *impossible*, and that the impossibility is worth
->   `−1/(N−1)` and therefore does not matter. That is a graduate-level observation about
+>   `−1/(N−1)` at equal weights and therefore does not matter. That is a graduate-level observation about
 >   least-squares residuals. It is built here from one line of algebra and then checked on a
 >   file the player already owns.
 > - **Newey–West** (p.27, p.28). Serial-correlation-robust aggregation is a graduate
@@ -77,9 +77,12 @@ matrix*, *diagonal*, *specific return correlation*, *structural* or *empirical a
 *sparse*, or *second moment* at the table before the player has built the mechanism. Before
 then, say: *the leftover*, *the size of the leftover*, *the grid of leftovers*, *the list with
 nothing off the middle line*, *two names whose leftovers move together*.
-(`gm/VOCAB.md` row 4 sets these unlocks at L9; rows 10 and 13–14 are **not** yours — the
-asset covariance matrix belongs to Level 10 and *tracking error* / *marginal contribution* to
-Level 11.)
+(`gm/VOCAB.md` row 4 sets these unlocks at L9. Three neighbours are **not** yours, and their
+owners are not all where a first guess puts them: the **asset** covariance matrix `Σ` is Level
+10's (`gm/LEVEL_ANCHORS.md` jargon ledger — VOCAB row 10's *"covariance matrix"* was already
+spent at L8 on `F`); *Active Risk* and *tracking error* are **Level 10's**, handed over in
+`datasets/level10.md` §12 and drilled again at L11 (VOCAB row 13: "L10 … used at L11"); only
+*marginal contribution* is Level 11's own (VOCAB row 14).)
 
 ---
 
@@ -290,11 +293,37 @@ Three reasons, said out loud:
    over five months. On the second-moment convention that `−6/5` counts as risk, which is what
    we want, because next month is not obliged to repeat it.
 
-**And here is the check that stops this being a fudge.** Every entry built the other way — mean
-subtracted, divided by `T − 1` — is this one multiplied by a *common* factor. On this file
-`d_CHR` would be `5` instead of `4`, and every other entry likewise scales by `5/4`. So
-**every ratio on this page is unchanged by the divisor convention**: `d_CHR / d_BRN = 2` either
-way. When the CRO attacks the divisor in the boss round, that is the answer, and it is exact.
+**And here is the check that stops this being a fudge — and the exact place where the check
+stops.** Two separate choices are hiding inside `d`, and **only one of them is harmless.** Do not
+let them be run together; a player who merges them has a false guarantee in their pocket.
+
+*The divisor is harmless.* Keep the second moment and divide by `T − 1 = 4` instead of `T = 5`.
+Every entry is multiplied by the **same** factor `5/4` — `d_CHR` becomes `5` instead of `4`,
+`d_BRN` becomes `5/2` instead of `2`, and so on down the column. A common factor cancels out of
+every ratio, so **no ratio on this page moves**: `d_CHR / d_BRN = 2` either way. When the CRO
+attacks the **divisor** in the boss round, that is the answer, and it is exact.
+
+*The centring is not harmless, and we do not pretend otherwise.* Subtract each row's own
+five-month average first — `Σ_t (u_i − ū_i)² / (T − 1)`, the full sample-variance convention —
+and the rows stop scaling together, because **each row has a different mean**:
+
+| Stock | `ū` | `Σ(u − ū)² = Σu² − T·ū²` | centred `d`, divisor `4` | our `d` |
+|---|---:|---:|---:|---:|
+| AXL | 1/5 | 3 − 1/5 = 14/5 | **7/10 = 0.7** | 3/5 = 0.6 |
+| BRN | 2/5 | 10 − 4/5 = 46/5 | **23/10 = 2.3** | 2 |
+| CHR | −6/5 | 20 − 36/5 = 64/5 | **16/5 = 3.2** | 4 |
+| DLT | 2/5 | 10 − 4/5 = 46/5 | **23/10 = 2.3** | 2 |
+| EMK | 1/5 | 3 − 1/5 = 14/5 | **7/10 = 0.7** | 3/5 = 0.6 |
+
+`d_CHR / d_BRN` moves from `2` to `32/23 = 1.391304` *(rounded)*. CHR is the row that loses most,
+and it loses it for precisely the reason **1** above gives: CHR's `−6/5` average *is* leftover
+size on our convention, and centring throws that size away. (Note the centred column is *not*
+uniformly smaller either — AXL and BRN go **up**, CHR goes **down**. That is the giveaway that no
+common factor is available.)
+
+**So the honest boss-round answer is two sentences, not one:** the divisor changes nothing that
+matters, and the centring does — which is why the choice not to centre is declared on the record,
+above, with its reason, rather than smuggled in under the divisor.
 
 BFRE's own words on this, p.27, PAPER — note what they do and do not settle:
 
@@ -397,7 +426,8 @@ diagonal. The average off-diagonal entry is `−(46/5)/20 = −23/50 = −0.46` 
 **The off-diagonals cannot all be zero.** A perfectly diagonal `Δ` would need
 `Σ_i d_i = 0`, which needs every leftover to be zero, which means a perfect fit. So a model
 with an intercept column *guarantees* that its leftovers are slightly negatively related, and
-then *assumes* they are not.
+then *assumes* they are not. *(That conclusion holds weighted or unweighted; only its **size**
+depends on the weights — see the rider at the end of 5c before you quote a number.)*
 
 ### 5b. Watch it bite: a book the diagonal model charges for nothing
 
@@ -437,6 +467,19 @@ correlation `ρ̄`. The identity says `N·d + N(N−1)·ρ̄·d = 0`, so
 | 50 | −0.020408 *(rounded)* |
 | 749 | −0.001337 *(rounded)* |
 | 3,000 | −0.000333 *(rounded)* |
+
+*(`749` is not a number picked for effect: it is the break-even universe size **derived in Section
+14.4** from the paper's own 375 observations. It sits in this table so the two arguments can be
+read at the same `N`. `3,000` is ours, chosen to be obviously large — 14.4 says so again.)*
+
+**One rider, because Section 3c already earned it.** `−1/(N−1)` is the **equal-weight** value. BFRE
+weights the regression by `√`market cap, so what its intercept actually forces is
+`Σ_i ω_i u_i(t) = 0`, and the identity becomes `Σ_i ω_i² d_i = − Σ_{i≠j} ω_i ω_j Δ_ij`. The
+*conclusion* survives untouched — the left-hand side is a sum of positive things, so the
+off-diagonals still cannot all be zero — but the **size** `−1/(N−1)` is this toy's, not the shipped
+model's. Say the conclusion at the table; never quote the number as BFRE's.
+**[INFER — the weighted version is ours. The paper writes no balance condition of any kind
+(Section 16i), so it writes neither of these.]**
 
 At five assets the mechanical link is a quarter, which is enormous. At three thousand assets it
 is `−0.000333` (rounded), about three parts in ten thousand. **The exact-diagonal assumption is
@@ -934,7 +977,8 @@ intercept.* A model with no intercept would catch neither.
 | "Use the correlation 3/4 in the grid" | Book P gets `4 + 2·(1/2)·(1/2)·(3/4) = 35/8 = 4.375` exactly, risk **2.0917%** *(rounded)* instead of 2.6458% *(rounded)* | The grid holds the **covariance** `6`, not the correlation `3/4`. Same error Level 8 catalogued for `F` |
 | "BFRE assumes all specific returns are uncorrelated" | — | It assumes it **across companies** (p.28, p.30). Within a company it estimates or overrides them (p.28). Saying the first without the second is the cheap shot |
 | "BFRE forces A and B shares to correlation 1" | — | Backwards. p.28: share classes "are still estimated empirically **under the structural approach**" |
-| "Divide by `T−1`, everyone does" | every `d` scales by `T/(T−1)`; `d_CHR` becomes 5 | Defensible, but it changes **no ratio on this page**, and the paper states no divisor at all. Declare it |
+| "Divide by `T−1`, everyone does" | every `d` scales by `T/(T−1)`; `d_CHR` becomes 5 | Defensible, and it changes **no ratio on this page**, because a common factor cancels. The paper states no divisor at all. Declare it |
+| "…and subtract the mean while you're at it" | `d_CHR` becomes **16/5 = 3.2**, `d_BRN` **23/10 = 2.3**, and `d_CHR/d_BRN` moves from `2` to `32/23` | A *different* choice from the divisor, and this one is **not** a common factor — every row has its own mean (Section 4a). Anyone who says "divisor or mean, same thing" has just lost the ratio argument |
 | "A negative off-diagonal means the model is broken" | Section 5a's grid is full of them | With an intercept column they are *forced*: rows sum to zero. Worth `−1/(N−1)` and no more |
 
 ---
@@ -968,9 +1012,9 @@ never appears in the paper at all. `9 + 1 + 1 = 11`.
 Contrast that with Level 8, where nearly everything had to be borrowed from outside the paper:
 **`Δ` is the best-documented object in the model.** Say so before you criticise it.
 
-**Do not unlock here:** *asset covariance matrix `Σ`* and the assembly `Σ = XFXᵀ + Δ`
-(Level 10 — you may point at the printed equation, but the left-hand side is not yours),
-*Active Risk*, *tracking error*, *marginal contribution to risk* (Level 11), *bias statistic*
+**Do not unlock here:** *asset covariance matrix `Σ`* and the assembly `Σ = XFXᵀ + Δ`, plus
+*Active Risk* and *tracking error* (all **Level 10** — you may point at the printed equation, but
+the left-hand side is not yours); *marginal contribution to risk* (Level 11); *bias statistic*
 (Level 12).
 
 ---
@@ -1057,8 +1101,14 @@ and the system said it did not.**
 | **W** fifty names, equal | 0.3995% *(r)* | 0.4055% *(r)* | **0.60 bps** *(r)* | 0.985293 *(r)* |
 
 ```
-64.58 / 0.60  =  108.3      (rounded)
+Book P's shortfall  ÷  Book W's shortfall
+   =  (√7 − 2)  ÷  (√411 − √399)/50
+   =  0.645751  ÷  0.005963   =   108.3        (rounded)
 ```
+
+*Divide the **shortfalls**, not the two-decimal bps printed in the table above: `64.58 / 0.60`
+reads `107.6`, and the gap is entirely the rounding of `0.596…` up to `0.60`. Both shortfalls
+above are themselves rounded from the exact roots shown.*
 
 **Say the sentence.** The error is invisible on the book that did not need the warning and
 maximal on the book that did. It is not a random error; it is an error that has learned where
@@ -1181,7 +1231,10 @@ prose.
    justifies restoring an off-diagonal — **structure** is.
 2. *"Change the divisor to `T−1` and your number changes."*
    → Every `d` and every `Δ_ij` scales by `6/5`. Every **ratio** on the page is identical.
-   `7/4` stays `7/4`. Section 4a.
+   `7/4` stays `7/4`. Section 4a. **If he follows up with "and subtract the means too" — on
+   *this* panel the four sample means are already zero (6b), so centring changes nothing here;
+   on the Level-8 file it changes plenty, and Section 4a shows exactly how much. Concede that
+   half; it costs nothing and it is the half he is testing for.**
 3. *"Fine. Now show me it matters on a real book, not a two-name cartoon."*
    → Book A: **24.74 bps** (rounded) on four names. Then concede Book W: **0.60 bps** (rounded)
    on fifty. Then produce `1 + 2ρ/N` and let the CRO pick any `N` he likes. A player who
@@ -1324,7 +1377,10 @@ Table 1.3 (**p.28**, PAPER, verified digit for digit):
 | Daily | **125 days** | **375 days** | **10 days** |
 | Weekly (WRLD and EMKT) | **26 weeks** | **104 weeks** | **2 weeks** |
 
-375 trading days is about **15** months at 25 days a month; 104 weeks is exactly **2** years.
+375 trading days is about **18 months**, not 15 — a trading year is roughly **252** days, so
+`375/252 = 1.4881` years *(rounded)*, i.e. `125/7 = 17.8571` months *(rounded)*. 104 weeks is
+exactly **2** years. *(252 is the market's number, not the paper's: BFRE never prints a
+trading-day count. Quote the 375 and give the conversion's assumption out loud.)*
 And the mechanism for the off-diagonals, PAPER:
 
 > "In all circumstances linkages can be captured through specific return correlations, either
@@ -1435,15 +1491,22 @@ anything else.
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level9.py     # 230 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level9.py     # 273 exact-rational assertions, exits 0
 ```
 
 The script recomputes every figure on this page in `fractions.Fraction`, with square roots
 taken in `decimal.Decimal` at 60 digits on top of exact variances: the Level-8 Gram matrix and
 all five cross-sectional solves, with both balance conditions checked in all five months and
-every miss reproduced; the three non-guarantees of Section 3d, including the centred covariance
-of `f_Chp` with `u_CHR`; the five specific variances under both divisor conventions and the
-proof that every ratio survives the swap; the full 5×5 second-moment matrix with all ten
+every miss reproduced; the **weighted** re-fit of that same file behind Section 3c's rider, with
+both weighted balance conditions holding in all five months while the unweighted sums do not, and
+the weighted form of Section 5's identity (`Σ_i ω_i² d_i = −Σ_{i≠j} ω_i ω_j Δ_ij`) shown to keep
+the conclusion while losing the `−1/(N−1)` number; the three non-guarantees of Section 3d,
+including the centred covariance of `f_Chp` with `u_CHR`; the five specific variances under the
+`T`-divisor and the `T−1`-divisor and the proof that the swap is a **common factor** so every ratio
+survives it, then the five **centred** variances (`7/10`, `23/10`, `16/5`, `23/10`, `7/10`) and the
+proof that centring is **not** a common factor — two entries rise, one falls, and `d_CHR/d_BRN`
+moves from `2` to `32/23`; the fact that the Section-6 panel's four row means are exactly zero, so
+centring is moot there; the full 5×5 second-moment matrix with all ten
 off-diagonals, all five zero row sums, the `Σ_{i≠j}Δ_ij = −Σd_i` identity and the
 `ρ̄ = −1/(N−1)` relation at four values of `N`; the equal-weight book's identically-zero leftover
 series and the 0.368 the diagonal model charges it; the three linear relations that collapse the
@@ -1454,7 +1517,9 @@ orthogonality checks; the full 4×4 `Δ`, its six cross-products, its one correl
 from the raw panel** for three books and then swept over all **2,401** integer books in
 `[−3,3]⁴`, confirming non-negative variance in every one and counting the **882** in which the
 diagonal model overstates; all four books' two variances, two risks, exact variance ratios,
-rounded risk ratios, reported shares and basis-point shortfalls; the discarded-variance shares
+rounded risk ratios, reported shares and basis-point shortfalls; the `108.3` ratio taken from the
+**unrounded** shortfalls, together with the `107.6` that the rounded bps would wrongly give;
+the discarded-variance shares
 `3/7`, `12/43` and `4/137`; the two wrong formulas of Section 11 priced (adding the volatilities,
 and putting the correlation in the grid instead of the covariance); the pair counts 1, 6 and
 1225 and the town's 79,800; the `1 + 2ρ/N` table at six values
@@ -1462,7 +1527,9 @@ of `N` and its agreement with Book W to four decimal places; the structural over
 matrix, its zero determinant, its invariance to the long-only split at four different splits,
 and its exactly-zero hedged book; both sabotage exhibits including the negative variance and
 the balance check that CHR's zero exposure defeats; the counting argument at five universe
-sizes with the 749 and 207 break-evens derived; and Table 1.3, the p.35 pie's sum to 100, and
-the p.16 decile positions relative to the printed 10% line.
+sizes with the 749 and 207 break-evens derived; and Table 1.3 (including the `375 trading days
+= 125/84 years = 125/7 months ≈ 18 months` conversion at 252 trading days a year, and the check
+that the naive "25 days a month" would imply an impossible 300-day trading year), the p.35 pie's
+sum to 100, and the p.16 decile positions relative to the printed 10% line.
 
 If any printed value ever disagrees with this markdown, the markdown is wrong.

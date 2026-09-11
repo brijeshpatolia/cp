@@ -335,6 +335,22 @@ check("M = (4/5)F + mean-outer-product, entry (0,0)",
       F(4, 5) * FF[0][0] + m1 * m1, MM[0][0])
 check("M = (4/5)F + mean-outer-product, entry (0,1)",
       F(4, 5) * FF[0][1] + m1 * m2, MM[0][1])
+# 4d: the no-mean grid differs from F by TWO effects pulling opposite ways --
+# the divisor (x 4/5, always down) and the outer product of the means (always up).
+# The markdown prints the size of each, cell by cell; check all six.
+check("4d divisor effect on Var(f_Mkt): (4/5)(25) - 25", F(4, 5) * FF[0][0] - FF[0][0],
+      F(-5))
+check("4d mean effect on Var(f_Mkt): m1*m1", m1 * m1, F(4))
+check("4d divisor effect on Var(f_Chp): (4/5)(9) - 9", F(4, 5) * FF[1][1] - FF[1][1],
+      F(-9, 5))
+check("4d mean effect on Var(f_Chp): m2*m2", m2 * m2, F(1))
+check("4d divisor effect on Cov: (4/5)(6) - 6", F(4, 5) * FF[0][1] - FF[0][1], F(-6, 5))
+check("4d mean effect on Cov: m1*m2", m1 * m2, F(2))
+check("4d: on both variances the divisor wins (net change is negative)",
+      (MM[0][0] < FF[0][0], MM[1][1] < FF[1][1]), (True, True))
+check("4d: on the covariance the mean wins (net change is positive)",
+      MM[0][1] > FF[0][1], True)
+
 check("M = (4/5)F + mean-outer-product, entry (1,1)",
       F(4, 5) * FF[1][1] + m2 * m2, MM[1][1])
 
@@ -571,9 +587,17 @@ show("that share as a decimal", dec(F(27) * share1 / F(46)))
 # says "variance"; this is what it would have to say if it said "risk".
 check("sqrt(108/115) to 4dp -- the volatility ratio, not the variance share",
       sqrt_dec(F(108, 115)), "0.9691 (ROUNDED)")
-check("... and it is strictly larger than the variance share 108/115",
-      (F(108, 115) * F(115, 108)) == 1 and Decimal("0.9691") > Decimal("0.9391"),
-      True)
+# sqrt(x) > x for 0 < x < 1, and that is provable in exact rationals as x > x^2.
+# (The old form here compared 108/115 against a re-evaluation of itself and two
+# hard-coded decimal literals, which proved nothing. Replaced.)
+_vshare = F(27) * share1 / F(46)
+check("the variance share is a proper fraction, 0 < 108/115 < 1",
+      F(0) < _vshare < F(1), True)
+check("... so its square root is strictly larger: 108/115 > (108/115)^2",
+      _vshare > _vshare * _vshare, True)
+check("... and the printed volatility ratio squares back to the variance share",
+      (F(Decimal(sqrt_dec(_vshare).split()[0])) ** 2 - _vshare)
+      < F(1, 1000), True)
 
 sub("6h. how much of the whole grid the first direction carries")
 check("lam_max / trace = 27/34", F(27) / F(34), F(27, 34))
@@ -873,6 +897,18 @@ check("the shrinkage moved that book's variance by 100", F(625) - F(525),
       F(100))
 check("... which is 100/625 = 4/25 of it", F(100) / F(625), F(4, 25))
 show("4/25 as decimal", dec(F(4, 25)))
+# The 16% is a VARIANCE move. The markdown now also prints the RISK move, because
+# variances move and volatilities do not move by the same percentage (Section 6g).
+check("the ratio of the two variances, 525/625", F(525) / F(625), F(21, 25))
+show("sqrt(21/25) -- the ratio of the two RISKS", sqrt_dec(F(21, 25)))
+_riskdrop = Decimal(1) - (Decimal(21) / Decimal(25)).sqrt()
+print(f"        1 - sqrt(21/25), the risk-side move = {_riskdrop:.4f} (ROUNDED)")
+check("the risk-side move rounds to 0.0835, i.e. 8.35% -- not 16%",
+      _riskdrop.quantize(Decimal("1.0000")), Decimal("0.0835"))
+check("... and it is strictly smaller than the 16% variance move",
+      _riskdrop < Decimal("0.16"), True)
+check("25% falls to sqrt(525) = 22.9129% (rounded)", sqrt_dec(F(525)),
+      "22.9129 (ROUNDED)")
 
 # ===========================================================================
 head("SECTION 13  Back to BFRE -- the paper's own numbers")

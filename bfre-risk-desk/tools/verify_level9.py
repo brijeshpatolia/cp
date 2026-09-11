@@ -136,13 +136,19 @@ def solve(M, y):
     return [A[i][k] for i in range(k)]
 
 
-def wls(cols, r):
-    """Unweighted least squares over columns `cols`. Returns
-    (coeffs, fitted, residuals, SS)."""
+def wls(cols, r, w=None):
+    """Least squares over columns `cols`, optionally weighted by `w`. Returns
+    (coeffs, fitted, residuals, SS). With w=None this is the unweighted fit the
+    markdown's toy uses; with w given it is the shipped model's shape, whose
+    balance condition is sum_i w_i x_i u_i = 0 rather than sum_i x_i u_i = 0."""
     n = len(r)
     k = len(cols)
-    M = [[dot(cols[i], cols[j]) for j in range(k)] for i in range(k)]
-    y = [dot(cols[i], r) for i in range(k)]
+    if w is None:
+        w = [F(1)] * n
+    w = [F(t) for t in w]
+    M = [[sum(w[t] * F(cols[i][t]) * F(cols[j][t]) for t in range(n))
+          for j in range(k)] for i in range(k)]
+    y = [sum(w[t] * F(cols[i][t]) * F(r[t]) for t in range(n)) for i in range(k)]
     bb = solve(M, y)
     fit = [sum(bb[j] * F(cols[j][i]) for j in range(k)) for i in range(n)]
     e = [F(r[i]) - fit[i] for i in range(n)]
@@ -223,6 +229,38 @@ SSQ_MONTH = [sum(U[nm][t] ** 2 for nm in NAMES8) for t in range(T8)]
 check("sum u^2 per month", SSQ_MONTH, [F(14), F(6), F(6), F(14), F(6)])
 check("sum u^2 over the whole file (Level 8 printed 46)", sum(SSQ_MONTH), F(46))
 
+sub("3c rider. the SHIPPED balance is the WEIGHTED one (p.25, sqrt-market-cap weights)")
+# The markdown's rider says: what the real fit forces is sum_i w_i x_i u_i = 0, and that
+# sum_i x_i u_i on its own is generally NOT zero once the regression is weighted. Checked
+# here on the Level-8 file with a deliberately uneven weight vector.
+WGT = [F(1), F(2), F(3), F(4), F(5)]
+UW = {nm: [] for nm in NAMES8}
+for t in range(T8):
+    r = [RET[nm][t] for nm in NAMES8]
+    bbw, fitw, ew, _ = wls([ONE5, XCHP], r, WGT)
+    for i, nm in enumerate(NAMES8):
+        UW[nm].append(ew[i])
+    check(f"month {t+1}: the WEIGHTED intercept balance sum_i w_i u_i = 0",
+          sum(WGT[i] * ew[i] for i in range(5)), F(0))
+    check(f"month {t+1}: the WEIGHTED slope balance sum_i w_i x_i u_i = 0",
+          sum(WGT[i] * XCHP[i] * ew[i] for i in range(5)), F(0))
+check("but the UNWEIGHTED sums are NOT all zero -- month 1 is the counterexample",
+      (sum(UW[nm][0] for nm in NAMES8) != 0,
+       sum(XCHP[i] * UW[NAMES8[i]][0] for i in range(5)) != 0), (True, True))
+# 5c rider: with weights, the row-sum identity becomes the weighted one, and the
+# conclusion (the off-diagonals cannot all be zero) survives while -1/(N-1) does not.
+SW = gram([UW[nm] for nm in NAMES8], T8)
+for i, nm in enumerate(NAMES8):
+    check(f"weighted case, row {nm}: sum_j w_j Delta_ij = 0",
+          sum(WGT[j] * SW[i][j] for j in range(5)), F(0))
+lhs = sum(WGT[i] ** 2 * SW[i][i] for i in range(5))
+rhs = -sum(WGT[i] * WGT[j] * SW[i][j] for i in range(5) for j in range(5) if i != j)
+check("weighted identity: sum_i w_i^2 d_i = - sum_{i!=j} w_i w_j Delta_ij", lhs, rhs)
+check("and the left side is strictly positive, so the off-diagonals cannot all be zero",
+      lhs > 0, True)
+check("the UNWEIGHTED row sums are NOT zero here, so -1/(N-1) is the toy's number only",
+      sum(SW[0]) != 0, True)
+
 sub("3d. three things the guarantee does NOT say -- each checked on this file")
 check("sum over TIME of CHR's misses is NOT zero", sum(U["CHR"]), F(-6))
 check("sum over TIME of AXL's misses is NOT zero", sum(U["AXL"]), F(1))
@@ -259,13 +297,38 @@ for nm in NAMES8:
 check("CHR's specific risk is exactly 2 because 4 is a perfect square",
       D8["CHR"], F(4))
 
-sub("4a. what the other divisor would have given (T-1 = 4), for comparison")
+sub("4a. the DIVISOR alone (T-1 = 4, still no mean subtracted) -- a common factor")
 D8_T1 = {nm: dot(U[nm], U[nm]) / F(T8 - 1) for nm in NAMES8}
 check("d_CHR with divisor 4", D8_T1["CHR"], F(5))
+check("d_BRN with divisor 4", D8_T1["BRN"], F(5, 2))
 check("every entry is the divisor-5 entry times 5/4",
       all(D8_T1[nm] == D8[nm] * F(5, 4) for nm in NAMES8), True)
 check("so any RATIO of two such numbers is unchanged by the divisor",
       D8_T1["CHR"] / D8_T1["BRN"], D8["CHR"] / D8["BRN"])
+check("   ... and that common ratio is 2", D8_T1["CHR"] / D8_T1["BRN"], F(2))
+
+sub("4a(ii). the CENTRED convention is a DIFFERENT choice, and it is NOT a common factor")
+# sum (u - ubar)^2 = sum u^2 - T * ubar^2 ; each row has its own mean, so no common factor.
+UBAR = {nm: sum(U[nm]) / F(T8) for nm in NAMES8}
+CEN_SS = {nm: sum((x - UBAR[nm]) ** 2 for x in U[nm]) for nm in NAMES8}
+check("row means are all different from each other (AXL, BRN, CHR)",
+      (UBAR["AXL"], UBAR["BRN"], UBAR["CHR"]), (F(1, 5), F(2, 5), F(-6, 5)))
+for nm, ss, want in [("AXL", F(14, 5), F(7, 10)), ("BRN", F(46, 5), F(23, 10)),
+                     ("CHR", F(64, 5), F(16, 5)), ("DLT", F(46, 5), F(23, 10)),
+                     ("EMK", F(14, 5), F(7, 10))]:
+    check(f"{nm}: sum (u - ubar)^2 = sum u^2 - T*ubar^2", CEN_SS[nm], ss)
+    check(f"{nm}: centred d, divisor T-1 = 4", CEN_SS[nm] / F(T8 - 1), want)
+CEN = {nm: CEN_SS[nm] / F(T8 - 1) for nm in NAMES8}
+check("centring is NOT a common rescaling: AXL and BRN go UP, CHR goes DOWN",
+      (CEN["AXL"] > D8["AXL"], CEN["BRN"] > D8["BRN"], CEN["CHR"] < D8["CHR"]),
+      (True, True, True))
+check("no single factor k has CEN = k * D8 for all five names",
+      len({CEN[nm] / D8[nm] for nm in NAMES8}) > 1, True)
+check("so the CHR/BRN ratio DOES move under centring: 2 -> 32/23",
+      CEN["CHR"] / CEN["BRN"], F(32, 23))
+show("32/23 as a decimal", dec(F(32, 23), 6))
+check("... whereas under the divisor change alone it stayed at 2",
+      D8_T1["CHR"] / D8_T1["BRN"], F(2))
 
 # ===========================================================================
 head("SECTION 5  THE GUARANTEE THAT FORBIDS A DIAGONAL")
@@ -357,6 +420,13 @@ check("sum of KVR^2", dot(PANEL["KVR"], PANEL["KVR"]), F(48))
 check("sum of TLM^2", dot(PANEL["TLM"], PANEL["TLM"]), F(48))
 check("sum of GNP^2", dot(PANEL["GNP"], PANEL["GNP"]), F(54))
 check("sum of HRB^2", dot(PANEL["HRB"], PANEL["HRB"]), F(36))
+# 6b says the four sample means are zero deliberately, so 4a(ii)'s centring question
+# is moot on THIS panel -- the boss-round answer at 14.7 objection 2 turns on that.
+check("every row mean on the new panel is exactly zero, so centring changes nothing here",
+      [sum(PANEL[nm]) / F(T9) for nm in NAMES9], [F(0)] * 4)
+check("... so on this panel the centred d equals the second-moment d, row by row",
+      [sum((x - sum(PANEL[nm]) / F(T9)) ** 2 for x in PANEL[nm]) / F(T9) for nm in NAMES9],
+      [dot(PANEL[nm], PANEL[nm]) / F(T9) for nm in NAMES9])
 
 sub("6c. where the numbers come from: one shock with no factor, plus private parts")
 G = [F(3), F(0), F(-3), F(-3), F(3), F(0)]        # the supply-chain shock
@@ -517,6 +587,11 @@ print(f"        risk missing, percentage points = {missW:.6f} (ROUNDED)")
 print(f"        risk missing, basis points      = {missW*100:.2f} (ROUNDED)")
 ratio_bps = missP / missW
 print(f"        Book P's shortfall divided by Book W's = {ratio_bps:.1f} (ROUNDED)")
+# 14.3 prints this division; it must be done on the SHORTFALLS, not on the rounded bps.
+check("the 108.3 comes from the unrounded shortfalls",
+      str(ratio_bps.quantize(Decimal("1.0"))), "108.3")
+check("...and NOT from the two-decimal bps, which would read 107.6",
+      str((Decimal("64.58") / Decimal("0.60")).quantize(Decimal("1.0"))), "107.6")
 
 sub("8e. the share of the variance the diagonal model throws away")
 check("Book P: 3 out of 7", F(3) / F(7), F(3, 7))
@@ -719,8 +794,14 @@ check("daily model Newey-West lag, days", F(10), F(10))
 check("weekly model half-life, weeks", F(26), F(26))
 check("weekly model observations, weeks", F(104), F(104))
 check("weekly model Newey-West lag, weeks", F(2), F(2))
-check("375 days is about 15 months of trading at 25 days a month",
-      F(375) / F(25), F(15))
+# 375 TRADING days: a trading year is about 252 days, NOT 300, so 375 days is ~18 months.
+check("375 trading days / 252 trading days per year = 125/84 years", F(375) / F(252), F(125, 84))
+show("125/84 in years, as a decimal", dec(F(125, 84)))
+check("that is 125/7 months", F(375) / F(252) * F(12), F(125, 7))
+show("125/7 in months, as a decimal", dec(F(125, 7)))
+check("which rounds to 18 months, not 15", round(F(125, 7)), 18)
+check("the naive '25 trading days a month' would imply 300 trading days a year, which is wrong",
+      F(25) * F(12) > F(252), True)
 check("104 weeks is exactly 2 years", F(104) / F(52), F(2))
 
 sub("16g. p.35 -- the size of the stake, read directly off the pie")

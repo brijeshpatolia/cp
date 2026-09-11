@@ -277,6 +277,11 @@ fMkt = [FIT[m]["b"][0] for m in MONTHS]
 fVal = [FIT[m]["b"][1] for m in MONTHS]
 SSE = [FIT[m]["sse"] for m in MONTHS]
 
+check("residual row M1", FIT["M1"]["e"], [F(1, 2), F(-1), F(1), F(1, 2), F(-1)])
+check("residual row M2", FIT["M2"]["e"], [F(1), F(0), F(1, 2), F(0), F(-3, 2)])
+check("residual row M3", FIT["M3"]["e"], [F(1), F(-1, 2), F(-1), F(1), F(-1, 2)])
+check("residual row M4", FIT["M4"]["e"], [F(3, 2), F(0), F(1, 2), F(-3, 2), F(-1, 2)])
+check("residual row M5", FIT["M5"]["e"], [F(1, 2), F(1, 2), F(-2), F(1, 2), F(1, 2)])
 check("f_Mkt series", fMkt, [F(5), F(-2), F(-2), F(2), F(2)])
 check("f_Val series", fVal, [F(3, 2), F(-1), F(0), F(1), F(1)])
 check("SSE series", SSE, [F(7, 2), F(7, 2), F(7, 2), F(5), F(5)])
@@ -579,8 +584,10 @@ sub("9e  the (1.12)-shaped regression: AXL on the market series")
 bbM, fitM, eM, ssM = wls([ones(T), fMkt], RS["AXL"])
 check("AXL: time-series slope on f_Mkt", bbM[1], F(13, 36))
 check("AXL: that slope by Cov/Var", dot(dMkt, centre(RS["AXL"])) / SS_Mkt, F(13, 36))
-check("the market column is all ones, every stock, every month",
-      [ones(N) for _ in MONTHS], [[F(1)] * 5 for _ in MONTHS])
+check("every stock's market exposure is 1 in every month (p.4, 'unit exposure')",
+      sorted(set(v for m in MONTHS for v in ones(N))), [F(1)])
+check("so the market column's reach is n, not Q", [dot(ones(N), ones(N))] * T,
+      [F(5)] * T)
 show("13/36", dec(F(13, 36), 6))
 
 # ===========================================================================
@@ -615,7 +622,11 @@ check("sum Q_t * f_Val,t", sum(Q[m] * FIT[m]["b"][1] for m in MONTHS), F(19))
 check("Q-weighted average of the monthly f_Val", qw, F(19, 44))
 check("it is exactly the pooled estimate", qw, bp[1])
 check("M4's weight in the pooled estimate", Q["M4"] / F(44), F(1, 11))
-check("M4's weight in the monthly mean", F(1, 5), F(1, 5))
+check("M4's weight in the monthly mean is 1/T, not Q4/sum Q", F(1, T), F(1, 5))
+check("the two weightings for M4 disagree", Q["M4"] / F(44) == F(1, T), False)
+check("only M4's two weights differ; the other four months are over-weighted",
+      [Q[m] / F(44) > F(1, T) for m in MONTHS],
+      [True, True, True, False, True])
 
 sub("10b  what pooling throws into the residual")
 check("pooled SSE", ssp, F(10507, 44))
@@ -727,7 +738,8 @@ print("   p.42 : (1.12) is a time-series regression -- 5 years of weeklies, 52-w
 print("   p.10 : Table 1.2 -- annualised return, annualised volatility, autocorrelation")
 
 sub("our five-month file against the paper's thresholds")
-check("our proportion of significant months for f_Val", F(3, 5), F(3, 5))
+check("our proportion of significant months for f_Val",
+      F(sum(1 for v in t2Val if v > 4), T), F(3, 5))
 check("clears p.14's 10% bar", F(3, 5) > F(1, 10), True)
 check("Figure 1.8's measured Value height, 34% [APPROX], also clears 10%",
       F(34, 100) > F(1, 10), True)
@@ -792,6 +804,38 @@ check("Profitability: 3.1/2.2 rounds to 1.41, printed 1.37",
       round2(F(31, 22)), F(141, 100))
 show("0.9/1.8", dec(F(9, 18), 6))
 show("-0.3/1.9", dec(F(-3, 19), 6))
+
+sub("p.40 style/substyle weights and p.52 macro betas (Section 9e, 17f)")
+# The two style/substyle weight tables on p.40 are UNNUMBERED and UNCAPTIONED in the paper;
+# notes/chunk_37-45.md labels them A and B for its own convenience. Only the NAMR column is
+# needed here. Every (1.12)/(1.49) output below is a COLUMN of X, never a factor return.
+NAMR_VOLATILITY = [("Historical Beta", F(34, 100)),      # (1.12) slope,     p.42
+                   ("Cumulative Range 12M", F(33, 100)),  # (1.13),          p.42
+                   ("Historical Sigma", F(33, 100))]      # (1.12) resid sd, p.42
+NAMR_MOMENTUM = [("Relative Strength 11M", F(50, 100)),
+                 ("Historical Alpha", F(50, 100))]        # (1.12) intercept, p.44
+check("NAMR Volatility substyle weights sum to 1",
+      sum(w for _, w in NAMR_VOLATILITY), F(1))
+check("NAMR Momentum substyle weights sum to 1",
+      sum(w for _, w in NAMR_MOMENTUM), F(1))
+check("(1.12)'s three outputs carry NAMR weight 0.34 + 0.33 + 0.50",
+      [dict(NAMR_VOLATILITY)["Historical Beta"],
+       dict(NAMR_VOLATILITY)["Historical Sigma"],
+       dict(NAMR_MOMENTUM)["Historical Alpha"]],
+      [F(34, 100), F(33, 100), F(50, 100)])
+# NAMR Sentiment has exactly one substyle: "Beta on VIX (Regional)", weight 1.00 -- and it is a
+# (1.49) macro beta, i.e. a SECOND per-asset time-series regression live in the NAMR model.
+NAMR_SENTIMENT = [("Beta on VIX (Regional)", F(100, 100))]
+check("NAMR Sentiment substyle weights sum to 1", sum(w for _, w in NAMR_SENTIMENT), F(1))
+check("NAMR Sentiment is a single (1.49) macro beta", len(NAMR_SENTIMENT), 1)
+# Time-series fits the paper defines, by equation number and page. The point of the list is that
+# it has length > 1 -- "the paper runs a time-series regression exactly once" is false.
+TIME_SERIES_FITS = {"1.12": 42, "1.23": 45, "1.31": 47, "1.37": 49, "1.41": 49, "1.49": 52}
+check("the paper defines more than one per-asset time-series regression",
+      len(TIME_SERIES_FITS) > 1, True)
+check("the two that are return-on-return betas are (1.12) p.42 and (1.49) p.52",
+      sorted((e, pg) for e, pg in TIME_SERIES_FITS.items() if e in ("1.12", "1.49")),
+      [("1.12", 42), ("1.49", 52)])
 
 sub("percentage forms of the noise floors, as printed in Section 8")
 check("f_Val noise share as a percentage", 100 * F(14, 75), F(56, 3))

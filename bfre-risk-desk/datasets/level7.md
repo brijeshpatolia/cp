@@ -1,7 +1,7 @@
 # Level 7 — The Timeline
 
 Every number below is recomputed in exact rational arithmetic by `tools/verify_level7.py`
-(252 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
+(267 assertions, exits 0). Nothing here is rounded by hand. Where a decimal does not
 terminate it is written with the word **rounded** next to it; every other decimal on this
 page is exact.
 
@@ -600,9 +600,9 @@ truth              = 9 − 41/150 = 1309/150 = 8.726667 (rounded)
 noise share        = (41/150)/9 = 41/1350 = 0.030370 (rounded)  ≈ 3.04%
 ```
 
-**3.04% for the market row against 18.67% for the value row**, and the reason is structural, not
-accidental: the market factor moves a lot relative to how precisely it is measured; the style
-factor does not. A grid built from these rows overstates every variance, and overstates the
+**3.04% for the market row against 18.67% for the value row** (both rounded), and the reason is
+structural, not accidental: the market factor moves a lot relative to how precisely it is
+measured; the style factor does not. A grid built from these rows overstates every variance, and overstates the
 *small* ones most.
 
 Three honest labels on this section:
@@ -718,7 +718,7 @@ slope on f_Mkt = (Cp − Bq)/det = (52 − 33)/23 =  19/23 =  0.826087 (rounded)
 slope on f_Val = (Aq − Bp)/det = (108 − 143)/23 = −35/23 = −1.521739 (rounded)
 ```
 
-Done properly, the sign is right and the size is sensible: `−1.52` against an average
+Done properly, the sign is right and the size is sensible: `−1.52` (rounded) against an average
 exposure of `−1.6`. **And it is still one number.** AXL's exposure took two distinct values
 over these five months and the method has no slot to put the second one in.
 
@@ -730,8 +730,8 @@ VIF = 1/(1 − cos²) = 144/23 = 6.260870 (rounded)
 df  = T − 3 = 2
 ```
 
-A VIF of 6.26 on two degrees of freedom. **This is a bad regression**, and the badness is not
-fixable by being cleverer — it is what you get when you have five observations and want to
+A VIF of 6.26 (rounded) on two degrees of freedom. **This is a bad regression**, and the badness
+is not fixable by being cleverer — it is what you get when you have five observations and want to
 separate two things that move together. A time-series method needs a long history. BFRE's own
 one, (1.12) on **p.42**, uses **5 years of weekly observations** — 260 of them — and the next
 subsection says what that buys and what it costs.
@@ -752,10 +752,11 @@ one of the five months on the *other side* of the factor.
 Ask the player which number they would put in a risk model for DLT's value exposure in M4,
 when the true answer that month was `−1`. There is no good answer. That is the point.
 
-### 9e. What BFRE's own time-series regression is for
+### 9e. What BFRE's own time-series regressions are for
 
-The paper runs a time-series regression **exactly once**, and it is worth being precise about
-what comes out of it. **p.42**, equation **(1.12)**, Historical Beta:
+BFRE runs time-series regressions in several places, and it is worth being precise about what
+comes out of them — because in **every** case the output is a column of `X`, never a factor
+return. The cleanest one to work through is **p.42**, equation **(1.12)**, Historical Beta:
 
 ```
 r_{i,s} = alpha_i + beta_i · r^M_{i,s} + epsilon_{i,s}
@@ -778,19 +779,39 @@ slope = Σ d_Mkt · dev(r_AXL) / Σ d_Mkt² = 13/36 = 0.361111 (rounded)
 
 And AXL's market exposure in the model? **1.** Every asset's is 1, in every month — **p.4**:
 *"all equity assets have a **unit exposure** to this factor."* So the time-series answer
-(`0.36`) and the model's exposure (`1`) are not even close, and they are not supposed to be:
-they are different objects.
+(`0.36`, rounded) and the model's exposure (`1`) are not even close, and they are not supposed
+to be: they are different objects.
 
-**Here is the sentence the level exists to produce.** BFRE does run a time-series regression —
-and its output is fed back in as **input substyles**. Its slope is Historical Beta and the
-standard deviation of its residuals is Historical Sigma, both substyles of **Volatility**
-(**p.42**); its intercept is Historical Alpha, a substyle of **Momentum** (**p.44**). One
-regression, three outputs, two different styles — and Table A on **p.40** prints the weights
-(NAMR: Historical Beta 0.34 and Historical Sigma 0.33 inside Volatility, Historical Alpha 0.50
-inside Momentum). Each is a *characteristic of the stock*, one more column of `X`. Not one of
-them is **ever** the mechanism by which exposures are obtained, and none of them produces a
-factor return. In BFRE, time-series regressions make columns; cross-sectional regressions make
-the row.
+**Here is the sentence the level exists to produce.** BFRE does run time-series regressions —
+and their output is fed back in as **input substyles**. (1.12)'s slope is Historical Beta and
+the equally-weighted standard deviation of its residuals is Historical Sigma, both substyles of
+**Volatility** (**p.42**); its intercept is Historical Alpha, a substyle of **Momentum**
+(**p.44**). One regression, three outputs, two different styles — and the style/substyle weight
+tables on **p.40** print the weights (NAMR: Historical Beta 0.34 and Historical Sigma 0.33
+inside Volatility, Historical Alpha 0.50 inside Momentum). **Those two tables carry no caption
+and no number in the paper** — cite them as "the weight tables on p.40", never by a label.
+Each of the three is a *characteristic of the stock*, one more column of `X`.
+
+**And (1.12) is not the only one — be exact about this, because a CRO will check.** The paper
+defines at least these time-series fits, every one of them run down a date index on a single
+asset:
+
+| Where | What it regresses | Where the answer goes |
+|---|---|---|
+| **(1.12)**, **p.42** | asset weekly excess returns on the cap-weighted Estimation Universe | Historical Beta + Historical Sigma → **Volatility**; Historical Alpha → **Momentum** (p.44) |
+| **(1.49)**, **p.52** | *the residuals of (1.12)* on a named macro series | the **Macro Beta** family. One of them is live in NAMR: Sentiment is *"Beta on VIX (Regional)"* at weight **1.00** (lower weight table, **p.40**) |
+| **(1.31)**, **p.47** | five years of EPS on time | its fitted value at the latest date is the numerator of Normalised Earnings-to-Price, (1.30) → **Earnings Yield** (NAMR 0.33) |
+| **(1.37)** and **(1.41)**, **p.49** | five years of Total Assets on time / Total Sales on time | the slope over an average is Asset Growth Rate (1.36) / Growth of Total Sales (1.40) → **Growth** |
+| **(1.23)**, **p.45** | monthly traded volume on time | the slope over an average is Growth of Trading Volume (1.22) → **Liquidity** (not in NAMR; 12M is 0.33 in EMKT, 36M is 0.17 in WRLD and 0.2 in USAM — **p.41**) |
+
+*(Note the paper's habit, worth pointing out: the **descriptor** gets the equation number the
+reader remembers — (1.22), (1.30), (1.36), (1.40) — and the **regression** that produces it is
+numbered separately on the next line. Level 5 already walked (1.31) and (1.49); this is the
+same list, read for its shape rather than its intercept.)*
+
+Not one of them is **ever** the mechanism by which exposures are obtained, and not one of them
+produces a factor return. That is the round trip, and it is the whole sentence: in BFRE,
+time-series regressions make columns; cross-sectional regressions make the row.
 
 ---
 
@@ -860,9 +881,9 @@ extra miss created by pooling = 9605/44 = 218.295455 (rounded)
 ratio pooled/monthly          = 10507/902 = 11.648559 (rounded)
 ```
 
-**Pooling multiplies the unexplained variation — the sum of squared misses — by 11.65.** And the whole of that increase is
-precisely the month-to-month variation in the factor returns — the thing this level produces
-and Level 8 is about to use. *A pooled regression does not lose the timeline by accident; it
+**Pooling multiplies the unexplained variation — the sum of squared misses — by 11.65
+(rounded).** And the whole of that increase is precisely the month-to-month variation in the
+factor returns — the thing this level produces and Level 8 is about to use. *A pooled regression does not lose the timeline by accident; it
 converts the timeline into residual.*
 
 ### 10c. One month is not a small version of the timeline
@@ -939,7 +960,7 @@ Two things to say out loud, because both are traps:
 |---|---|---|
 | **cross-sectional regression** | one regression, one date, many stocks — Sections 4 and 5 | **the paper's own core phrase**: p.24, p.30, and footnotes 11 (p.14) and 12 (p.16). p.32's "cross-sectional *variation*" is a different phrase |
 | **factor-return time series** | the row in Section 6 — one number per factor per period | the object behind Table 1.2 (p.10) and every cumulative-performance figure |
-| **time-series regression** | one stock, many dates — Section 9 | the paper runs one: (1.12), p.42. It never calls it that |
+| **time-series regression** | one stock, many dates — Section 9 | the paper runs several — (1.12) p.42, the macro betas (1.49) p.52, the trend fits (1.23) p.45, (1.31) p.47, (1.37)/(1.41) p.49 — and **never calls any of them that** (its word is *univariate regression*). Every one makes a column of `X` |
 | **pooled / panel regression** | all stock-months in one solve — Section 10 | **neither word appears in the paper** |
 | **Fama–MacBeth** | the industry name for exactly Sections 5 + 6c: run cross-sections period by period, then take the mean of the row and its standard error | **never appears in the paper** — no mention, no citation |
 | **cumulative factor return** | the running sum of Section 6e | Figures 1.7 (p.14), 1.12 (p.18), 1.14 (p.20) — the paper never states whether it sums or compounds |
@@ -964,8 +985,8 @@ held fixed has recognised the word and not the object.
 |---|---|---|
 | "a stock's exposure is its time-series slope" | AXL: **+0.75** | AXL's exposure was negative in all five months (max `−1`). Section 9b decomposes the sign flip into three named channels |
 | "then just average the monthly exposures" | AXL: **−1.6**, DLT: **+1** | Not the same object as a slope, and not the same number: DLT's slope is `33/8 = 4.125`. Averaging also throws away the very variation that made M4 different from M3 |
-| "pool all the stock-months, it's more data" | `f_Val = 19/44 = 0.431818` (rounded) | Not the timeline's `1/2`. Pooling weights each month by `Q_t` (Section 10a) and inflates the miss by **11.65×** (Section 10b) |
-| "the series' variance is the factor's variance" | `1` | `61/75 = 0.813333` (rounded) after removing the noise floor `14/75`. The error is **18.67%** here, and it is worst for the quietest factors |
+| "pool all the stock-months, it's more data" | `f_Val = 19/44 = 0.431818` (rounded) | Not the timeline's `1/2`. Pooling weights each month by `Q_t` (Section 10a) and inflates the miss by **11.65×** (rounded, Section 10b) |
+| "the series' variance is the factor's variance" | `1` | `61/75 = 0.813333` (rounded) after removing the noise floor `14/75`. The error is **18.67%** (rounded) here, and it is worst for the quietest factors |
 | "a month with a small `t` means the factor didn't work" | M4: `t = 1.549193` (rounded) | M4 and M5 have **identical** `f` and `σ̂²`. Only `Q` differs, `4` against `10`, and `t²` differs by exactly `5/2` |
 | "`f_Mkt` is the plain average return" | M1: **5** | With √-cap weights, `77/16 = 4.8125`. It is the *weighted* average, and only because `Σw·x = 0` (p.10) |
 | "more stocks make the series longer" | — | More stocks raise `Q`, which sharpens each `f̂_t`. Only more **months** raise `T`, which is what `Var(mean) = variance/T` and `df = T − 1` need. Level 6's "distance covered, not count", with a date on it |
@@ -1019,7 +1040,7 @@ either. Demand both, each with numbers from the file or pages from the paper.
 | **4. The exposures genuinely move, and this design tracks them.** | Our file: DLT goes `+2, +2, +1, −1, +1` — a sign change. The paper's own version, **p.17**: *"In contrast to most style factors in BFRE, the reversal and momentum factor exposures of a security **can vary considerably through time**"*, and *"Reversal and momentum clearly exhibit the **least persistence** relative to other styles, which reflects the highly time-varying nature of these factor exposures."* Figure 1.11 (p.17) is that measurement — and `notes/` records `[UNREADABLE]` for which plotted trace is which style, so quote the sentence, never a trace. |
 | **5. A time-series beta on a moving exposure returns the wrong number, and can return the wrong sign.** | Section 9: AXL's slope is **+0.75** against exposures that were never positive. Even the two-column version, `−35/23 = −1.521739` (rounded), is one number for a quantity that took two values. |
 | **6. Structure buys you a small problem instead of a huge one.** | **p.2**: BFRE *"imposes far more structure on the asset covariance matrix, reducing the modelling problem to a smaller set of factors, which capture the most important sources of asset return commonality"* — positioned against **STORM**, which the paper calls *"an alternative and entirely complementary methodology"*, not a thing to replace. **Careful with the citation:** the description of STORM as an asset-by-asset covariance matrix built from asset returns alone, each asset effectively its own factor, is `notes/`'s **gloss**, not a printed quotation. The quotable clause is the "imposes far more structure" one. |
-| **7. A cross-section is wide, so each period's answer is well determined.** | Our five stocks give `df = 3` per month and a `t` of 4.39. BFRE's cross-sections are the whole Estimation Universe. Compare Section 9c's time-series fit: `df = 2` and `VIF = 6.260870` (rounded). |
+| **7. A cross-section is wide, so each period's answer is well determined.** | Our five stocks give `df = 3` per month and a `t` of 4.39 (rounded). BFRE's cross-sections are the whole Estimation Universe. Compare Section 9c's time-series fit: `df = 2` and `VIF = 6.260870` (rounded). |
 
 ## 15.3 THE CASE FOR WHAT IT COSTS — every claim a page or a number
 
@@ -1032,7 +1053,7 @@ either. Demand both, each with numbers from the file or pages from the paper.
 | **5. You need identifying restrictions that a time-series model never needs.** | **p.26**: market, industry and country are all columns of ones for every asset, so the specification *"is not uniquely identified as there are an infinite number of possible solutions"* until (1.10) is imposed by hand. And the fix changes meanings: *"the industry and country factors are **net of** the market factor return, which impacts their interpretation."* Level 2's lesson, now a running cost. |
 | **6. The exposures are refreshed weekly while the regression runs daily.** | **p.24**: *"These regressions are performed **daily** for country and regional models and **weekly** for the World model."* **p.36**: *"The model universes, **factor exposures**, specific risk and specific return correlations are updated on a **weekly basis on Thursday** to incorporate the data as of previous Wednesday market close."* **INFER, and say so**: it follows that roughly five consecutive daily cross-sections are run against **the same** exposure matrix. So p.2's *"immediately"* is, operationally, *by next Thursday*. The paper never remarks on the gap. (`gm/CRITIQUE.md` **B-1** lists four frequencies for one horizon; this is a fifth, and it belongs there.) |
 | **7. The World model is coarser for no stated reason.** | **p.24**, again: weekly for the World model. `notes/` records explicitly that **no justification is given**. Its factor returns are a coarser row feeding the same downstream machinery. |
-| **8. You still cannot answer "how sensitive is this stock?" from a cross-section.** | The cross-section answers *what did this characteristic pay this month*. To get a sensitivity you must run a time-series regression — which BFRE does, once, at (1.12) on **p.42** — and then it enters as **input substyles**: slope and residual sd into Volatility (p.42), intercept into Momentum (p.44), with the weights in Table A (p.40). Never as the exposure mechanism. The player must be able to state that round trip. |
+| **8. You still cannot answer "how sensitive is this stock?" from a cross-section.** | The cross-section answers *what did this characteristic pay this month*. To get a sensitivity you must run a time-series regression — which BFRE does in several places, most clearly at (1.12) on **p.42** — and then it enters as **input substyles**: slope and residual sd into Volatility (p.42), intercept into Momentum (p.44), with the weights in the p.40 weight tables. The macro betas of (1.49) on **p.52** are the same move again: NAMR's whole Sentiment style is one of them, *"Beta on VIX (Regional)"* at weight **1.00**. Never the exposure mechanism, never a factor return. The player must be able to state that round trip. |
 
 ## 15.4 The trap the good players fall into — have this ready
 
@@ -1199,9 +1220,9 @@ Printed values, for calibration only, verified digit-for-digit in `notes/`: Mark
 autocorrelation **0.22**; Reversal's **0.17**.
 
 **Two GAPs on this table, both real:** the paper never states its annualisation convention, and
-never defines "Sharpe Ratio" — no formula, no risk-free rate named. And a warning carried
-forward from Level 1: **do not derive one printed column from another**. Return and volatility
-are each rounded to one decimal before the Sharpe column is printed, so **eight of the thirteen
+never defines "Sharpe Ratio" — no formula, no risk-free rate named. And a warning this level
+issues for the first time and every later level inherits: **do not derive one printed column
+from another**. Return and volatility are each rounded to one decimal before the Sharpe column is printed, so **eight of the thirteen
 rows do not reproduce** — Size, Mid-cap, Momentum, Earnings Yield, Dividend Yield, Profitability,
 Growth and Sentiment. Three of the eight, worked:
 
@@ -1211,17 +1232,19 @@ Mid-cap         0.9/1.8 = 0.5 exactly        → 0.50   printed 0.52
 Dividend Yield −0.3/1.9 = −0.157895 (rounded)→ −0.16  printed −0.18
 ```
 
-Only Market, Volatility, Reversal, Liquidity and Value reproduce to two decimals. The Sharpe
-column is computed from unrounded inputs; the printed columns are not those inputs.
+Only Market, Volatility, Reversal, Liquidity and Value reproduce to two decimals. **INFER:** the
+Sharpe column looks computed from unrounded inputs, of which the printed return and volatility
+columns are rounded shadows. The paper says nothing either way — that is the second GAP.
 
-### 17d. p.14, p.18, p.20 — the plots are the running sums
+### 17d. p.14, p.18, p.19–20 — the plots are the running sums
 
 Figure 1.7 (**p.14**, NAMR Size against a negated Fama-French SMB), Figure 1.12 (**p.18**, EMEA
 momentum) and Figure 1.14 (**p.20**, NAMR Value against Fama-French HML) are cumulative
 performance charts. **They are Section 6e's operation, run on nearly eighteen years
-(Mar 1996 – Dec 2013) instead of five months.** The paper's two printed correlations between its own factor and the academic
-counterpart — **0.67** for size (p.13) and **0.45** for value (p.20) — are correlations between
-two *rows* of the kind Section 6 builds.
+(Mar 1996 – Dec 2013) instead of five months.** The paper's two printed correlations between its
+own factor and the academic counterpart — **0.67** for size (**p.13**) and **0.45** for value
+(**p.19**: the sentence is printed on p.19, the figure it describes on p.20, and Level 1 makes
+the same split) — are correlations between two *rows* of the kind Section 6 builds.
 
 All plotted *levels* in those figures are `[APPROX — measured off the scan; the paper prints no
 data labels on any chart]`. The correlations 0.67 and 0.45 are printed text and may be quoted
@@ -1245,19 +1268,28 @@ So the chain is: Level 7 produces a row of `f` and a row of `t` → the proporti
 months decides which factors exist → the surviving factors are the columns of `X` → and `X` and
 the row of `f` are the two inputs to (1.7) and (1.8) on **p.24**.
 
-### 17f. p.42 — the one time-series regression, and what it is for
+### 17f. p.42 and p.52 — the time-series regressions, and what they are for
 
 Equation **(1.12)**, Historical Beta: weekly excess returns, five years, exponentially weighted
 with a **52-week half-life**, against the cap-weighted Estimation Universe. Its slope becomes
 the **Historical Beta** substyle and the equally-weighted standard deviation of its residuals
 becomes **Historical Sigma** — both substyles of **Volatility**, both defined on **p.42**. Its
 intercept becomes the **Historical Alpha** substyle, and that one sits under **Momentum**
-(**p.44**), not Volatility. Table A on **p.40** gives the NAMR weights: Historical Beta `0.34`
-and Historical Sigma `0.33` within Volatility, Historical Alpha `0.50` within Momentum.
+(**p.44**), not Volatility. The style/substyle weight tables on **p.40** give the NAMR weights:
+Historical Beta `0.34` and Historical Sigma `0.33` within Volatility, Historical Alpha `0.50`
+within Momentum. (Those tables are unnumbered and uncaptioned in the paper; `notes/` labels them
+A and B for its own convenience, and that label is **not** the paper's.)
+
+Then equation **(1.49)** on **p.52**, the Macro Beta: *"The estimated slope coefficient … from
+an exponentially weighted univariate regression of the residuals in regression (1.12) on the
+returns of the specified macro-economic factor"*. Same shape, one stock, a date index — and in
+NAMR its output is the *entire* **Sentiment** style, *"Beta on VIX (Regional)"* at weight
+**1.00** (lower weight table, **p.40**). Table 1.4 on **p.56** lists **21** Macro Beta substyles
+in the candidate inventory.
 
 **Every one of those is a column of `X`.** Not one of them is a factor return. The rival design
-is present inside BFRE — as a supplier of characteristics, on the input side of the very
-regression this level runs.
+is present inside BFRE — repeatedly, as a supplier of characteristics, on the input side of the
+very regression this level runs.
 
 Say the round trip out loud, because it is the sentence that proves the level landed:
 
@@ -1284,9 +1316,14 @@ M4's was — is a bias in everything built on the row.
 
 ### 17h. What `notes/` does NOT support — searched across all 65 transcribed pages
 
-- **No number of assets is ever given for any cross-sectional regression.** So the `n`, the `k`
-  and the `df` behind every t-statistic the paper reports cannot be reconstructed. (Carried
-  forward from Level 6; it is a Level 7 problem too, because the row's precision depends on it.)
+- **No sample size is ever stated for any cross-sectional regression.** So the `n`, the `k` and
+  the `df` behind every t-statistic the paper reports cannot be reconstructed. (Carried forward
+  from Level 6; it is a Level 7 problem too, because the row's precision depends on it.) Be
+  precise when a CRO pushes back: the paper *does* print asset counts — the industry-schema
+  tables from **p.57** give a `# Assets` column, and the NAMR rows there total **2,193** (Level 1
+  counted them; the page prints no total). That is a **coverage snapshot as of December 2013**,
+  not the `n` of any dated estimation-universe cross-section, and the t-statistics being reported
+  run from **March 1996**. It does not reconstruct a single `df`.
 - **No standard error is ever reported for any factor return.** The row is printed; its
   uncertainty is not. The one confidence interval anywhere in the paper is p.38's 95% band on a
   *bias statistic*, which is a different object.
@@ -1298,7 +1335,7 @@ M4's was — is a bias in everything built on the row.
   not in the text and not in the bibliography (**27 entries**, `[1]`–`[15]` printed on **p.64**
   and `[16]`–`[27]` on **p.65**; the count is the highest reference number, neither page prints
   a total). Fama and French are not in the bibliography at all — they appear only
-  as the source of the **SMB** and **HML** comparison series (p.13, p.14, p.20).
+  as the source of the **SMB** and **HML** comparison series (p.13, p.14, p.19, p.20).
 - **The word "stationarity" never appears**, although p.17's finding that reversal and momentum
   exposures *"can vary considerably through time"* is precisely a statement that the assumption
   a time-series beta needs is false for two of BFRE's own factors.
@@ -1317,14 +1354,15 @@ and withholds the trial, and by now the player should notice it without being to
 ## Verification
 
 ```bash
-python3 bfre-risk-desk/tools/verify_level7.py     # 252 exact-rational assertions, exits 0
+python3 bfre-risk-desk/tools/verify_level7.py     # 267 exact-rational assertions, exits 0
 ```
 
 The script rebuilds every figure on this page from the raw `x` and `r` tables in
 `fractions.Fraction`, using the same exact Gaussian-elimination and weighted-least-squares
 helpers as `tools/verify_level5.py`: the five exposure columns and their sums, `Q_t` and
 `ΣQ = 44`; all five cross-sectional regressions solved from the 2×2 Gram matrix, with both
-balance conditions checked in every month; the diagonal Gram matrix and its `VIF = 1`; the
+balance conditions and the full residual row checked in every month; the diagonal Gram matrix
+and its `VIF = 1`; the
 factor-return rows, their means, their `T − 1` variances (both exact squares), their population
 variances, the standard error and `t` of each row's mean, the cross-term `11`, the cumulative
 sums, the annualisation and both autocorrelations; the per-month `σ̂²`, `Var(f)` and `t²` for
@@ -1337,7 +1375,9 @@ market slope `13/36`; the pooled regression, its `Q`-weighted-average identity, 
 decomposition `20.5 + 180 + 1685/44 = 10507/44` (with the pooled SSE reached by two independent
 routes — residual-by-residual, and the `Σr² − (Σr)²/25 − (Σxr)²/Σx²` short route of Section 10b);
 all thirteen printed rows of Table 1.2 divided out and compared against the printed Sharpe column,
-which fixes the count at **eight** non-reproducing rows and **five** reproducing ones; and the
-√-cap-weighted month with both weighted balance conditions at zero.
+which fixes the count at **eight** non-reproducing rows and **five** reproducing ones; the
+√-cap-weighted month with both weighted balance conditions at zero; and the p.40 NAMR substyle
+weights behind Section 9e — Volatility and Momentum and Sentiment each summing to 1, and the
+`0.34 / 0.33 / 0.50` that (1.12)'s three outputs carry.
 
 If any printed value ever disagrees with this markdown, the markdown is wrong.
