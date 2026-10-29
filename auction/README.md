@@ -65,23 +65,32 @@ The design and the reasoning behind it are in [PLAN.md](PLAN.md).
 
 ## Deploying (Vercel + Supabase, about 15 minutes)
 
-1. **Database:** create a free project at [supabase.com](https://supabase.com) in the region
-   nearest the office. Open **Connect** and copy the **Transaction pooler** connection
-   string (port 6543), with your database password filled in.
-2. **Hosting:** in [Vercel](https://vercel.com), **Add New → Project**, import this GitHub
-   repository and set **Root Directory** to `auction`. Add these environment variables:
-   - `DATABASE_URL`: the Supabase connection string
-   - `ADMIN_PASSWORD`: the organizers' password
-   - `SESSION_SECRET`: a long random string (for example the output of `openssl rand -hex 32`)
+Vercel builds from GitHub, and its production site (the URL everyone uses) is built from
+`main`. Preview deployments of other branches ask visitors to log in to Vercel, so they
+won't work for phones at the event. Make sure this code is on `main` before you start.
 
-   Deploy. The build creates the database tables itself (`scripts/migrate.ts` runs
-   before `next build`), and every later deploy keeps them up to date.
-   Using Vercel's Supabase or Neon integration instead also works: it sets `POSTGRES_URL`,
-   which the app reads too.
-3. **Region:** in the Vercel project, **Settings → Functions → Region**, choose the same
-   region as the database.
-4. Open `https://<your-project>.vercel.app/admin` and log in.
-5. **Load test** (wipes the event data, so do it before setting up for real):
+1. **Import the project.** On [vercel.com](https://vercel.com) (sign up with GitHub),
+   choose **Add New → Project** and import this repository.
+   - **Root Directory:** click **Edit** and choose `auction`. The framework shows as
+     Next.js; leave the build settings alone.
+   - **Environment Variables:** add `ADMIN_PASSWORD` (the organizers' password) and
+     `SESSION_SECRET` (any long random string, e.g. from `openssl rand -hex 32`).
+   - Click **Deploy**. The first build succeeds without a database. The site isn't usable
+     yet; the next steps add the database.
+2. **Add the database.** In the new project, open **Storage → Create Database → Supabase**
+   (free plan). Pick the region nearest the office (for India: Mumbai), leave the
+   environment-variable prefix empty, and connect it to the project. This sets
+   `POSTGRES_URL` and friends for you; the app reads them as they are.
+3. **Match the regions.** In **Settings → Functions → Function Region**, choose the same
+   region as the database (Mumbai is `bom1`). Every request talks to the database
+   several times, so this matters.
+4. **Redeploy.** In **Deployments**, open the latest one, choose **⋯ → Redeploy**. This
+   build creates the database tables (`scripts/migrate.ts` runs before `next build`), and
+   every later deploy keeps them up to date.
+5. **Check it.** Open `https://<your-project>.vercel.app/api/health`. It should say
+   `"ok": true`, with `dbLatencyMs` in single or low double digits. Otherwise `problem`
+   says what's missing. Then log in at `/admin`.
+6. **Load test** before setting up for real (it wipes the event data):
 
    ```bash
    cd auction && npm install
@@ -93,7 +102,11 @@ The design and the reasoning behind it are in [PLAN.md](PLAN.md).
    are consistent, prints latencies, and resets. Add `--keep` to look at the result in
    `/admin` and `/board` first.
 
-Free Supabase projects pause after about a week without activity: open the dashboard
+You can also skip the Storage tab: create the project at [supabase.com](https://supabase.com),
+open **Connect**, copy the **Transaction pooler** connection string (port 6543) and add it
+as `DATABASE_URL`. A [Neon](https://neon.tech) database from the Storage tab works too.
+
+Free Supabase projects pause after about a week without activity, so open the dashboard
 the day before the event. Vercel's free Hobby plan is meant for non-commercial personal
 use; if the company wants this on a company account, that's the Pro plan.
 

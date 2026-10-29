@@ -1,10 +1,8 @@
 import postgres from "postgres";
 
-// Accepts DATABASE_URL, or POSTGRES_URL as set by the Vercel ↔ Supabase/Neon
-// integrations. Provider-specific query params (e.g. Supabase's `supa=`) would be
-// sent to Postgres as unknown settings and rejected, so only sslmode is kept.
-export function databaseUrl(): string | undefined {
-  const raw = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+// Provider-specific query params (e.g. Supabase's `supa=`) would be sent to Postgres
+// as unknown settings and rejected, so only sslmode is kept.
+function cleanUrl(raw: string | undefined): string | undefined {
   if (!raw) return undefined;
   const url = new URL(raw);
   const sslmode = url.searchParams.get("sslmode");
@@ -13,7 +11,21 @@ export function databaseUrl(): string | undefined {
   return url.toString();
 }
 
-function isLocal(url: string) {
+// The app's (pooled) connection: DATABASE_URL, or POSTGRES_URL as set by Vercel's
+// Supabase integration. Neon's integration sets DATABASE_URL.
+export function databaseUrl(): string | undefined {
+  return cleanUrl(process.env.DATABASE_URL || process.env.POSTGRES_URL);
+}
+
+// Migrations prefer the integration's non-pooled (direct or session-mode) connection
+// from the same provider, which is the safest place to run DDL.
+export function migrationUrl(): string | undefined {
+  const env = process.env;
+  const direct = env.MIGRATION_DATABASE_URL || (env.DATABASE_URL ? env.DATABASE_URL_UNPOOLED : env.POSTGRES_URL_NON_POOLING);
+  return cleanUrl(direct) ?? databaseUrl();
+}
+
+export function isLocal(url: string) {
   const host = new URL(url).hostname;
   return host === "localhost" || host === "127.0.0.1";
 }
