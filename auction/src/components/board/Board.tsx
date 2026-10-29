@@ -110,8 +110,12 @@ function SmallButton({ label, onClick, children }: { label: string; onClick: () 
   );
 }
 
+// canvas-confetti works in CSS pixels; scale it so a 4K TV gets the same show as a laptop.
+const screenScale = () => Math.max(1, window.innerHeight / 900);
+
 // Bursts of fireworks across the top half of the screen.
 function fireworks(colors: string[], durationMs: number) {
+  const k = screenScale();
   const end = Date.now() + durationMs;
   const timer = setInterval(() => {
     if (Date.now() > end) return clearInterval(timer);
@@ -119,10 +123,10 @@ function fireworks(colors: string[], durationMs: number) {
       confetti({
         particleCount: 50,
         spread: 360,
-        startVelocity: 26,
+        startVelocity: 26 * k,
         ticks: 75,
-        gravity: 0.7,
-        scalar: 0.95,
+        gravity: 0.7 * k,
+        scalar: 0.95 * k,
         shapes: ["star", "circle"],
         origin: { x, y: 0.12 + Math.random() * 0.3 },
         colors,
@@ -152,10 +156,13 @@ function useBoardEffects(s: PublicState | null | undefined, soundOn: boolean) {
     if (lot.status === "sold" && prev.status !== "sold") {
       if (soundOn) sounds.gavel();
       const color = s.teams.find((t) => t.id === lot.winnerTeamId)?.color ?? "#9f1d45";
+      const k = screenScale();
       confetti({
         particleCount: 160,
         spread: 100,
-        startVelocity: 50,
+        startVelocity: 50 * k,
+        gravity: k,
+        scalar: k,
         origin: { x: 0.35, y: 0.75 },
         colors: [color, ...FESTIVE_COLORS],
         shapes: ["star", "circle"],
@@ -234,29 +241,35 @@ function RevealScene({ s }: { s: PublicState }) {
   return (
     <div className="grid h-full grid-cols-[1fr_auto] gap-[2.5vw] pt-[1.5vh]">
       <div key={latest.id} className="animate-pop-in flex min-h-0 flex-col overflow-hidden rounded-[2vh] border border-line bg-surface shadow-xl">
-        <div className="relative flex items-end justify-between overflow-hidden px-[2.5vw] py-[3vh]" style={{ background: latest.color, color: ink }}>
+        <div
+          className="relative flex items-end justify-between gap-[2vw] overflow-hidden px-[2.5vw] py-[3vh]"
+          style={{ background: latest.color, color: ink }}
+        >
           <Rangoli opacity="0.28" className="animate-spin-slow pointer-events-none absolute -top-[10vh] right-[18vw] h-[34vh] w-[34vh]" />
-          <div className="relative">
+          <div className="relative min-w-0">
             <p className="text-[2.4vh] font-bold tracking-[0.25em] uppercase opacity-90">
               Team {latest.revealOrder} of {s.teamCount}
             </p>
-            <p className="font-festive text-[10vh] leading-none">{latest.name}</p>
+            <p className="truncate font-festive text-[min(10vh,6vw)] leading-[1.2]">{latest.name}</p>
           </div>
-          <p className="relative text-[5vh] font-extrabold">Table {latest.tableNo}</p>
+          <div className="relative shrink-0 text-right">
+            <p className="text-[2.4vh] font-bold tracking-[0.25em] uppercase opacity-90">Table</p>
+            <p className="tabular text-[9vh] leading-none font-black">{latest.tableNo}</p>
+          </div>
         </div>
-        <ul className="grid min-h-0 flex-1 grid-cols-2 content-start gap-x-[3vw] gap-y-[2.4vh] px-[2.5vw] py-[3.5vh] text-[4.2vh]">
+        <ul className="grid min-h-0 flex-1 grid-cols-2 content-start gap-x-[3vw] gap-y-[2.4vh] px-[2.5vw] py-[3.5vh] text-[min(4.2vh,2.7vw)]">
           {latest.members.map((m, i) => (
             <li key={m.id} className="animate-slide-up flex items-baseline justify-between gap-3" style={{ animationDelay: `${i * 90}ms` }}>
               <span className="truncate font-bold">
                 {latest.leader?.id === m.id && "👑 "}
                 {m.name}
               </span>
-              <span className="shrink-0 text-[2.6vh] font-semibold text-muted">{m.level}</span>
+              <span className="shrink-0 text-[min(2.6vh,1.6vw)] font-semibold text-muted">{m.level}</span>
             </li>
           ))}
         </ul>
       </div>
-      <div className="flex w-[22vw] flex-col gap-[1.2vh] overflow-hidden">
+      <div className="flex w-[22vw] flex-col gap-[1.2vh] overflow-hidden [@media(max-aspect-ratio:3/2)]:w-[27vw]">
         <p className="text-[2.4vh] font-bold text-muted">
           {revealed.length} of {s.teamCount} revealed
         </p>
@@ -264,7 +277,7 @@ function RevealScene({ s }: { s: PublicState }) {
           .slice(0, -1)
           .reverse()
           .map((t) => (
-            <div key={t.id} className="flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-[1.2vh] text-[2.6vh]">
+            <div key={t.id} className="flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-[1.2vh] text-[min(2.6vh,1.9vw)]">
               <TeamDot color={t.color} className="h-[2vh] w-[2vh]" />
               <span className="flex-1 truncate font-bold">{t.name}</span>
               <span className="text-muted">T{t.tableNo}</span>
@@ -305,6 +318,14 @@ function LotScene({ s, serverNow }: { s: PublicState; serverNow: () => number })
   );
 }
 
+// Approximate width of a number or clock in em at the board's black, tabular weight
+// (measured: digits 0.66em, comma 0.26em, colon 0.32em), with a little slack.
+function emWidth(text: string) {
+  let em = 0.08;
+  for (const ch of text) em += ch === "," ? 0.27 : ch === ":" ? 0.33 : 0.66;
+  return Math.round(em * 100) / 100;
+}
+
 function teamById(s: PublicState, id: number | null | undefined): TeamView | undefined {
   return s.teams.find((t) => t.id === id);
 }
@@ -320,11 +341,11 @@ function LotHero({ s, lot, serverNow }: { s: PublicState; lot: LotView; serverNo
   const callout = lot.status === "live" && left > 0 && left <= 5000 ? (left > 2500 ? "Going once…" : "Going twice…") : null;
 
   return (
-    <div className="relative flex min-h-0 flex-col">
+    <div className="@container relative flex min-h-0 flex-col">
       <div className="flex items-start gap-[2vw]">
         <span className="text-[16vh] leading-none">{lot.emoji}</span>
         <div className="min-w-0 pt-[1vh]">
-          <p className="font-festive text-[8vh] leading-[1.1]">{lot.title}</p>
+          <p className="font-festive text-[min(8vh,5.4vw)] leading-[1.1]">{lot.title}</p>
           {lot.description && <p className="mt-[1vh] text-[3vh] text-muted">{lot.description}</p>}
         </div>
       </div>
@@ -334,7 +355,12 @@ function LotHero({ s, lot, serverNow }: { s: PublicState; lot: LotView; serverNo
           <p className="text-[3vh] font-bold tracking-[0.2em] text-muted uppercase">
             {lot.status === "sold" ? "Sold for" : lot.status === "unsold" ? "Opened at" : lot.top ? "Top bid" : "Opening bid"}
           </p>
-          <p key={amount} className="tabular animate-bump text-[24vh] leading-[0.95] font-black" style={{ color: amountTeam?.color }}>
+          <p
+            key={amount}
+            className="tabular animate-bump leading-[0.95] font-black"
+            // Fill the space beside the countdown ring, but never run into it: 30vh ring + 3vw gap.
+            style={{ color: amountTeam?.color, fontSize: `min(24vh, calc((100cqw - 30vh - 3vw) / ${emWidth(fmt(amount))}))` }}
+          >
             {fmt(amount)}
           </p>
           <p className="h-[6vh] font-festive text-[4.5vh]" style={{ color: amountTeam?.color }}>
@@ -399,7 +425,12 @@ function CountdownRing({ left, total, paused }: { left: number; total: number; p
         {paused ? (
           <p className="font-festive text-[5vh]">Paused</p>
         ) : (
-          <p className={`tabular text-[11vh] font-black ${urgent ? "animate-urgent text-bad" : ""}`}>{formatClock(left)}</p>
+          <p
+            className={`tabular font-black ${urgent ? "animate-urgent text-bad" : ""}`}
+            style={{ fontSize: `${Math.min(11, 23 / emWidth(formatClock(left)))}vh` }}
+          >
+            {formatClock(left)}
+          </p>
         )}
       </div>
     </div>
@@ -443,14 +474,19 @@ function CoinTable({ s, lot }: { s: PublicState; lot: LotView }) {
       <p className="mb-[1vh] text-[2.4vh] font-bold tracking-[0.2em] text-muted uppercase">{s.currency} left</p>
       <ul className="flex flex-col gap-[0.7vh]">
         {teams.map((t) => {
-          const short = t.coinsLeft < lot.minNext;
+          // While bidding is open, fade teams that can't afford the next bid (but not the top bidder).
+          const open = lot.status === "live" || lot.status === "paused";
+          const short = open && t.id !== lot.top?.teamId && t.coinsLeft < lot.minNext;
           return (
-            <li key={t.id} className={`grid grid-cols-[12vw_1fr_auto] items-center gap-3 text-[2.3vh] ${short ? "opacity-40" : ""}`}>
+            <li
+              key={t.id}
+              className={`grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_auto] items-center gap-3 text-[2.3vh] ${short ? "opacity-40" : ""}`}
+            >
               <span className="truncate font-semibold">{t.name}</span>
               <span className="h-[1.4vh] overflow-hidden rounded-full bg-surface-2">
                 <span className="block h-full rounded-full" style={{ width: `${(t.coinsLeft / max) * 100}%`, background: t.color }} />
               </span>
-              <span className="tabular w-[5vw] text-right font-bold">{fmt(t.coinsLeft)}</span>
+              <span className="tabular text-right font-bold">{fmt(t.coinsLeft)}</span>
             </li>
           );
         })}

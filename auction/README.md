@@ -44,6 +44,16 @@ The design and the reasoning behind it are in [PLAN.md](PLAN.md).
 4. **Results:** **Live → 4. Results** shows the final standings (most perks, then most
    coins left). **Settings → Export** gives CSVs.
 
+**The big screen**
+- The board scales to any screen. It has been checked at 1080p and 4K TVs, a 16:10 laptop
+  mirrored to a screen, a 4:3 projector and an ultrawide, with prices up to 10,000.
+- Open `/board` in Chrome on the laptop connected to the screen. If the laptop *extends*
+  its display, drag the window onto the big screen first, then click ⛶ (or press F11).
+- Projector on a whiteboard: keep the default light theme. TV: the ☾ "Diwali night"
+  theme looks best.
+- Keep the laptop on mains power. The board asks the browser to keep the screen awake,
+  but turn off the laptop's own sleep timer too.
+
 **If something goes wrong**
 - *A leader's phone dies:* **Teams → Paddle QR** for that team, and scan it with any
   phone; that phone can now bid for the team. Or pick a different leader in the dropdown.
