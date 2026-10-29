@@ -1,11 +1,12 @@
 # Office Auction: Plan
 
-A phone-first web app for a ~100-person office event. Everyone checks in by
+A phone-first web app for an office event of up to 80 people. Everyone checks in by
 scanning a QR code, the app deals them into balanced teams, each team gets the
 same number of coins, and teams bid live for perks ("Unlimited work from home",
 …) from their leader's phone while the big screen shows the action.
 
-**Status:** plan only, nothing built yet. Open decisions are listed at the end.
+**Status:** built. See [README.md](README.md) for running the event and deploying.
+Decisions so far and the remaining open questions are at the end.
 
 ---
 
@@ -71,7 +72,7 @@ Full screen, 16:9, readable from the back of the room. The admin picks which sce
 Goal: every team gets a fair spread of seniority, teams are the same size (±1),
 and departments are mixed.
 
-1. Organizers pick the number of teams (default: 100 people → 10 teams of 10).
+1. Organizers pick the number of teams (up to 10 by default; 80 people → 10 teams of 8).
 2. Go through people from most senior to most junior (MD → Director → VP →
    Associate → Analyst), in random order within each position.
 3. Put each person in the team that has, in this order of priority:
@@ -91,7 +92,8 @@ What this guarantees:
 Before announcing, the admin sees a positions × teams table and can reshuffle or move people by hand.
 
 **Leader:** picked automatically for each team using a rule the organizers
-choose (random, most junior or most senior). It can be re-rolled per team or set by hand.
+choose (random, most junior or most senior; default random). It can be re-rolled per
+team or set by hand. With up to 10 teams there are up to 10 leaders.
 
 **Team names:** assigned from a list (The Bulls, The Bears, Blue Chips, Hedge
 Hogs, Rainmakers, Dark Horses, Unicorns, Day Traders, Deal Makers, Bull Run, …),
@@ -141,15 +143,15 @@ each with a colour and table number. All of them are editable.
 Vercel Functions can't keep websocket connections open, so live updates need
 either a separate realtime service or polling. Supabase Realtime's free plan
 allows **100 messages per second** and counts one message **per receiving
-screen**. One bid pushed to ~105 screens is already ~106 messages, which is over
-the cap, and connections over the cap get dropped. Paid plans raise the limit,
+screen**. One bid pushed to ~85 screens is ~86 messages, so two bids in the same second
+are over the cap, and connections over the cap get dropped. Paid plans raise the limit,
 but at this size polling is simpler, works through corporate firewalls and costs nothing:
 
 | Screen | Refreshes | Delay |
 |---|---|---|
 | Big screen | every 0.5 s | ≤ 0.5 s |
-| Admin console, ~10 leader phones | every 1 s | ≤ 1 s (a leader's own bid shows instantly) |
-| ~90 other phones | every 3 s, from Vercel's CDN cache (2 s) | ≤ 5 s (they're watching the big screen anyway) |
+| Admin console, up to 10 leader phones | every 1 s | ≤ 1 s (a leader's own bid shows instantly) |
+| ~70 other phones | every 3 s, from Vercel's CDN cache (2 s) | ≤ 5 s (they're watching the big screen anyway) |
 
 Each refresh is a small JSON response (< 2 KB) that includes a `version`
 number. A phone fetches its personal data (team, leader status) again only when
@@ -158,10 +160,11 @@ number. A phone fetches its personal data (team, leader status) again only when
 If the big screen feels slow in rehearsal, Supabase Realtime can be added for
 the big screen alone. That's only a handful of listeners, far inside the free cap.
 
-### Load math for 100 people
+### Load math for 80 people
 
-- Check-in burst: ~100 inserts over a few minutes, which is trivial.
-- ~90 phones refreshing every 3 s ≈ 30 requests/s. Vercel's CDN cache answers
+- Check-in burst: ~80 inserts over a few minutes, which is trivial (the simulation
+  checks in 80 phones in the same second).
+- ~70 phones refreshing every 3 s ≈ 23 requests/s. Vercel's CDN cache answers
   almost all of them, so the function behind it runs about once every 2 s.
 - Big screen, admin and leaders ≈ 13 requests/s to functions, each a single indexed query.
 - A 3-hour event ≈ 150k function calls. Vercel Hobby includes 1,000,000 a month
@@ -206,7 +209,7 @@ Coins left = team coins − total price of lots won.
 3. **Auction:** lot editor, `place_bid` and the lot lifecycle, leader paddle,
    live big-screen scene, admin console.
 4. **Polish and proof:** animations, sounds, confetti, results, CSV export, and a
-   load-test script run against the deployed site (100 fake phones checking in,
+   load-test script run against the deployed site (80 fake phones checking in,
    10 bots bidding as fast as the rules allow) that checks no team ever
    overspends and the top bid always wins.
 
@@ -234,13 +237,18 @@ Coins left = team coins − total price of lots won.
   for paddle QRs; an organizer at the door to add people who have no phone.
 - **After:** export the CSV, then reset to delete everyone's data.
 
-## 10. Open decisions
+## 10. Decisions
 
+Decided:
+- Up to 80 people and at most 10 teams, so up to 10 leaders (default 10 teams of 8).
+- Defaults, all changeable in **Settings**: leader picked at random; 1,000 coins per
+  team; "team" on the check-in form means the person's department, and the new teams
+  mix departments; overall winner = most perks, then most coins left.
+
+Still open (each one is a setting, so the app doesn't wait on them):
 1. How is the overall winner decided: most perks won, best value, or a judges'
-   "most fun" vote? The app can show any of these.
-2. Number of teams (default 10 teams of ~10)?
-3. Leader rule: random, most junior or most senior?
-4. Coins per team, currency name, list of perks, default timer and step.
-5. Event date, which sets the build and rehearsal timeline.
-6. "Team" on the check-in form means the person's department, and the new
-   teams should mix departments. Correct?
+   "most fun" vote? Do you want fun twists (mystery perks are built in; bonus coins
+   can be given by editing a team's coins)?
+2. Leader rule: random, most junior or most senior?
+3. Coins per team, currency name, list of perks, default timer and step.
+4. Event date, which sets the rehearsal timeline.
