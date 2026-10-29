@@ -12,6 +12,12 @@ shows the action.
 | `/board` | The projector / TV | Check-in QR and counter, team reveal, live perk with countdown, SOLD!, standings |
 | `/admin` | Organizers (password) | People, teams, perks, the live auction console, settings, CSV export, reset |
 
+It's dressed for Diwali: a marigold toran across the top, flickering diyas, rangoli,
+शुभ दीपावली lettering, Diwali team names (Diya Squad, Rangoli Rebels, Anaar Army…),
+fireworks on every SOLD and at the final results, and a temple-bell chime. The big screen
+has a light **festive day** theme (default, best on a projector) and a **Diwali night**
+theme (the ☾ button, best on a TV); phones follow their own light/dark setting.
+
 The design and the reasoning behind it are in [PLAN.md](PLAN.md).
 
 ## Running the event
@@ -19,14 +25,14 @@ The design and the reasoning behind it are in [PLAN.md](PLAN.md).
 **Before the day** (in `/admin`)
 1. **Perks** tab: add the perks in running order (there are one-click ideas). Tick
    *Mystery perk* to hide a perk's name until it's sold.
-2. **Settings** tab: event name, coins per team, who becomes leader (random, most junior or
-   most senior), timer defaults, and optionally a fixed list of departments for the
-   check-in form.
+2. **Settings** tab: event name, coins per team (rename the currency too, e.g. "laddoos"),
+   who becomes leader (random, most junior or most senior), timer defaults, and optionally
+   a fixed list of departments for the check-in form.
 3. Rehearse with a few phones on the office Wi-Fi, then **Settings → Reset everything**.
 
 **On the day**
 1. **Check-in:** open `/board` on the projector laptop, click ⛶ for full screen and 🔇 to
-   turn sound on. People scan the QR and check in; the counter climbs. Anyone without a
+   turn sound on (the buttons sit faintly in the top-right corner). People scan the QR and check in; the counter climbs. Anyone without a
    phone: **People → Add**.
 2. **Teams:** **Teams → Generate teams** (default 10), check the balance table, reshuffle
    if you like. Then **Live → 2. Teams** and press **Reveal next team** once per team: each

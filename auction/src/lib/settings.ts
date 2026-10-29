@@ -20,7 +20,7 @@ export const settingsSchema = z.object({
 export type Settings = z.infer<typeof settingsSchema>;
 
 export const DEFAULT_SETTINGS: Settings = {
-  eventName: "Office Auction",
+  eventName: "Diwali Perks Auction",
   teamCount: 10,
   startingCoins: 1000,
   currency: "coins",

@@ -34,6 +34,19 @@ export const sounds = {
   gavel: () => {
     tone(110, 0, 0.25, 0.9, "triangle");
     tone(90, 0.28, 0.35, 0.9, "triangle");
-    tone(660, 0.3, 0.6, 0.15, "sine");
+    bell(0.45);
   },
+  bell: () => bell(0),
 };
+
+// A temple-bell (ghanti) chime: a few inharmonic partials with a long ring.
+function bell(start: number) {
+  for (const [freq, gain] of [
+    [659, 0.22],
+    [1319, 0.12],
+    [1760, 0.08],
+    [2489, 0.05],
+  ] as const) {
+    tone(freq, start, 2.2, gain, "sine");
+  }
+}

@@ -8,6 +8,8 @@ import { EditableText } from "./PeopleTab";
 
 const IDEAS = [
   { emoji: "🏠", title: "Unlimited work from home", description: "For one month" },
+  { emoji: "🪔", title: "Half day before Diwali", description: "Head home early for the festivities" },
+  { emoji: "🍬", title: "Mithai box for your team", description: "Kaju katli, laddoos, the works" },
   { emoji: "🏖️", title: "Leave early on Fridays", description: "For a month of Fridays" },
   { emoji: "🍕", title: "Pick the team lunch", description: "Your choice, team pays" },
   { emoji: "☕", title: "Boss brings the coffee", description: "Every morning for a week" },

@@ -7,11 +7,14 @@ import { readableOn } from "@/lib/color";
 import { LEVELS_SENIOR_FIRST } from "@/lib/levels";
 import { rankTeams } from "@/lib/ranking";
 import type { LotView, PublicState, TeamView } from "@/lib/types";
+import { Diya, DiyaRow, Rangoli, Toran } from "../festive";
 import { QrCode } from "../QrCode";
 import { TeamDot } from "../ui";
 import { sounds } from "./sound";
 
 type Theme = "light" | "dark";
+
+const FESTIVE_COLORS = ["#fbbf24", "#f59e0b", "#ea580c", "#db2777", "#fde68a"];
 
 export function Board() {
   const poll = usePoll<PublicState>("/api/state", 500);
@@ -20,7 +23,8 @@ export function Board() {
   const joinUrl = useOrigin();
   useWakeLock();
 
-  // A projector on a whiteboard washes out dark backgrounds, so light is the default.
+  // A projector on a whiteboard washes out dark backgrounds, so the light
+  // "festive day" theme is the default; "Diwali night" suits a TV.
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");
@@ -32,54 +36,63 @@ export function Board() {
   useBoardEffects(s, soundOn);
 
   return (
-    <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-bg px-[3vw] pt-[2.5vh] pb-[3vh] text-ink">
-      <header className="flex items-center justify-between gap-4 text-[2.2vh] font-semibold text-muted">
-        <span>🔨 {s?.eventName ?? "Office Auction"}</span>
-        <span className="flex items-center gap-3">
-          <span className={poll.offline ? "font-bold text-bad" : ""}>
-            {poll.offline ? "Reconnecting…" : s && s.phase === "checkin" ? `${s.stats.registered} checked in` : ""}
+    <div className="relative flex h-dvh w-full flex-col overflow-hidden text-ink">
+      <Toran className="h-[5.5vh]" />
+      <div className="flex min-h-0 flex-1 flex-col px-[3vw] pt-[1.5vh] pb-[3vh]">
+        <header className="flex items-center justify-between gap-4 text-[2.2vh] font-semibold text-muted">
+          <span className="flex items-center gap-[0.6vw] font-festive text-[2.8vh] text-ink">
+            <Diya className="h-[3.6vh] w-[3.6vh]" />
+            {s?.eventName ?? "Diwali Perks Auction"}
           </span>
-          <span className="flex gap-2 opacity-25 transition hover:opacity-100">
-            <SmallButton
-              label={soundOn ? "Mute" : "Sound on"}
-              onClick={() => {
-                if (!soundOn) sounds.unlock();
-                setSoundOn(!soundOn);
-              }}
-            >
-              {soundOn ? "🔊" : "🔇"}
-            </SmallButton>
-            <SmallButton label="Light/dark" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
-              {theme === "light" ? "☾" : "☀"}
-            </SmallButton>
-            <SmallButton
-              label="Full screen"
-              onClick={() => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen())}
-            >
-              ⛶
-            </SmallButton>
+          <span className="flex items-center gap-3">
+            <span className={poll.offline ? "font-bold text-bad" : ""}>
+              {poll.offline ? "Reconnecting…" : s && s.phase === "checkin" ? `${s.stats.registered} checked in` : ""}
+            </span>
+            <span className="flex gap-2 opacity-25 transition hover:opacity-100">
+              <SmallButton
+                label={soundOn ? "Mute" : "Sound on"}
+                onClick={() => {
+                  if (!soundOn) sounds.unlock();
+                  setSoundOn(!soundOn);
+                }}
+              >
+                {soundOn ? "🔊" : "🔇"}
+              </SmallButton>
+              <SmallButton label={theme === "light" ? "Diwali night theme" : "Festive day theme"} onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+                {theme === "light" ? "☾" : "☀"}
+              </SmallButton>
+              <SmallButton
+                label="Full screen"
+                onClick={() => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen())}
+              >
+                ⛶
+              </SmallButton>
+            </span>
           </span>
-        </span>
-      </header>
-      <main className="min-h-0 flex-1">
-        {!s ? (
-          <Center>
-            <p className="text-[4vh] text-muted">Connecting…</p>
-          </Center>
-        ) : s.board.scene === "checkin" ? (
-          <CheckinScene s={s} joinUrl={joinUrl} />
-        ) : s.board.scene === "reveal" ? (
-          <RevealScene s={s} />
-        ) : s.board.scene === "lot" ? (
-          <LotScene s={s} serverNow={poll.serverNow} />
-        ) : s.board.scene === "leaderboard" ? (
-          <LeaderboardScene s={s} />
-        ) : (
-          <Center>
-            <p className="max-w-[80vw] text-center text-[9vh] leading-tight font-extrabold">{s.board.message || "…"}</p>
-          </Center>
-        )}
-      </main>
+        </header>
+        <main className="relative min-h-0 flex-1">
+          {!s ? (
+            <Center>
+              <DiyaRow count={3} />
+              <p className="text-[4vh] text-muted">Lighting the diyas…</p>
+            </Center>
+          ) : s.board.scene === "checkin" ? (
+            <CheckinScene s={s} joinUrl={joinUrl} />
+          ) : s.board.scene === "reveal" ? (
+            <RevealScene s={s} />
+          ) : s.board.scene === "lot" ? (
+            <LotScene s={s} serverNow={poll.serverNow} />
+          ) : s.board.scene === "leaderboard" ? (
+            <LeaderboardScene s={s} />
+          ) : (
+            <Center>
+              <CornerRangoli />
+              <p className="max-w-[80vw] text-center font-festive text-[10vh] leading-tight">{s.board.message || "…"}</p>
+              <DiyaRow count={5} className="h-[8vh] w-[8vh]" />
+            </Center>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
@@ -97,51 +110,96 @@ function SmallButton({ label, onClick, children }: { label: string; onClick: () 
   );
 }
 
-// Sounds and confetti, fired once per event (new bid, lot sold, final seconds).
+// Bursts of fireworks across the top half of the screen.
+function fireworks(colors: string[], durationMs: number) {
+  const end = Date.now() + durationMs;
+  const timer = setInterval(() => {
+    if (Date.now() > end) return clearInterval(timer);
+    for (const x of [0.08 + Math.random() * 0.34, 0.58 + Math.random() * 0.34]) {
+      confetti({
+        particleCount: 50,
+        spread: 360,
+        startVelocity: 26,
+        ticks: 75,
+        gravity: 0.7,
+        scalar: 0.95,
+        shapes: ["star", "circle"],
+        origin: { x, y: 0.12 + Math.random() * 0.3 },
+        colors,
+        disableForReducedMotion: true,
+      });
+    }
+  }, 300);
+}
+
+// Sounds and fireworks, fired once per event (new bid, perk sold, final results).
 function useBoardEffects(s: PublicState | null | undefined, soundOn: boolean) {
-  const seen = useRef<{ lotId?: number; topBid?: number; status?: string } | null>(null);
+  const seen = useRef<{ lotId?: number; topBid?: number; status?: string; phase?: string } | null>(null);
   const lot = s?.lot;
-  const key = lot ? `${lot.id}:${lot.status}:${lot.top?.amount ?? 0}` : "none";
+  const key = `${s?.phase}:${lot ? `${lot.id}:${lot.status}:${lot.top?.amount ?? 0}` : "none"}`;
 
   useEffect(() => {
     const prev = seen.current;
-    seen.current = { lotId: lot?.id, topBid: lot?.top?.amount, status: lot?.status };
-    if (!prev || !lot || !s) return; // first load: don't replay what already happened
-    const sameLot = prev.lotId === lot.id;
-    if (sameLot && lot.top && lot.top.amount !== prev.topBid && soundOn) sounds.bid();
-    if (sameLot && lot.status === "sold" && prev.status !== "sold") {
+    seen.current = { lotId: lot?.id, topBid: lot?.top?.amount, status: lot?.status, phase: s?.phase };
+    if (!prev || !s) return; // first load: don't replay what already happened
+    if (s.phase === "results" && prev.phase !== "results") {
+      if (soundOn) sounds.bell();
+      fireworks(FESTIVE_COLORS, 6000);
+      return;
+    }
+    if (!lot || prev.lotId !== lot.id) return;
+    if (lot.top && lot.top.amount !== prev.topBid && soundOn) sounds.bid();
+    if (lot.status === "sold" && prev.status !== "sold") {
       if (soundOn) sounds.gavel();
-      const color = s.teams.find((t) => t.id === lot.winnerTeamId)?.color ?? "#c2410c";
-      const burst = (x: number) =>
-        confetti({ particleCount: 140, spread: 75, startVelocity: 55, origin: { x, y: 0.7 }, colors: [color, "#ffd166", "#ffffff"] });
-      burst(0.25);
-      burst(0.75);
-      setTimeout(() => burst(0.5), 350);
+      const color = s.teams.find((t) => t.id === lot.winnerTeamId)?.color ?? "#9f1d45";
+      confetti({
+        particleCount: 160,
+        spread: 100,
+        startVelocity: 50,
+        origin: { x: 0.35, y: 0.75 },
+        colors: [color, ...FESTIVE_COLORS],
+        shapes: ["star", "circle"],
+        disableForReducedMotion: true,
+      });
+      fireworks([color, ...FESTIVE_COLORS], 2500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `key` captures every change that matters
   }, [key, soundOn]);
 }
 
 function Center({ children }: { children: ReactNode }) {
-  return <div className="flex h-full flex-col items-center justify-center gap-[2vh]">{children}</div>;
+  return <div className="relative flex h-full flex-col items-center justify-center gap-[2.4vh]">{children}</div>;
+}
+
+function CornerRangoli() {
+  return (
+    <>
+      <Rangoli className="animate-spin-slow pointer-events-none absolute -bottom-[18vh] -left-[14vh] h-[56vh] w-[56vh]" />
+      <Rangoli className="animate-spin-slow pointer-events-none absolute -right-[14vh] -bottom-[18vh] h-[56vh] w-[56vh]" />
+    </>
+  );
 }
 
 function CheckinScene({ s, joinUrl }: { s: PublicState; joinUrl: string }) {
   return (
-    <div className="grid h-full grid-cols-[auto_1fr] items-center gap-[5vw]">
-      <div className="flex flex-col items-center gap-[2vh]">
-        <p className="text-[5vh] font-extrabold">Scan to check in</p>
-        <QrCode value={joinUrl} className="h-[56vh] shadow-lg" />
-        <p className="text-[2.8vh] font-semibold text-muted">{joinUrl.replace(/^https?:\/\//, "")}</p>
+    <div className="relative grid h-full grid-cols-[auto_1fr] items-center gap-[5vw]">
+      <Rangoli className="animate-spin-slow pointer-events-none absolute -right-[12vh] -bottom-[20vh] h-[62vh] w-[62vh]" />
+      <div className="relative flex flex-col items-center gap-[1.8vh]">
+        <p className="font-festive text-[5.5vh] leading-none">Scan to join</p>
+        <div className="rounded-[2.6vh] bg-gradient-to-br from-[#f59e0b] via-[#fbbf24] to-[#db2777] p-[0.9vh] shadow-xl">
+          <QrCode value={joinUrl} className="h-[52vh]" />
+        </div>
+        <p className="text-[2.6vh] font-semibold text-muted">{joinUrl.replace(/^https?:\/\//, "")}</p>
       </div>
-      <div className="flex min-w-0 flex-col gap-[3vh]">
+      <div className="relative flex min-w-0 flex-col gap-[2.6vh]">
+        <p className="font-festive text-[4.6vh] leading-tight text-accent">शुभ दीपावली · Happy Diwali</p>
         <div>
-          <p className="tabular text-[22vh] leading-none font-black">{s.stats.registered}</p>
+          <p className="tabular text-[20vh] leading-none font-black">{s.stats.registered}</p>
           <p className="text-[4vh] font-bold text-muted">checked in{!s.checkinOpen && " · check-in closed"}</p>
         </div>
         <div className="flex flex-wrap gap-[1vw] text-[2.6vh]">
           {LEVELS_SENIOR_FIRST.map((l) => (
-            <span key={l} className="rounded-full bg-surface px-[1.2vw] py-[0.6vh] font-semibold shadow-sm">
+            <span key={l} className="rounded-full border border-line bg-surface px-[1.2vw] py-[0.6vh] font-semibold">
               {l} <span className="tabular text-muted">{s.stats.byLevel[l]}</span>
             </span>
           ))}
@@ -149,7 +207,7 @@ function CheckinScene({ s, joinUrl }: { s: PublicState; joinUrl: string }) {
         <ul className="flex flex-wrap gap-[0.8vw] text-[2.6vh]">
           {s.stats.recent.map((p) => (
             <li key={p.id} className="animate-slide-up rounded-xl border border-line bg-surface px-[1vw] py-[0.6vh]">
-              👋 {p.name}
+              ✨ {p.name}
             </li>
           ))}
         </ul>
@@ -164,24 +222,27 @@ function RevealScene({ s }: { s: PublicState }) {
   if (!latest) {
     return (
       <Center>
-        <p className="text-[4vh] font-bold tracking-[0.3em] text-muted uppercase">{s.teamCount} teams</p>
-        <p className="text-center text-[11vh] leading-none font-black">Who&apos;s on your team?</p>
-        <p className="text-[3.5vh] text-muted">Watch this screen, and your phone.</p>
+        <CornerRangoli />
+        <p className="text-[3.6vh] font-bold tracking-[0.3em] text-muted uppercase">{s.teamCount} teams</p>
+        <p className="text-center font-festive text-[12vh] leading-none">Who&apos;s on your team?</p>
+        <DiyaRow count={7} className="h-[8vh] w-[8vh]" />
+        <p className="text-[3.2vh] text-muted">Watch this screen, and your phone.</p>
       </Center>
     );
   }
   const ink = readableOn(latest.color);
   return (
-    <div className="grid h-full grid-cols-[1fr_auto] gap-[2.5vw] pt-[2vh]">
-      <div key={latest.id} className="animate-pop-in flex min-h-0 flex-col overflow-hidden rounded-[2vh] bg-surface shadow-xl">
-        <div className="flex items-end justify-between px-[2.5vw] py-[3vh]" style={{ background: latest.color, color: ink }}>
-          <div>
+    <div className="grid h-full grid-cols-[1fr_auto] gap-[2.5vw] pt-[1.5vh]">
+      <div key={latest.id} className="animate-pop-in flex min-h-0 flex-col overflow-hidden rounded-[2vh] border border-line bg-surface shadow-xl">
+        <div className="relative flex items-end justify-between overflow-hidden px-[2.5vw] py-[3vh]" style={{ background: latest.color, color: ink }}>
+          <Rangoli opacity="0.28" className="animate-spin-slow pointer-events-none absolute -top-[10vh] right-[18vw] h-[34vh] w-[34vh]" />
+          <div className="relative">
             <p className="text-[2.4vh] font-bold tracking-[0.25em] uppercase opacity-90">
               Team {latest.revealOrder} of {s.teamCount}
             </p>
-            <p className="text-[10vh] leading-none font-black">{latest.name}</p>
+            <p className="font-festive text-[10vh] leading-none">{latest.name}</p>
           </div>
-          <p className="text-[5vh] font-extrabold">Table {latest.tableNo}</p>
+          <p className="relative text-[5vh] font-extrabold">Table {latest.tableNo}</p>
         </div>
         <ul className="grid min-h-0 flex-1 grid-cols-2 content-start gap-x-[3vw] gap-y-[2.4vh] px-[2.5vw] py-[3.5vh] text-[4.2vh]">
           {latest.members.map((m, i) => (
@@ -203,7 +264,7 @@ function RevealScene({ s }: { s: PublicState }) {
           .slice(0, -1)
           .reverse()
           .map((t) => (
-            <div key={t.id} className="flex items-center gap-3 rounded-xl bg-surface px-4 py-[1.2vh] text-[2.6vh] shadow-sm">
+            <div key={t.id} className="flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-[1.2vh] text-[2.6vh]">
               <TeamDot color={t.color} className="h-[2vh] w-[2vh]" />
               <span className="flex-1 truncate font-bold">{t.name}</span>
               <span className="text-muted">T{t.tableNo}</span>
@@ -219,20 +280,22 @@ function LotScene({ s, serverNow }: { s: PublicState; serverNow: () => number })
   if (!lot) {
     return (
       <Center>
-        <p className="text-[4vh] font-bold tracking-[0.3em] text-muted uppercase">{s.nextLot ? "First up" : "Auction"}</p>
+        <CornerRangoli />
+        <p className="text-[3.6vh] font-bold tracking-[0.3em] text-muted uppercase">{s.nextLot ? "First up" : "The auction"}</p>
         {s.nextLot ? (
           <>
             <p className="text-[16vh] leading-none">{s.nextLot.emoji}</p>
-            <p className="text-center text-[9vh] leading-none font-black">{s.nextLot.title}</p>
+            <p className="text-center font-festive text-[9vh] leading-none">{s.nextLot.title}</p>
           </>
         ) : (
-          <p className="text-[9vh] font-black">Starting soon</p>
+          <p className="font-festive text-[9vh]">Starting soon</p>
         )}
+        <DiyaRow count={5} />
       </Center>
     );
   }
   return (
-    <div className="grid h-full grid-cols-[1fr_30vw] gap-[3vw] pt-[2vh]">
+    <div className="grid h-full grid-cols-[1fr_32vw] gap-[3vw] pt-[1.5vh]">
       <LotHero s={s} lot={lot} serverNow={serverNow} />
       <div className="flex min-h-0 flex-col gap-[2.5vh]">
         <BidTicker s={s} lot={lot} />
@@ -261,7 +324,7 @@ function LotHero({ s, lot, serverNow }: { s: PublicState; lot: LotView; serverNo
       <div className="flex items-start gap-[2vw]">
         <span className="text-[16vh] leading-none">{lot.emoji}</span>
         <div className="min-w-0 pt-[1vh]">
-          <p className="text-[8vh] leading-[1.05] font-black">{lot.title}</p>
+          <p className="font-festive text-[8vh] leading-[1.1]">{lot.title}</p>
           {lot.description && <p className="mt-[1vh] text-[3vh] text-muted">{lot.description}</p>}
         </div>
       </div>
@@ -271,14 +334,10 @@ function LotHero({ s, lot, serverNow }: { s: PublicState; lot: LotView; serverNo
           <p className="text-[3vh] font-bold tracking-[0.2em] text-muted uppercase">
             {lot.status === "sold" ? "Sold for" : lot.status === "unsold" ? "Opened at" : lot.top ? "Top bid" : "Opening bid"}
           </p>
-          <p
-            key={amount}
-            className="tabular animate-bump text-[24vh] leading-[0.95] font-black"
-            style={{ color: amountTeam?.color }}
-          >
+          <p key={amount} className="tabular animate-bump text-[24vh] leading-[0.95] font-black" style={{ color: amountTeam?.color }}>
             {fmt(amount)}
           </p>
-          <p className="h-[6vh] text-[4.5vh] font-extrabold" style={{ color: amountTeam?.color }}>
+          <p className="h-[6vh] font-festive text-[4.5vh]" style={{ color: amountTeam?.color }}>
             {amountTeam ? amountTeam.name : running ? `+${fmt(lot.step)} per bid` : ""}
           </p>
         </div>
@@ -287,22 +346,27 @@ function LotHero({ s, lot, serverNow }: { s: PublicState; lot: LotView; serverNo
 
       {callout && (
         <div className="pointer-events-none absolute inset-0 grid place-items-center">
-          <p key={callout} className="animate-pop-in rounded-[2vh] bg-ink px-[3vw] py-[2vh] text-[11vh] font-black text-bg shadow-2xl">
+          <p key={callout} className="animate-pop-in rounded-[2vh] bg-ink px-[3vw] py-[2vh] font-festive text-[11vh] text-bg shadow-2xl">
             {callout}
           </p>
         </div>
       )}
       {lot.status === "sold" && winner && (
         <div className="pointer-events-none absolute inset-0 grid place-items-center">
-          <div className="animate-stamp rounded-[2vh] border-[1.2vh] px-[3vw] py-[1vh] text-center shadow-2xl" style={{ borderColor: winner.color, background: winner.color, color: readableOn(winner.color) }}>
-            <p className="text-[16vh] leading-none font-black">SOLD!</p>
-            <p className="text-[5vh] font-extrabold">to {winner.name}</p>
+          <div
+            className="animate-stamp rounded-[2vh] border-[1vh] px-[3.5vw] py-[1.5vh] text-center shadow-2xl"
+            style={{ borderColor: "#fbbf24", background: winner.color, color: readableOn(winner.color) }}
+          >
+            <p className="font-festive text-[16vh] leading-none">SOLD!</p>
+            <p className="font-festive text-[5vh]">to {winner.name}</p>
           </div>
         </div>
       )}
       {lot.status === "unsold" && (
         <div className="pointer-events-none absolute inset-0 grid place-items-center">
-          <p className="animate-stamp rounded-[2vh] border-[1vh] border-muted px-[3vw] py-[1vh] text-[12vh] font-black text-muted">No bids</p>
+          <p className="animate-stamp rounded-[2vh] border-[1vh] border-muted bg-surface px-[3vw] py-[1vh] font-festive text-[12vh] text-muted">
+            No bids
+          </p>
         </div>
       )}
     </div>
@@ -323,7 +387,7 @@ function CountdownRing({ left, total, paused }: { left: number; total: number; p
           cy="50"
           r={r}
           fill="none"
-          stroke={urgent ? "var(--bad)" : "var(--accent)"}
+          stroke={urgent ? "var(--bad)" : "#f59e0b"}
           strokeWidth="7"
           strokeLinecap="round"
           strokeDasharray={circumference}
@@ -333,7 +397,7 @@ function CountdownRing({ left, total, paused }: { left: number; total: number; p
       </svg>
       <div className="absolute inset-0 grid place-items-center">
         {paused ? (
-          <p className="text-[5vh] font-black">Paused</p>
+          <p className="font-festive text-[5vh]">Paused</p>
         ) : (
           <p className={`tabular text-[11vh] font-black ${urgent ? "animate-urgent text-bad" : ""}`}>{formatClock(left)}</p>
         )}
@@ -350,12 +414,14 @@ function BidTicker({ s, lot }: { s: PublicState; lot: LotView }) {
         <p className="text-[3vh] text-muted">No bids yet</p>
       ) : (
         <ul className="flex flex-col gap-[0.8vh]">
-          {lot.bids.slice(0, 5).map((b, i) => {
+          {lot.bids.slice(0, 4).map((b, i) => {
             const team = teamById(s, b.teamId);
             return (
               <li
                 key={b.id}
-                className={`flex items-center gap-3 rounded-xl px-4 py-[1vh] text-[3vh] ${i === 0 ? "animate-slide-up bg-surface font-extrabold shadow-sm" : "text-muted"}`}
+                className={`flex items-center gap-3 rounded-xl px-4 py-[1vh] text-[3vh] ${
+                  i === 0 ? "animate-slide-up border border-line bg-surface font-extrabold" : "text-muted"
+                }`}
               >
                 <TeamDot color={team?.color ?? "#999"} className="h-[2.2vh] w-[2.2vh]" />
                 <span className="flex-1 truncate">{team?.name ?? "?"}</span>
@@ -379,7 +445,7 @@ function CoinTable({ s, lot }: { s: PublicState; lot: LotView }) {
         {teams.map((t) => {
           const short = t.coinsLeft < lot.minNext;
           return (
-            <li key={t.id} className={`grid grid-cols-[9vw_1fr_auto] items-center gap-3 text-[2.3vh] ${short ? "opacity-40" : ""}`}>
+            <li key={t.id} className={`grid grid-cols-[12vw_1fr_auto] items-center gap-3 text-[2.3vh] ${short ? "opacity-40" : ""}`}>
               <span className="truncate font-semibold">{t.name}</span>
               <span className="h-[1.4vh] overflow-hidden rounded-full bg-surface-2">
                 <span className="block h-full rounded-full" style={{ width: `${(t.coinsLeft / max) * 100}%`, background: t.color }} />
@@ -397,18 +463,24 @@ function LeaderboardScene({ s }: { s: PublicState }) {
   const ranked = rankTeams(s.teams);
   const final = s.phase === "results";
   return (
-    <div className="flex h-full flex-col pt-[2vh]">
-      <p className="text-[8vh] leading-none font-black">{final ? "🏆 Final results" : "Standings"}</p>
-      <ol className="mt-[3vh] grid min-h-0 flex-1 auto-rows-fr gap-[1.2vh]">
+    <div className="relative flex h-full flex-col pt-[1.5vh]">
+      {final && <Rangoli className="animate-spin-slow pointer-events-none absolute -top-[16vh] -right-[12vh] h-[48vh] w-[48vh]" />}
+      <div className="relative flex items-end gap-[1.5vw]">
+        <p className="font-festive text-[8vh] leading-none">{final ? "🏆 Final results" : "Standings"}</p>
+        {final && <p className="pb-[0.8vh] font-festive text-[4vh] text-accent">Happy Diwali! शुभ दीपावली</p>}
+      </div>
+      <ol className="relative mt-[3vh] grid min-h-0 flex-1 auto-rows-fr gap-[1.2vh]">
         {ranked.map((t, i) => (
           <li
             key={t.id}
-            className={`animate-slide-up flex items-center gap-[1.5vw] rounded-[1.5vh] px-[1.5vw] text-[3vh] ${i === 0 && final ? "shadow-xl" : "bg-surface"}`}
+            className={`animate-slide-up flex items-center gap-[1.5vw] rounded-[1.5vh] px-[1.5vw] text-[3vh] ${
+              i === 0 && final ? "shadow-xl" : "border border-line bg-surface"
+            }`}
             style={{ animationDelay: `${i * 70}ms`, ...(i === 0 && final ? { background: t.color, color: readableOn(t.color) } : {}) }}
           >
             <span className="tabular w-[3vw] text-center font-black">{i === 0 && final ? "👑" : i + 1}</span>
             {!(i === 0 && final) && <TeamDot color={t.color} className="h-[2.4vh] w-[2.4vh]" />}
-            <span className="w-[18vw] truncate font-extrabold">{t.name}</span>
+            <span className="w-[20vw] truncate font-festive">{t.name}</span>
             <span className="flex min-w-0 flex-1 gap-[0.6vw] overflow-hidden">
               {t.perks.length === 0 ? (
                 <span className="opacity-60">No perks yet</span>

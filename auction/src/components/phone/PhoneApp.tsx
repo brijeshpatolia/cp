@@ -1,11 +1,13 @@
 "use client";
 
+import confetti from "canvas-confetti";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import { api, buzz, fmt, formatClock, usePoll, useTicker, useWakeLock } from "@/lib/client";
 import { readableOn } from "@/lib/color";
 import { LEVELS, type Level } from "@/lib/levels";
 import { rankTeams } from "@/lib/ranking";
 import type { LotView, MeState, PublicState, TeamView } from "@/lib/types";
+import { Diya, Rangoli, Toran } from "../festive";
 import { Button, Card, ErrorText, inputClass, Label, LevelBadge, TeamDot } from "../ui";
 
 const noSubscribe = () => () => {};
@@ -47,6 +49,8 @@ export function PhoneApp() {
   useEffect(() => {
     if (peopleVersion !== undefined && me && peopleVersion > me.peopleVersion) loadMe();
   }, [peopleVersion, me, loadMe]);
+
+  useWinCelebration(poll.data?.lot ?? null, me?.bidTeam?.id ?? me?.team?.id);
 
   if (!me) {
     return (
@@ -117,15 +121,43 @@ export function PhoneApp() {
   );
 }
 
+// A burst of confetti on this phone when its team wins a perk.
+function useWinCelebration(lot: LotView | null, myTeamId: number | undefined) {
+  const seen = useRef<string | null>(null);
+  const key = lot ? `${lot.id}:${lot.status}` : null;
+  useEffect(() => {
+    const prev = seen.current;
+    seen.current = key;
+    if (!lot || lot.status !== "sold" || lot.winnerTeamId !== myTeamId) return;
+    if (prev !== `${lot.id}:live` && prev !== `${lot.id}:paused`) return; // only on the moment it sells
+    buzz([80, 40, 80, 40, 200]);
+    confetti({
+      particleCount: 120,
+      spread: 90,
+      origin: { y: 0.6 },
+      colors: ["#fbbf24", "#f59e0b", "#db2777", "#ea580c"],
+      shapes: ["star", "circle"],
+      disableForReducedMotion: true,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `key` captures the transition
+  }, [key, myTeamId]);
+}
+
 function Shell({ eventName, offline, children }: { eventName?: string; offline?: boolean; children: ReactNode }) {
   return (
-    <main className="mx-auto flex max-w-md flex-col gap-4 px-4 pt-5 pb-16">
-      <header className="flex items-center justify-between">
-        <h1 className="text-lg font-bold">🔨 {eventName ?? "Office Auction"}</h1>
-        {offline && <span className="text-sm font-medium text-bad">Reconnecting…</span>}
-      </header>
-      {children}
-    </main>
+    <>
+      <Toran className="h-7" />
+      <main className="mx-auto flex max-w-md flex-col gap-4 px-4 pt-2 pb-16">
+        <header className="flex items-center justify-between">
+          <h1 className="flex items-center gap-1.5 font-festive text-xl">
+            <Diya className="h-8 w-8" />
+            {eventName ?? "Diwali Perks Auction"}
+          </h1>
+          {offline && <span className="text-sm font-medium text-bad">Reconnecting…</span>}
+        </header>
+        {children}
+      </main>
+    </>
   );
 }
 
@@ -141,7 +173,7 @@ function CheckinForm({ me, onDone, onCancel }: { me: MeState; onDone: (me: MeSta
   if (!p && !me.checkinOpen) {
     return (
       <Card>
-        <p className="text-xl font-bold">Check-in is closed</p>
+        <p className="font-festive text-2xl">Check-in is closed</p>
         <p className="mt-1 text-muted">Please find an organizer and they&apos;ll add you.</p>
       </Card>
     );
@@ -164,8 +196,15 @@ function CheckinForm({ me, onDone, onCancel }: { me: MeState; onDone: (me: MeSta
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
       <div>
-        <p className="text-3xl font-extrabold leading-tight">{p ? "Edit your details" : "Welcome! Let's get you checked in."}</p>
-        {!p && <p className="mt-1 text-muted">Takes ten seconds. Then watch the big screen.</p>}
+        {p ? (
+          <p className="font-festive text-3xl leading-tight">Edit your details</p>
+        ) : (
+          <>
+            <p className="font-festive text-4xl leading-tight text-accent">Happy Diwali!</p>
+            <p className="mt-1 text-lg font-semibold">Check in to join the auction.</p>
+            <p className="text-muted">Takes ten seconds. Then watch the big screen.</p>
+          </>
+        )}
       </div>
       <div>
         <Label htmlFor="name">Your name</Label>
@@ -223,7 +262,7 @@ function CheckinForm({ me, onDone, onCancel }: { me: MeState; onDone: (me: MeSta
       </fieldset>
       <ErrorText>{error}</ErrorText>
       <Button type="submit" size="lg" disabled={busy}>
-        {busy ? "Saving…" : p ? "Save" : "Check in"}
+        {busy ? "Saving…" : p ? "Save" : "Check in ✨"}
       </Button>
       {onCancel && (
         <Button variant="ghost" onClick={onCancel}>
@@ -238,7 +277,7 @@ function WaitingCard({ me, onEdit }: { me: MeState; onEdit: () => void }) {
   const p = me.participant!;
   return (
     <Card className="animate-slide-up">
-      <p className="text-2xl font-extrabold">You&apos;re checked in ✅</p>
+      <p className="font-festive text-3xl">You&apos;re in! ✨</p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="font-semibold">{p.name}</span>
         {p.department && <span className="text-muted">· {p.department}</span>}
@@ -263,10 +302,11 @@ function TeamCard({ team, me, defaultOpen }: { team: TeamView; me: MeState; defa
   const ink = readableOn(team.color);
   return (
     <div className="animate-pop-in overflow-hidden rounded-2xl border border-line bg-surface">
-      <div className="p-5" style={{ background: team.color, color: ink }}>
-        <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-90">Your team</p>
-        <p className="text-3xl font-extrabold">{team.name}</p>
-        <p className="mt-1 text-lg font-semibold">Sit at table {team.tableNo}</p>
+      <div className="relative overflow-hidden p-5" style={{ background: team.color, color: ink }}>
+        <Rangoli opacity="0.3" className="animate-spin-slow pointer-events-none absolute -top-10 -right-10 h-40 w-40" />
+        <p className="relative text-xs font-bold uppercase tracking-[0.2em] opacity-90">Your team</p>
+        <p className="relative font-festive text-4xl leading-tight">{team.name}</p>
+        <p className="relative mt-1 text-lg font-semibold">Sit at table {team.tableNo}</p>
       </div>
       <div className="p-4">
         {me.isLeader ? (
@@ -315,7 +355,7 @@ function LotStatus({ state, lot, myTeamId, serverNow }: { state: PublicState; lo
       <div className="flex items-start gap-3">
         <span className="text-5xl leading-none">{lot.emoji}</span>
         <div className="min-w-0">
-          <p className="text-xl font-extrabold leading-tight">{lot.title}</p>
+          <p className="font-festive text-2xl leading-tight">{lot.title}</p>
           {lot.description && <p className="mt-0.5 text-sm text-muted">{lot.description}</p>}
         </div>
       </div>
@@ -359,7 +399,7 @@ function LotCard({ state, myTeamId, serverNow }: { state: PublicState; myTeamId?
   if (!state.lot) {
     return (
       <Card>
-        <p className="text-lg font-bold">The auction is about to start</p>
+        <p className="font-festive text-2xl">The auction is about to start</p>
         {state.nextLot && (
           <p className="mt-1 text-muted">
             First up: {state.nextLot.emoji} {state.nextLot.title}
@@ -453,7 +493,7 @@ function BidPanel({
       >
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-90">Bidding for</p>
-          <p className="text-xl font-extrabold">{team.name}</p>
+          <p className="font-festive text-2xl leading-tight">{team.name}</p>
         </div>
         <div className="text-right">
           <p className="tabular text-3xl font-extrabold">{fmt(team.coinsLeft)}</p>
@@ -465,7 +505,7 @@ function BidPanel({
         {lot ? (
           <LotStatus state={state} lot={lot} myTeamId={team.id} serverNow={serverNow} />
         ) : (
-          <p className="text-lg font-bold">Waiting for the first perk…</p>
+          <p className="font-festive text-xl">Waiting for the first perk…</p>
         )}
       </Card>
 
@@ -530,15 +570,18 @@ function BidPanel({
 function Standings({ state, myTeamId }: { state: PublicState; myTeamId?: number }) {
   return (
     <Card>
-      <p className="text-xl font-extrabold">Final standings</p>
+      <p className="font-festive text-3xl">Final standings</p>
+      <p className="font-festive text-lg text-accent">Happy Diwali! शुभ दीपावली</p>
       <ol className="mt-3 flex flex-col gap-2">
         {rankTeams(state.teams).map((t, i) => (
           <li key={t.id} className={`flex items-center gap-3 rounded-xl p-2 ${t.id === myTeamId ? "bg-surface-2" : ""}`}>
             <span className="tabular w-6 text-center font-bold">{i === 0 ? "🏆" : i + 1}</span>
             <TeamDot color={t.color} />
-            <span className="flex-1 font-semibold">{t.name}</span>
-            <span className="text-sm text-muted">
-              {t.perks.length} perk{t.perks.length === 1 ? "" : "s"} · {fmt(t.coinsLeft)} left
+            <span className="min-w-0 flex-1">
+              <span className="block truncate font-semibold">{t.name}</span>
+              <span className="block text-sm text-muted">
+                {t.perks.length} perk{t.perks.length === 1 ? "" : "s"} · {fmt(t.coinsLeft)} {state.currency} left
+              </span>
             </span>
           </li>
         ))}

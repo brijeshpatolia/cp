@@ -5,7 +5,8 @@ scanning a QR code, the app deals them into balanced teams, each team gets the
 same number of coins, and teams bid live for perks ("Unlimited work from home",
 …) from their leader's phone while the big screen shows the action.
 
-**Status:** built. See [README.md](README.md) for running the event and deploying.
+**Status:** built, with a Diwali theme (marigold toran, diyas, rangoli, fireworks,
+Diwali team names). See [README.md](README.md) for running the event and deploying.
 Decisions so far and the remaining open questions are at the end.
 
 ---
@@ -95,9 +96,10 @@ Before announcing, the admin sees a positions × teams table and can reshuffle o
 choose (random, most junior or most senior; default random). It can be re-rolled per
 team or set by hand. With up to 10 teams there are up to 10 leaders.
 
-**Team names:** assigned from a list (The Bulls, The Bears, Blue Chips, Hedge
-Hogs, Rainmakers, Dark Horses, Unicorns, Day Traders, Deal Makers, Bull Run, …),
-each with a colour and table number. All of them are editable.
+**Team names:** assigned from a Diwali list (Diya Squad, Rangoli Rebels, Laddoo
+Legends, Anaar Army, Kandil Crew, Chakri Champs, Phuljhadi Force, Toran Titans, Rocket
+Riders, Kaju Katli Kings, …), each with a colour and table number. All of them are
+editable.
 
 ## 4. Auction rules (defaults; all adjustable)
 
