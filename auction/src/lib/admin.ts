@@ -2,7 +2,7 @@
 // concurrent admin actions and check-ins serialize in a consistent lock order.
 import { z } from "zod";
 import { balanceTeams, pickLeader, pickTeamFor, shuffle, type Person } from "./balance";
-import { db, type Sql } from "./db";
+import { transaction, type Sql } from "./db";
 import { HttpError } from "./http";
 import { LEVELS } from "./levels";
 import { hashToken, newToken } from "./session";
@@ -163,7 +163,7 @@ async function setPhase(tx: Sql, app: AppState, phase: AppState["phase"]) {
 
 export async function runAdminAction(input: unknown): Promise<Record<string, unknown>> {
   const action = actionSchema.parse(input);
-  return db().begin(async (tx) => {
+  return transaction(async (tx) => {
     const app = await loadApp(tx, { lock: true });
     const rule = app.settings.leaderRule;
 

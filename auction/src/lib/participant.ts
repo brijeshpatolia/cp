@@ -1,7 +1,7 @@
 // Phone-side actions: checking in and bidding.
 import { z } from "zod";
 import { bumpPeople, ensureLeader, placeLateArrival } from "./admin";
-import { db } from "./db";
+import { db, transaction } from "./db";
 import { HttpError } from "./http";
 import { LEVELS } from "./levels";
 import { hashToken, newToken } from "./session";
@@ -17,7 +17,7 @@ export const registerSchema = z.object({
 // Returns a new device token when one was created (the caller sets the cookie).
 export async function register(existingToken: string | undefined, input: unknown): Promise<{ token: string | null }> {
   const data = registerSchema.parse(input);
-  return db().begin(async (tx) => {
+  return transaction(async (tx) => {
     const app = await loadApp(tx, { lock: true });
 
     if (existingToken) {

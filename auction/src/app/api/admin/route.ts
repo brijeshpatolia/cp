@@ -13,8 +13,9 @@ export const GET = handle(async (req: NextRequest) => {
   return json(await getAdminOverview());
 });
 
+// Making the teams takes a few dozen statements: slow if the database is far away.
 export const POST = handle(async (req: NextRequest) => {
   requireAdmin(req);
   const result = await runAdminAction(await readJson(req));
   return json({ ...result, overview: await getAdminOverview() });
-});
+}, 30_000);

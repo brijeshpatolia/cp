@@ -89,7 +89,8 @@ won't work for phones at the event. Make sure this code is on `main` before you 
    every later deploy keeps them up to date.
 5. **Check it.** Open `https://<your-project>.vercel.app/api/health`. It should say
    `"ok": true`, with `dbLatencyMs` in single or low double digits. Otherwise `problem`
-   says what's missing. Then log in at `/admin`.
+   says what's missing, and `hint` says which Function Region to pick if the app and
+   the database are in different regions. Then log in at `/admin`.
 6. **Load test** before setting up for real (it wipes the event data):
 
    ```bash
@@ -127,6 +128,12 @@ simultaneous bids are handled one after another and no team can overspend. The c
 the database's; perks are sold by whichever request first notices the timer ran out, so
 no background job is needed.
 
+Each database connection carries one query at a time, because Supabase's connection
+pooler hangs when a connection sends a query before the previous one has answered
+([supavisor#1239](https://github.com/supabase/supavisor/issues/1239)). And no request
+waits on the database for more than 10 seconds (30 for admin actions): it gets a "busy,
+try again" answer, and if nothing at all is getting through, the app reconnects.
+
 ## Developing
 
 Needs Node 20+ and Postgres.
@@ -141,7 +148,7 @@ npm run dev                     # http://localhost:3000, /board, /admin
 
 | Command | |
 | --- | --- |
-| `npm test` | Unit tests (team balancing) and database tests (bidding rules, concurrent bids, anti-snipe, settling). The database tests use `TEST_DATABASE_URL`, which they wipe, and are skipped if it isn't set. |
+| `npm test` | Unit tests (team balancing) and database tests (bidding rules, concurrent bids, anti-snipe, settling, and the connection settings through a proxy that behaves like Supabase's pooler). The database tests use `TEST_DATABASE_URL`, which they wipe, and are skipped if it isn't set. |
 | `npm run lint` / `npm run typecheck` | ESLint / TypeScript |
 | `npm run simulate -- --url http://localhost:3000 --yes` | The 80-phone simulation, locally |
 
