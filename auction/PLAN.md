@@ -139,15 +139,18 @@ editable.
 - **Time** comes only from the database clock. Every refresh carries the server
   time, and each screen corrects for its own clock drift, so all countdowns show
   the same value.
-- **Supabase's pooler: transaction mode for queries, session mode for transactions.**
-  In transaction mode (port 6543) the pooler stops answering a connection that sends a
-  query before the previous one has answered, or hands it another query's rows
-  ([supavisor#1239](https://github.com/supabase/supavisor/issues/1239)), so the app never
-  pipelines (`max_pipeline: 0`). Single statements (reads, bids) are then fine there.
-  But in production it also lost or mixed up replies when 3 to 5 check-ins, each a
-  transaction, ran at once. So transactions use the pooler's session mode (port 5432),
-  which passes each connection straight through, on a reserved connection, with at most
-  two such connections per server instance (the project has about 15).
+- **Single statements on the busy paths.** Supabase's pooler, in transaction mode (port
+  6543), stops answering a connection that sends a query before the previous one has
+  answered ([supavisor#1239](https://github.com/supabase/supavisor/issues/1239)), so the
+  app never pipelines (`max_pipeline: 0`). It then copes with single statements, even
+  many at once, but in production it lost or mixed up replies when 3 to 5 check-ins,
+  each a transaction, ran together. So a check-in is one database function call
+  (`check_in`), like a bid (`place_bid`).
+- **Transactions on a connection of their own.** Admin actions and late check-ins run on
+  a session-mode connection (port 5432), opened for the transaction and closed right
+  after. A pool of them used up the project's ~15 session slots once: Vercel pauses idle
+  functions with their connections still open. If the slots are full anyway, the
+  transaction falls back to transaction mode, which copes with one at a time.
 - **No request waits on the database for long.** After 10 s (30 s for admin actions)
   a request gets a "busy, try again" answer instead of hanging until Vercel's 5-minute
   limit, and if no other request got through in that time either, the app drops its

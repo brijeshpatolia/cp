@@ -5,7 +5,7 @@ import { db, transaction } from "./db";
 import { HttpError } from "./http";
 import { LEVELS } from "./levels";
 import { hashToken, newToken } from "./session";
-import { loadApp, resolveDevice, type DeviceTokens, type MemberRow } from "./state";
+import { loadApp, resolveDevice, type DeviceTokens } from "./state";
 
 export const registerSchema = z.object({
   name: z.string().trim().min(1, "Please enter your name").max(40),
@@ -13,31 +13,29 @@ export const registerSchema = z.object({
   level: z.enum(LEVELS, { message: "Please pick your position" }),
 });
 
+type CheckIn = { ok: true; added: boolean } | { ok: false; error: "closed" | "late" };
+
 // Checks a phone in, or updates the details of a phone that already checked in.
 // Returns a new device token when one was created (the caller sets the cookie).
 export async function register(existingToken: string | undefined, input: unknown): Promise<{ token: string | null }> {
   const data = registerSchema.parse(input);
+  const token = newToken();
+  // One statement rather than a transaction, as everyone checks in at once (see
+  // check_in in db/schema.sql).
+  const [{ r }] = await db()<{ r: CheckIn }[]>`
+    select check_in(${existingToken ? hashToken(existingToken) : null}, ${hashToken(token)},
+                    ${data.name}, ${data.department}, ${data.level}) as r`;
+  if (r.ok) return { token: r.added ? token : null };
+  if (r.error === "closed") throw new HttpError(403, "Check-in is closed. Please find an organizer.");
+  return checkInLate(token, data);
+}
+
+// Someone checking in after the teams were made joins the team that keeps the balance best.
+function checkInLate(token: string, data: z.infer<typeof registerSchema>): Promise<{ token: string }> {
   return transaction(async (tx) => {
     const app = await loadApp(tx, { lock: true });
-
-    if (existingToken) {
-      const [me] = await tx<MemberRow[]>`
-        select id, name, department, level, team_id from participants
-        where token_hash = ${hashToken(existingToken)} for update`;
-      if (me) {
-        // Position drives the team balance, so it is fixed once someone is on a team.
-        await tx`
-          update participants set name = ${data.name}, department = ${data.department},
-            level = ${me.team_id ? me.level : data.level}
-          where id = ${me.id}`;
-        await bumpPeople(tx);
-        return { token: null };
-      }
-    }
-
     if (!app.checkinOpen) throw new HttpError(403, "Check-in is closed. Please find an organizer.");
 
-    const token = newToken();
     const [person] = await tx<{ id: number }[]>`
       insert into participants (name, department, level, token_hash)
       values (${data.name}, ${data.department}, ${data.level}, ${hashToken(token)})

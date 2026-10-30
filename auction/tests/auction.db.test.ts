@@ -61,6 +61,10 @@ describe.skipIf(!url)("auction (database)", () => {
 
   it("checks in 80 people concurrently and deals them into 10 balanced teams with leaders", async () => {
     await Promise.all(Array.from({ length: 80 }, (_, i) => checkIn(i + 1)));
+    // Until the teams are made, a phone can change its details, position included.
+    const [[firstId, firstToken]] = tokens;
+    expect(await register(firstToken, { name: "First", department: "ECM", level: "MD" })).toEqual({ token: null });
+    expect((await raw`select name, level from participants where id = ${firstId}`)[0]).toEqual({ name: "First", level: "MD" });
     await admin({ action: "teams.generate", teamCount: 10 });
 
     const teams = await raw<{ id: number; leader_id: number | null; size: number }[]>`
@@ -97,6 +101,24 @@ describe.skipIf(!url)("auction (database)", () => {
     expect(row.team_id).not.toBeNull();
     const sizes = await raw<{ n: number }[]>`select count(*)::int as n from participants group by team_id`;
     expect(Math.max(...sizes.map((s) => s.n)) - Math.min(...sizes.map((s) => s.n))).toBeLessThanOrEqual(1);
+  });
+
+  it("lets a phone on a team change its name but not its position", async () => {
+    const [[id, token]] = tokens;
+    const [before] = await raw<{ level: string; v: number }[]>`
+      select level, (select people_version from app_state) as v from participants where id = ${id}`;
+    expect(await register(token, { name: "Renamed", department: "Ops", level: "Analyst" })).toEqual({ token: null });
+    const [after] = await raw<{ name: string; level: string; v: number }[]>`
+      select name, level, (select people_version from app_state) as v from participants where id = ${id}`;
+    expect(after).toEqual({ name: "Renamed", level: before.level, v: before.v + 1 });
+  });
+
+  it("turns new phones away once check-in is closed, but lets checked-in ones edit", async () => {
+    await admin({ action: "checkin.set", open: false });
+    await expect(register(undefined, { name: "Too late", level: "VP" })).rejects.toMatchObject({ status: 403 });
+    const [[, token]] = tokens;
+    expect(await register(token, { name: "Renamed again", level: "VP" })).toEqual({ token: null });
+    await admin({ action: "checkin.set", open: true });
   });
 
   it("enforces the bidding rules", async () => {
