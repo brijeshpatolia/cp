@@ -163,6 +163,47 @@ begin
   return jsonb_build_object('ok', true, 'amount', p_amount);
 end $$;
 
+-- Every check-in from a phone goes through here, as one statement rather than a
+-- transaction: everyone checks in at once, and Supabase's pooler mishandles many
+-- simultaneous transactions. A known device token updates that participant's details
+-- (the position stays fixed once they are on a team). Otherwise a participant is
+-- added, unless check-in is closed or teams already exist: the app places a late
+-- arrival in a team itself, in a transaction (they are few, so that's fine).
+create or replace function check_in(
+  p_existing_hash text, p_new_hash text, p_name text, p_department text, p_level text
+) returns jsonb
+language plpgsql as $$
+declare
+  me        participants%rowtype;
+  accepting boolean;
+begin
+  -- The lock admin actions take first, so a check-in never races making the teams.
+  select checkin_open into accepting from app_state where id = 1 for update;
+
+  if p_existing_hash is not null then
+    select * into me from participants where token_hash = p_existing_hash for update;
+    if found then
+      update participants set name = p_name, department = p_department,
+        level = case when me.team_id is null then p_level else me.level end
+      where id = me.id;
+      update app_state set people_version = people_version + 1 where id = 1;
+      return jsonb_build_object('ok', true, 'added', false);
+    end if;
+  end if;
+
+  if not accepting then
+    return jsonb_build_object('ok', false, 'error', 'closed');
+  end if;
+  if exists (select 1 from teams) then
+    return jsonb_build_object('ok', false, 'error', 'late');
+  end if;
+
+  insert into participants (name, department, level, token_hash)
+  values (p_name, p_department, p_level, p_new_hash);
+  return jsonb_build_object('ok', true, 'added', true);
+end;
+$$;
+
 -- Closes live lots whose timer has run out (or, with p_force_lot, that lot
 -- right now). Called on every state read, so no background job is needed.
 -- Lots locked by an in-flight bid are skipped and settled on the next read.

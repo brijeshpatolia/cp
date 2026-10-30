@@ -128,17 +128,26 @@ simultaneous bids are handled one after another and no team can overspend. The c
 the database's; perks are sold by whichever request first notices the timer ran out, so
 no background job is needed.
 
-Supabase's connection pooler needs some care. Reads and bids, single statements, go
-through its transaction mode (port 6543), one query at a time per connection, because it
-stops answering a connection that sends a query before the previous one has answered
-([supavisor#1239](https://github.com/supabase/supavisor/issues/1239)). Check-ins and
-admin actions run several statements in a transaction, and transaction mode lost or mixed
-up their replies once a few ran at the same moment, so they go through the same pooler's
-session mode (port 5432) instead, which passes each connection straight through. Session
-mode has room for about 15 connections per project, so each server instance keeps at
-most two, closed after 10 idle seconds. No request waits on the database for more than
-10 seconds (30 for admin actions): it gets a "busy, try again" answer, and if nothing at
-all is getting through, the app reconnects.
+Supabase's connection pooler needs some care, learned the hard way on the live site:
+
+- Its transaction mode (port 6543) stops answering a connection that sends a query
+  before the previous one has answered
+  ([supavisor#1239](https://github.com/supabase/supavisor/issues/1239)), so every
+  connection carries one query at a time.
+- It copes with single statements, even many at once, but loses or mixes up replies when
+  a few multi-statement transactions run together. So the busy paths are single
+  statements: a bid is one database function (`place_bid`), and so is a check-in
+  (`check_in`).
+- Admin actions, and check-ins after the teams are made, are transactions. Each runs on
+  a session-mode connection (port 5432) of its own, which passes straight through to
+  the database, and is closed as soon as it's done. Session mode has room for only about
+  15 connections per project, and Vercel pauses idle functions with their connections
+  still open, so none is kept around. If they're all taken anyway, the transaction falls
+  back to transaction mode, which copes with one at a time.
+
+No request waits on the database for more than 10 seconds (30 for admin actions): it
+gets a "busy, try again" answer, and if nothing at all is getting through, the app
+reconnects.
 
 ## Developing
 
