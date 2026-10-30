@@ -171,7 +171,10 @@ async function main() {
   }
   const serverErrors = Object.values(stats).reduce((n, s) => n + s.errors, 0);
 
-  if (!args.keep) await adminAction({ action: "reset", scope: "everything" });
+  if (!args.keep) {
+    await adminAction({ action: "reset", scope: "everything" });
+    await adminAction({ action: "lot.delete", id: lotId }); // the reset keeps perks
+  }
   if (problems.length || serverErrors) {
     console.error(`\nFAILED: ${[...problems, serverErrors ? `${serverErrors} server errors` : ""].filter(Boolean).join("; ")}`);
     process.exit(1);

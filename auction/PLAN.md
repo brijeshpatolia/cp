@@ -139,6 +139,16 @@ editable.
 - **Time** comes only from the database clock. Every refresh carries the server
   time, and each screen corrects for its own clock drift, so all countdowns show
   the same value.
+- **One query at a time per database connection.** Supabase's connection pooler
+  (transaction mode) stops answering a connection that sends a query before the
+  previous one has answered, or hands it another query's rows
+  ([supavisor#1239](https://github.com/supabase/supavisor/issues/1239)). The
+  postgres.js driver does exactly that under load by default, so the app turns it off
+  (`max_pipeline: 0`) and runs transactions on a reserved connection.
+- **No request waits on the database for long.** After 10 s (30 s for admin actions)
+  a request gets a "busy, try again" answer instead of hanging until Vercel's 5-minute
+  limit, and if no other request got through in that time either, the app drops its
+  database connections and opens new ones.
 
 ### How screens stay live (and why not websockets)
 
