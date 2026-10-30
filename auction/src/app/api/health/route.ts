@@ -1,5 +1,5 @@
 import { connection } from "next/server";
-import { databaseUrl, db, TimeoutError, withTimeout } from "@/lib/db";
+import { databaseUrl, db, poolerMode, TimeoutError, transaction, transactionUrl, withTimeout } from "@/lib/db";
 import { handle, json, replacePoolIfStuck } from "@/lib/http";
 
 // The Vercel region next to each cloud region a Supabase (or Neon) database can be in.
@@ -28,6 +28,8 @@ function databaseRegion(url: string | undefined) {
   return new URL(url).hostname.match(/(?:^|[.-])((?:us|eu|ap|sa|ca|me|af)-[a-z]+-\d)(?=\.)/)?.[1] ?? null;
 }
 
+const message = (err: unknown) => (err instanceof Error ? err.message : String(err));
+
 // Deployment check: open /api/health after deploying. Says what's missing, if anything.
 export const GET = handle(async () => {
   await connection();
@@ -37,6 +39,7 @@ export const GET = handle(async () => {
     databaseUrl: Boolean(url),
     databaseReachable: false,
     tablesCreated: false,
+    transactionsWork: false,
     adminPassword: Boolean(process.env.ADMIN_PASSWORD),
     sessionSecret: Boolean(process.env.SESSION_SECRET),
   };
@@ -46,17 +49,27 @@ export const GET = handle(async () => {
   if (!url) {
     problem = "No database: connect Supabase in the Vercel project's Storage tab (or set DATABASE_URL), then redeploy.";
   } else {
+    // Three checks of at most 3 s each, inside the request's 10 s limit.
     try {
       const pinged = performance.now();
-      await withTimeout(db()`select 1`, 4000);
+      await withTimeout(db()`select 1`, 3000);
       dbLatencyMs = Math.round(performance.now() - pinged);
       checks.databaseReachable = true;
-      const [row] = await withTimeout(db()<{ ok: boolean }[]>`select to_regclass('public.app_state') is not null as ok`, 4000);
+      const [row] = await withTimeout(db()<{ ok: boolean }[]>`select to_regclass('public.app_state') is not null as ok`, 3000);
       checks.tablesCreated = row.ok;
       if (!row.ok) problem = "The database has no tables yet: redeploy, and the build will create them.";
     } catch (err) {
       if (err instanceof TimeoutError) replacePoolIfStuck(started);
-      problem = `Can't reach the database: ${err instanceof Error ? err.message : String(err)}`;
+      problem = `Can't reach the database: ${message(err)}`;
+    }
+    if (checks.databaseReachable) {
+      try {
+        await withTimeout(transaction((tx) => tx`select 1`), 3000);
+        checks.transactionsWork = true;
+      } catch (err) {
+        if (err instanceof TimeoutError) replacePoolIfStuck(started);
+        problem ??= `Transactions (check-ins, admin actions) fail: ${message(err)}`;
+      }
     }
   }
   if (!problem && !checks.adminPassword) problem = "ADMIN_PASSWORD is not set, so nobody can log in to /admin.";
@@ -70,7 +83,7 @@ export const GET = handle(async () => {
         `In the Vercel project, set Settings → Functions → Function Region to ${nearest}, then redeploy.`
       : null;
 
-  const ok = checks.databaseReachable && checks.tablesCreated && checks.adminPassword;
+  const ok = checks.databaseReachable && checks.tablesCreated && checks.transactionsWork && checks.adminPassword;
   return json(
     {
       ok,
@@ -80,6 +93,8 @@ export const GET = handle(async () => {
       dbLatencyMs, // a few ms when the app and database share a region; 100+ means they don't
       region,
       dbRegion,
+      // Supabase's pooler: "transaction" mode for queries, "session" mode for transactions
+      dbPooler: url ? { queries: poolerMode(url), transactions: poolerMode(transactionUrl()!) } : null,
     },
     { status: ok ? 200 : 503 },
   );
