@@ -1,5 +1,6 @@
 import { unstable_rethrow } from "next/navigation";
 import { NextResponse } from "next/server";
+import postgres from "postgres";
 import { ZodError } from "zod";
 import { resetDb, TimeoutError, withTimeout } from "./db";
 
@@ -52,6 +53,11 @@ export function handle<A extends unknown[]>(fn: (...args: A) => Promise<Response
         const issue = err.issues[0];
         const where = issue?.path.length ? `${issue.path.join(".")}: ` : "";
         return json({ error: `${where}${issue?.message ?? "Invalid input"}` }, { status: 400 });
+      }
+      // A reference to something that is gone, or a clash with a change made a moment
+      // earlier, e.g. by another organizer: usually fixed by looking again.
+      if (err instanceof postgres.PostgresError && (err.code === "23503" || err.code === "23505")) {
+        return json({ error: "That has just changed: refresh and try again" }, { status: 409 });
       }
       console.error(err);
       return json({ error: "Something went wrong, please try again" }, { status: 500 });

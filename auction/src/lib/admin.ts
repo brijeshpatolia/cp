@@ -1,7 +1,7 @@
 // Organizer actions. Each runs in one transaction that locks app_state first, so
 // concurrent admin actions and check-ins serialize in a consistent lock order.
 import { z } from "zod";
-import { balanceTeams, pickLeader, pickTeamFor, shuffle, type Person } from "./balance";
+import { balanceTeams, pickLeader, pickTeamForLateArrival, shuffle, type Person } from "./balance";
 import { transaction, type Sql } from "./db";
 import { HttpError } from "./http";
 import { LEVELS } from "./levels";
@@ -125,7 +125,7 @@ export async function placeLateArrival(tx: Sql, person: Person): Promise<number 
   const members = await tx<MemberRow[]>`
     select id, name, department, level, team_id from participants where team_id is not null and id <> ${person.id}`;
   const grouped = teams.map((t) => members.filter((m) => m.team_id === t.id));
-  return teams[pickTeamFor(person, grouped)].id;
+  return teams[pickTeamForLateArrival(person, grouped)].id;
 }
 
 async function assertNoAuctionActivity(tx: Sql) {

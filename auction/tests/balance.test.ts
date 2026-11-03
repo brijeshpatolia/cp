@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { balanceTeams, pickLeader, pickTeamFor, type Person } from "@/lib/balance";
+import { balanceTeams, pickLeader, pickTeamForLateArrival, type Person } from "@/lib/balance";
 import { LEVELS, type Level } from "@/lib/levels";
 
 const DEPTS = ["M&A", "ECM", "DCM", "Coverage", "Research", "Ops", "Risk"];
@@ -58,12 +58,26 @@ describe("balanceTeams", () => {
   });
 });
 
-describe("pickTeamFor (late arrivals)", () => {
-  it("joins the team with fewest of that position, then the smallest", () => {
+describe("pickTeamForLateArrival", () => {
+  it("joins a smallest team, the one with fewest of that position", () => {
     const p = (id: number, level: Level): Person => ({ id, level, department: "" });
     const teams = [[p(1, "VP"), p(2, "Analyst")], [p(3, "Analyst")], [p(4, "VP")]];
-    expect(pickTeamFor(p(9, "VP"), teams, () => 0)).toBe(1);
-    expect(pickTeamFor(p(9, "Analyst"), teams, () => 0)).toBe(2);
+    expect(pickTeamForLateArrival(p(9, "VP"), teams, () => 0)).toBe(1);
+    expect(pickTeamForLateArrival(p(9, "Analyst"), teams, () => 0)).toBe(2);
+  });
+
+  it("prefers a smaller team to a bigger one that lacks that position", () => {
+    const p = (id: number, level: Level): Person => ({ id, level, department: "" });
+    const teams = [[p(1, "VP"), p(2, "VP"), p(3, "VP")], [p(4, "Analyst")], [p(5, "Analyst")]];
+    expect([1, 2]).toContain(pickTeamForLateArrival(p(9, "Analyst"), teams));
+  });
+
+  it("keeps team sizes within one however many people trickle in", () => {
+    const random = rng(7);
+    const teams = balanceTeams(office(80, rng(3)), 10, rng(4));
+    for (const late of office(37, rng(5))) teams[pickTeamForLateArrival(late, teams, random)].push(late);
+    const sizes = teams.map((t) => t.length);
+    expect(Math.max(...sizes) - Math.min(...sizes)).toBeLessThanOrEqual(1);
   });
 });
 
