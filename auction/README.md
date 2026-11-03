@@ -147,10 +147,16 @@ Supabase's connection pooler needs some care, learned the hard way on the live s
   15 connections per project, and Vercel pauses idle functions with their connections
   still open, so none is kept around. If they're all taken anyway, the transaction falls
   back to transaction mode, which copes with one at a time.
+- Every request opens its own connection, on its first query, and closes it before
+  answering. A pool of connections per server instance ran the pooler out of its 200
+  client connections (`EMAXCONN`) in a check-in rush: Vercel starts dozens of instances
+  for one, and freezes idle ones with their connections still open. Now the connections
+  open at any moment are the requests in flight (81 at the peak of 80 phones checking
+  in at once, a handful otherwise). Nagle's algorithm is off on them, or each new
+  connection would wait ~40 ms for a delayed ACK.
 
 No request waits on the database for more than 10 seconds (30 for admin actions): it
-gets a "busy, try again" answer, and if nothing at all is getting through, the app
-reconnects.
+gets a "busy, try again" answer, and its connection is dropped.
 
 ## Developing
 

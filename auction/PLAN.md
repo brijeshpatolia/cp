@@ -151,10 +151,15 @@ editable.
   after. A pool of them used up the project's ~15 session slots once: Vercel pauses idle
   functions with their connections still open. If the slots are full anyway, the
   transaction falls back to transaction mode, which copes with one at a time.
+- **A connection per request.** Each request opens a connection on its first query and
+  closes it before answering. A pool per server instance used up the pooler's 200
+  client connections (`EMAXCONN`) during a check-in rush on the live site: Vercel ran
+  dozens of instances, and froze idle ones with their connections still open. Opening
+  one costs ~12 ms with Nagle's algorithm off (postgres.js leaves it on, which cost
+  ~40 ms more per connection).
 - **No request waits on the database for long.** After 10 s (30 s for admin actions)
   a request gets a "busy, try again" answer instead of hanging until Vercel's 5-minute
-  limit, and if no other request got through in that time either, the app drops its
-  database connections and opens new ones.
+  limit, and its database connection is dropped.
 
 ### How screens stay live (and why not websockets)
 
