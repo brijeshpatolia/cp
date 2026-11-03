@@ -1,8 +1,9 @@
 import { unstable_rethrow } from "next/navigation";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import postgres from "postgres";
 import { ZodError } from "zod";
 import { resetDb, TimeoutError, withTimeout } from "./db";
+import { isAdmin } from "./session";
 
 export class HttpError extends Error {
   constructor(
@@ -60,9 +61,17 @@ export function handle<A extends unknown[]>(fn: (...args: A) => Promise<Response
         return json({ error: "That has just changed: refresh and try again" }, { status: 409 });
       }
       console.error(err);
-      return json({ error: "Something went wrong, please try again" }, { status: 500 });
+      return json({ error: "Something went wrong, please try again", ...detailForAdmins(args[0], err) }, { status: 500 });
     }
   };
+}
+
+// An organizer sees what actually went wrong (e.g. a database error), to tell the cause
+// on the day; phones only get the generic message.
+function detailForAdmins(req: unknown, err: unknown) {
+  if (!(req instanceof Request) || !("cookies" in req) || !isAdmin(req as NextRequest)) return {};
+  const e = err as { message?: string; code?: string };
+  return { detail: `${e?.message ?? String(err)}${e?.code ? ` (${e.code})` : ""}` };
 }
 
 export async function readJson(req: Request): Promise<unknown> {
