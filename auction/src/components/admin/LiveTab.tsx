@@ -62,15 +62,16 @@ export function LiveTab({ o, act, serverNow }: TabProps) {
           <Card>
             <p className="font-bold">Team reveal</p>
             <p className="text-sm text-muted">
-              {o.phase === "checkin" ? 0 : o.revealCount} of {o.teams.length} teams revealed. Phones show each person&apos;s team as
-              it&apos;s revealed.
+              {o.phase === "checkin" ? 0 : o.revealCount} of {o.teams.length} teams revealed. Reveal them one by one, or all at
+              once: the big screen then shows every team together, with its table and members. Phones show each person&apos;s
+              team as it&apos;s revealed.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button size="lg" onClick={() => act({ action: "reveal.next" })} disabled={o.phase !== "checkin" && o.revealCount >= o.teams.length}>
                 Reveal next team
               </Button>
-              <Button variant="secondary" onClick={() => act({ action: "reveal.all" })}>
-                Reveal all
+              <Button size="lg" variant="secondary" onClick={() => act({ action: "reveal.all" })}>
+                Reveal all at once
               </Button>
               <Button variant="ghost" onClick={() => act({ action: "reveal.reset" }, "Hide all teams again and restart the reveal?")}>
                 Start over

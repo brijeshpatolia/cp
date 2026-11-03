@@ -79,7 +79,7 @@ export function Board() {
           ) : s.board.scene === "checkin" ? (
             <CheckinScene s={s} joinUrl={joinUrl} />
           ) : s.board.scene === "reveal" ? (
-            <RevealScene s={s} />
+            <RevealScene s={s} serverNow={poll.serverNow} />
           ) : s.board.scene === "lot" ? (
             <LotScene s={s} serverNow={poll.serverNow} />
           ) : s.board.scene === "leaderboard" ? (
@@ -223,9 +223,28 @@ function CheckinScene({ s, joinUrl }: { s: PublicState; joinUrl: string }) {
   );
 }
 
-function RevealScene({ s }: { s: PublicState }) {
+// When teams are revealed one by one, the last one still gets its moment in the
+// spotlight before every team goes up together.
+const LAST_SPOTLIGHT_MS = 8000;
+
+function useAllTeamsFrom(s: PublicState, serverNow: () => number) {
+  const count = s.teams.length; // revealed teams only
+  const [seen, setSeen] = useState({ count, from: 0 });
+  if (count !== seen.count) {
+    const lastOfOneByOne = count === s.teamCount && seen.count === s.teamCount - 1;
+    setSeen({ count, from: lastOfOneByOne ? serverNow() + LAST_SPOTLIGHT_MS : 0 });
+  }
+  return seen.from;
+}
+
+function RevealScene({ s, serverNow }: { s: PublicState; serverNow: () => number }) {
+  useTicker(1000);
+  const allFrom = useAllTeamsFrom(s, serverNow);
   const revealed = [...s.teams].sort((a, b) => a.revealOrder - b.revealOrder);
   const latest = revealed.at(-1);
+  if (latest && revealed.length >= s.teamCount && serverNow() >= allFrom) {
+    return <AllTeams teams={[...revealed].sort((a, b) => a.tableNo - b.tableNo)} />;
+  }
   if (!latest) {
     return (
       <Center>
@@ -284,6 +303,63 @@ function RevealScene({ s }: { s: PublicState }) {
             </div>
           ))}
       </div>
+    </div>
+  );
+}
+
+// Every team at once, so the whole room can find their names and tables together.
+function AllTeams({ teams }: { teams: TeamView[] }) {
+  const n = teams.length;
+  const cols = n <= 4 ? n : n <= 6 ? 3 : n <= 8 ? 4 : n <= 10 ? 5 : 6;
+  const rows = Math.ceil(n / cols);
+  const most = Math.max(4, ...teams.map((t) => t.members.length));
+  // Team names fit the card's width on one line, all at the size the longest one allows
+  // (the festive font runs up to about 0.58 em per letter).
+  const longest = Math.max(...teams.map((t) => t.name.length));
+  const nameSize = `min(4.2vh, calc(90cqw / ${(0.58 * longest).toFixed(2)}))`;
+  return (
+    <div
+      className="grid h-full gap-[1.2vw] pt-[1vh]"
+      style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }}
+    >
+      {teams.map((t, i) => {
+        const ink = readableOn(t.color);
+        return (
+          <div
+            key={t.id}
+            className="animate-pop-in @container flex min-h-0 flex-col overflow-hidden rounded-[1.6vh] border border-line bg-surface shadow-lg"
+            style={{ animationDelay: `${i * 90}ms` }}
+          >
+            <div className="px-[5cqw] pt-[0.6vh] pb-[1.2vh]" style={{ background: t.color, color: ink }}>
+              <p className="truncate font-festive leading-[1.45]" style={{ fontSize: nameSize }}>
+                {t.name}
+              </p>
+              <p className="flex items-baseline gap-[0.5em] leading-none">
+                <span className="font-bold tracking-[0.2em] uppercase opacity-90" style={{ fontSize: "min(1.6vh, 5cqw)" }}>
+                  Table
+                </span>
+                <span className="tabular font-black" style={{ fontSize: "min(4.4vh, 13cqw)" }}>
+                  {t.tableNo}
+                </span>
+              </p>
+            </div>
+            {/* Sized so the biggest team's names all fit, the same size on every card. */}
+            <div className="min-h-0 flex-1 [container-type:size]">
+              <ul
+                className="flex h-full flex-col justify-evenly px-[5cqw] leading-[1.3]"
+                style={{ fontSize: `min(calc(72cqh / ${most}), 9cqw, 3.6vh)` }}
+              >
+                {t.members.map((m) => (
+                  <li key={m.id} className="truncate font-bold">
+                    {t.leader?.id === m.id && "👑 "}
+                    {m.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
