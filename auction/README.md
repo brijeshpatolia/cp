@@ -35,8 +35,11 @@ The design and the reasoning behind it are in [PLAN.md](PLAN.md).
    turn sound on (the buttons sit faintly in the top-right corner). People scan the QR and check in; the counter climbs. Anyone without a
    phone: **People → Add**.
 2. **Teams:** **Teams → Generate teams** (default 10), check the balance table, reshuffle
-   if you like. Then **Live → 2. Teams** and press **Reveal next team** once per team: each
-   team appears on the big screen and on its members' phones at the same moment.
+   if you like. Then **Live → 2. Teams**: **Reveal all at once** puts every team on the big
+   screen together, with its table number and members, so everyone can find their table and
+   settle in. Or press **Reveal next team** once per team for a reveal with some suspense:
+   once the last one has had its moment, the big screen shows them all together too. Each
+   team appears on its members' phones at the same moment.
 3. **Auction:** **Live → Start next**. Leaders bid from their phones; the big screen shows
    the top bid, countdown and every team's coins. A bid in the last 10 s puts the clock
    back to 10 s. At zero the perk is sold automatically. You can **Pause**, add **+15 s**,
