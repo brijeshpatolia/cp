@@ -20,7 +20,10 @@ export async function api<T>(path: string, body?: unknown, method = body === und
     cache: "no-store",
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new ApiError(res.status, data.error ?? `Request failed (${res.status})`, data);
+  if (!res.ok) {
+    const message = data.error ?? `Request failed (${res.status})`;
+    throw new ApiError(res.status, data.detail ? `${message} (${data.detail})` : message, data); // detail: organizers only
+  }
   return data as T;
 }
 

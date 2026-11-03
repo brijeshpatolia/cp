@@ -20,26 +20,38 @@ export function shuffle<T>(items: T[], random: Random = Math.random): T[] {
   return a;
 }
 
-// Index of the team `person` should join: fewest people of their position, then
-// fewest people overall, then fewest from their department; ties broken at random.
-export function pickTeamFor(person: Person, teams: Person[][], random: Random = Math.random): number {
+// Index of the team whose key is smallest, keys compared in order; ties broken at random.
+function pickBy(teams: Person[][], key: (members: Person[]) => number[], random: Random): number {
   let best: number[] = [];
   let bestKey: number[] | null = null;
   teams.forEach((members, index) => {
-    const key = [
-      members.filter((m) => m.level === person.level).length,
-      members.length,
-      members.filter((m) => deptKey(m.department) === deptKey(person.department)).length,
-    ];
-    const cmp = bestKey ? key[0] - bestKey[0] || key[1] - bestKey[1] || key[2] - bestKey[2] : -1;
+    const k = key(members);
+    const cmp = bestKey ? (k.map((v, i) => v - bestKey![i]).find((d) => d !== 0) ?? 0) : -1;
     if (cmp < 0) {
-      bestKey = key;
+      bestKey = k;
       best = [index];
     } else if (cmp === 0) {
       best.push(index);
     }
   });
   return best[Math.floor(random() * best.length)];
+}
+
+const samePosition = (members: Person[], person: Person) => members.filter((m) => m.level === person.level).length;
+const sameDepartment = (members: Person[], person: Person) =>
+  members.filter((m) => deptKey(m.department) === deptKey(person.department)).length;
+
+// Index of the team `person` should join while the teams are dealt: fewest people of
+// their position, then fewest people overall, then fewest from their department.
+export function pickTeamFor(person: Person, teams: Person[][], random: Random = Math.random): number {
+  return pickBy(teams, (m) => [samePosition(m, person), m.length, sameDepartment(m, person)], random);
+}
+
+// A late arrival joins one of the smallest teams, as tables only have so many seats:
+// the one with fewest people of their position, then fewest from their department.
+// (Position first, as when dealing, lets sizes drift apart as people trickle in.)
+export function pickTeamForLateArrival(person: Person, teams: Person[][], random: Random = Math.random): number {
+  return pickBy(teams, (m) => [m.length, samePosition(m, person), sameDepartment(m, person)], random);
 }
 
 // Deals people into `teamCount` teams, most senior first. Guarantees that team

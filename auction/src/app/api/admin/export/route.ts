@@ -4,7 +4,10 @@ import { isAdmin } from "@/lib/session";
 import { getAdminOverview } from "@/lib/state";
 
 const cell = (value: unknown) => {
-  const text = value === null || value === undefined ? "" : String(value);
+  let text = value === null || value === undefined ? "" : String(value);
+  // Text that a spreadsheet would run as a formula (a name like "=HYPERLINK(...)") is
+  // kept as text.
+  if (typeof value === "string" && /^[=+\-@\t\r]/.test(text)) text = `'${text}`;
   return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 };
 const csv = (rows: unknown[][]) => rows.map((r) => r.map(cell).join(",")).join("\n") + "\n";
