@@ -11,6 +11,12 @@ import { startWireProxy, type WireProxy } from "./wireProxy";
 const url = process.env.TEST_DATABASE_URL;
 process.env.ADMIN_PASSWORD ??= "test";
 
+async function waitFor(condition: () => boolean, ms = 2000) {
+  const end = Date.now() + ms;
+  while (!condition() && Date.now() < end) await new Promise((resolve) => setTimeout(resolve, 20));
+  return condition();
+}
+
 describe.skipIf(!url)("database connections through a Supabase-like pooler", () => {
   let proxy: WireProxy;
 
@@ -80,30 +86,32 @@ describe.skipIf(!url)("database connections through a Supabase-like pooler", () 
     expect(proxy.stats.pipelined).toBeGreaterThan(pipelined);
   });
 
-  it("answers a slow request with a 503 but keeps a pool that is only busy", async () => {
-    const { db } = await import("@/lib/db");
-    const { handle } = await import("@/lib/http");
-    const slow = handle(async () => Response.json((await db()`select pg_sleep(1)`)[0]), 300);
-    const quick = handle(async () => Response.json((await db()`select 1 as ok`)[0]), 300);
-    const pool = db();
-    const slowAnswer = slow();
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    expect((await quick()).status).toBe(200);
-    expect((await slowAnswer).status).toBe(503);
-    expect(db()).toBe(pool);
-  });
-
-  it("answers quickly with a 503 when the database stops answering, then recovers", async () => {
+  it("every request closes its own database connection before answering", async () => {
     const { db, resetDb } = await import("@/lib/db");
     const { handle } = await import("@/lib/http");
-    resetDb(); // start from a fresh pool, whatever the tests above left behind
-    const ping = handle(async () => Response.json((await db()`select 1 as ok`)[0]), 500);
-    expect((await ping()).status).toBe(200);
+    resetDb(); // the shared pool the tests above used isn't what's measured here
+    expect(await waitFor(() => proxy.stats.open === 0)).toBe(true);
+    const opened = proxy.stats.connections;
+    const request = handle(async () => {
+      const [[a], [b]] = await Promise.all([db()`select 1 as a`, db()`select 2 as b`]);
+      return Response.json({ ...a, ...b });
+    });
+    const answers = await Promise.all(Array.from({ length: 30 }, () => request()));
+    expect(answers.every((r) => r.status === 200)).toBe(true);
+    expect(proxy.stats.connections - opened).toBe(30); // one each
+    // So a function instance frozen after answering holds none open.
+    expect(await waitFor(() => proxy.stats.open === 0, 300)).toBe(true);
+  });
 
-    proxy.stallAll(); // e.g. sockets that died while Vercel had the function paused
+  it("answers a request the database doesn't answer with a 503, and drops its connection", async () => {
+    const { db } = await import("@/lib/db");
+    const { handle } = await import("@/lib/http");
+    const slow = handle(async () => Response.json((await db()`select pg_sleep(5)`)[0]), 300);
     const started = performance.now();
-    expect((await ping()).status).toBe(503);
-    expect(performance.now() - started).toBeLessThan(2000);
-    expect((await ping()).status).toBe(200);
+    expect((await slow()).status).toBe(503);
+    expect(performance.now() - started).toBeLessThan(1500);
+    expect(await waitFor(() => proxy.stats.open === 0)).toBe(true);
+    const quick = handle(async () => Response.json((await db()`select 1 as ok`)[0]));
+    expect((await quick()).status).toBe(200);
   });
 });

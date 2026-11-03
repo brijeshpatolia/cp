@@ -1,6 +1,6 @@
 import { connection } from "next/server";
-import { databaseUrl, db, poolerMode, TimeoutError, transaction, transactionUrl, withTimeout } from "@/lib/db";
-import { handle, json, replacePoolIfStuck } from "@/lib/http";
+import { databaseUrl, db, poolerMode, transaction, transactionUrl, withTimeout } from "@/lib/db";
+import { handle, json } from "@/lib/http";
 
 // The Vercel region next to each cloud region a Supabase (or Neon) database can be in.
 const NEAREST_VERCEL_REGION: Record<string, string> = {
@@ -33,7 +33,6 @@ const message = (err: unknown) => (err instanceof Error ? err.message : String(e
 // Deployment check: open /api/health after deploying. Says what's missing, if anything.
 export const GET = handle(async () => {
   await connection();
-  const started = performance.now();
   const url = databaseUrl();
   const checks = {
     databaseUrl: Boolean(url),
@@ -59,7 +58,6 @@ export const GET = handle(async () => {
       checks.tablesCreated = row.ok;
       if (!row.ok) problem = "The database has no tables yet: redeploy, and the build will create them.";
     } catch (err) {
-      if (err instanceof TimeoutError) replacePoolIfStuck(started);
       problem = `Can't reach the database: ${message(err)}`;
     }
     if (checks.databaseReachable) {
@@ -67,7 +65,6 @@ export const GET = handle(async () => {
         await withTimeout(transaction((tx) => tx`select 1`), 3000);
         checks.transactionsWork = true;
       } catch (err) {
-        if (err instanceof TimeoutError) replacePoolIfStuck(started);
         problem ??= `Transactions (check-ins, admin actions) fail: ${message(err)}`;
       }
     }

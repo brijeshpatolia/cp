@@ -7,7 +7,7 @@ import net from "node:net";
 
 export type WireProxy = {
   url: string;
-  stats: { connections: number; pipelined: number; stalled: number };
+  stats: { connections: number; open: number; pipelined: number; stalled: number };
   // Every open connection stops answering, as if its socket had died; new ones work.
   stallAll(): void;
   close(): Promise<void>;
@@ -38,12 +38,14 @@ function messages(startup: boolean, keep: (type: string, message: Buffer) => boo
 // `target` is a postgres:// URL; the returned `url` is the same database through the proxy.
 export async function startWireProxy(target: string, opts: { supavisor?: boolean } = {}): Promise<WireProxy> {
   const to = new URL(target);
-  const stats = { connections: 0, pipelined: 0, stalled: 0 };
+  const stats = { connections: 0, open: 0, pipelined: 0, stalled: 0 };
   const sockets = new Set<net.Socket>();
   const stallers = new Set<() => void>();
 
   const server = net.createServer((client) => {
     stats.connections++;
+    stats.open++;
+    client.on("close", () => stats.open--);
     const upstream = net.connect(Number(to.port || 5432), to.hostname);
     for (const s of [client, upstream]) {
       s.setNoDelay(true);
